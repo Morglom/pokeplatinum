@@ -8,19 +8,19 @@
 #include "bag.h"
 #include "item.h"
 
-u8 ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
+BOOL ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
 {
     if (param0->unk_00->unk_20 == 0) {
-        return 0;
+        return FALSE;
     }
 
     if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->unk_20, 1, param0->unk_00->heapID) == FALSE) {
         param0->unk_00->unk_20 = 0;
         param0->unk_00->unk_1F = 0;
-        return 0;
+        return FALSE;
     }
 
-    return 1;
+    return TRUE;
 }
 
 void ov13_02227A7C(UnkStruct_ov13_02227244 *param0)
@@ -90,6 +90,7 @@ void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
     }
 }
 
+// Get item
 u16 ov13_02227BA8(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     if ((param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].item != 0) && (param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].quantity != 0)) {

@@ -13,12 +13,12 @@
 #include "system.h"
 
 struct UnkStruct_ov13_02228A50_t {
-    UnkStruct_ov16_0226DC24 *unk_00;
+    UnkStruct_ov16_0226DC24 *unk_00; // Sprites
     const ByteFlagSet *unk_04;
-    u8 unk_08;
-    u8 unk_09;
-    u8 unk_0A;
-    u32 unk_0C;
+    u8 enabled;
+    u8 setIndex; // Set Index
+    u8 unk_0A; // Some sort of index
+    u32 size; // Size I think
 };
 
 UnkStruct_ov13_02228A50 *ov13_02228A38(u32 heapID)
@@ -40,12 +40,12 @@ UnkStruct_ov16_0226DC24 *ov13_02228A58(UnkStruct_ov13_02228A50 *param0)
 
 u8 ov13_02228A5C(UnkStruct_ov13_02228A50 *param0)
 {
-    return param0->unk_08;
+    return param0->enabled;
 }
 
 void ov13_02228A60(UnkStruct_ov13_02228A50 *param0, u8 param1)
 {
-    param0->unk_08 = param1;
+    param0->enabled = param1;
 }
 
 void ov13_02228A64(UnkStruct_ov13_02228A50 *param0, UnkStruct_ov16_0226DC24 *param1)
@@ -55,16 +55,16 @@ void ov13_02228A64(UnkStruct_ov13_02228A50 *param0, UnkStruct_ov16_0226DC24 *par
 
 void ov13_02228A68(UnkStruct_ov13_02228A50 *param0, u8 param1)
 {
-    param0->unk_09 = param1;
+    param0->setIndex = param1;
 
-    if (param0->unk_08 == 1) {
-        ov16_0226DD7C(param0->unk_00, param0->unk_04[param0->unk_09].flagA, param0->unk_04[param0->unk_09].flagC, param0->unk_04[param0->unk_09].flagB, param0->unk_04[param0->unk_09].flagD);
+    if (param0->enabled == TRUE) {
+        ov16_0226DD7C(param0->unk_00, param0->unk_04[param0->setIndex].flagA, param0->unk_04[param0->setIndex].flagC, param0->unk_04[param0->setIndex].flagB, param0->unk_04[param0->setIndex].flagD);
     }
 }
 
 void ov13_02228A90(UnkStruct_ov13_02228A50 *param0)
 {
-    param0->unk_09 = 0;
+    param0->setIndex = 0;
     param0->unk_0A = 0xff;
 }
 
@@ -73,32 +73,32 @@ void ov13_02228A9C(UnkStruct_ov13_02228A50 *param0, const ByteFlagSet *param1)
     ov13_02228A90(param0);
 
     param0->unk_04 = param1;
-    param0->unk_0C = 0xffffffff;
+    param0->size = 0xffffffff;
 
-    if (param0->unk_08 == 1) {
+    if (param0->enabled == TRUE) {
         ov16_0226DD7C(param0->unk_00, param0->unk_04[0].flagA, param0->unk_04[0].flagC, param0->unk_04[0].flagB, param0->unk_04[0].flagD);
     }
 }
 
 void ov13_02228AC8(UnkStruct_ov13_02228A50 *param0, u32 param1)
 {
-    param0->unk_0C = param1;
+    param0->size = param1;
 }
 
 static u8 ov13_02228ACC(UnkStruct_ov13_02228A50 *param0)
 {
-    if (param0->unk_08 == 1) {
-        return 1;
+    if (param0->enabled == TRUE) {
+        return TRUE;
     }
 
     if (gSystem.pressedKeys & (PAD_KEY | PAD_BUTTON_B | PAD_BUTTON_A)) {
-        param0->unk_08 = 1;
+        param0->enabled = TRUE;
 
-        ov16_0226DD7C(param0->unk_00, param0->unk_04[param0->unk_09].flagA, param0->unk_04[param0->unk_09].flagC, param0->unk_04[param0->unk_09].flagB, param0->unk_04[param0->unk_09].flagD);
+        ov16_0226DD7C(param0->unk_00, param0->unk_04[param0->setIndex].flagA, param0->unk_04[param0->setIndex].flagC, param0->unk_04[param0->setIndex].flagB, param0->unk_04[param0->setIndex].flagD);
         Sound_PlayEffect(SEQ_SE_CONFIRM);
     }
 
-    return 0;
+    return FALSE;
 }
 
 static BOOL ov13_02228B18(const ByteFlagSet *byteFlagSet, u8 direction)
@@ -132,69 +132,69 @@ static BOOL ov13_02228B18(const ByteFlagSet *byteFlagSet, u8 direction)
 u32 ov13_02228B64(UnkStruct_ov13_02228A50 *param0)
 {
     u8 v0, v1, v2, v3;
-    u8 v4;
+    u8 directionIndex;
     u8 v5;
 
-    if (ov13_02228ACC(param0) == 0) {
+    if (ov13_02228ACC(param0) == FALSE) {
         return 0xffffffff;
     }
 
     if (gSystem.pressedKeys & PAD_KEY_UP) {
-        v4 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->unk_09, BYTE_FLAG_SET_DIRECTION_UP);
+        directionIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->setIndex, BYTE_FLAG_SET_DIRECTION_UP);
         v5 = BYTE_FLAG_SET_DIRECTION_UP;
     } else if (gSystem.pressedKeys & PAD_KEY_DOWN) {
-        v4 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->unk_09, BYTE_FLAG_SET_DIRECTION_DOWN);
+        directionIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->setIndex, BYTE_FLAG_SET_DIRECTION_DOWN);
         v5 = BYTE_FLAG_SET_DIRECTION_DOWN;
     } else if (gSystem.pressedKeys & PAD_KEY_LEFT) {
-        v4 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->unk_09, BYTE_FLAG_SET_DIRECTION_LEFT);
+        directionIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->setIndex, BYTE_FLAG_SET_DIRECTION_LEFT);
         v5 = BYTE_FLAG_SET_DIRECTION_LEFT;
     } else if (gSystem.pressedKeys & PAD_KEY_RIGHT) {
-        v4 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->unk_09, BYTE_FLAG_SET_DIRECTION_RIGHT);
+        directionIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->setIndex, BYTE_FLAG_SET_DIRECTION_RIGHT);
         v5 = BYTE_FLAG_SET_DIRECTION_RIGHT;
     } else {
-        v4 = 0xffffffff;
+        directionIndex = 0xffffffff;
     }
 
-    if (v4 != 0xff) {
+    if (directionIndex != 0xff) {
         u8 v6 = 1;
 
-        if (v4 & 0x80) {
+        if (directionIndex & 0x80) {
             if (param0->unk_0A != 0xff) {
-                v4 = param0->unk_0A;
+                directionIndex = param0->unk_0A;
             } else {
-                v4 ^= 0x80;
+                directionIndex ^= 0x80;
             }
         }
 
         while (TRUE) {
             u8 v7;
 
-            if (param0->unk_0C & (1 << v4)) {
+            if (param0->size & (1 << directionIndex)) {
                 break;
             }
 
             v6 = 0;
-            v7 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, v4, v5) & (0xff ^ 0x80);
+            v7 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, directionIndex, v5) & (0xff ^ 0x80);
 
-            if ((v7 == v4) || (v7 == param0->unk_09)) {
-                v4 = param0->unk_09;
+            if ((v7 == directionIndex) || (v7 == param0->setIndex)) {
+                directionIndex = param0->setIndex;
                 break;
             }
 
-            v4 = v7;
+            directionIndex = v7;
         }
 
-        if (param0->unk_09 != v4) {
-            ReadABByteFlags(&param0->unk_04[v4], &v0, &v1);
-            ReadCDByteFlags(&param0->unk_04[v4], &v2, &v3);
+        if (param0->setIndex != directionIndex) {
+            ReadABByteFlags(&param0->unk_04[directionIndex], &v0, &v1);
+            ReadCDByteFlags(&param0->unk_04[directionIndex], &v2, &v3);
 
-            if ((ov13_02228B18(&param0->unk_04[v4], v5) == TRUE) && (v6 != 0)) {
-                param0->unk_0A = param0->unk_09;
+            if ((ov13_02228B18(&param0->unk_04[directionIndex], v5) == TRUE) && (v6 != 0)) {
+                param0->unk_0A = param0->setIndex;
             } else {
                 param0->unk_0A = 0xff;
             }
 
-            param0->unk_09 = v4;
+            param0->setIndex = directionIndex;
 
             ov16_0226DD7C(param0->unk_00, v0, v2, v1, v3);
             Sound_PlayEffect(SEQ_SE_CONFIRM);
@@ -204,7 +204,7 @@ u32 ov13_02228B64(UnkStruct_ov13_02228A50 *param0)
     }
 
     if (gSystem.pressedKeys & PAD_BUTTON_A) {
-        return param0->unk_09;
+        return param0->setIndex;
     }
 
     if (gSystem.pressedKeys & PAD_BUTTON_B) {

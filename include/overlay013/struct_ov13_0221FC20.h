@@ -11,7 +11,7 @@ typedef struct {
     BattleSystem *unk_08;
     u32 heapID;
     u8 unk_10;
-    u8 unk_11;
+    u8 selectedPartyIndex;
     u8 unk_12;
     u8 unk_13;
     u8 unk_14;

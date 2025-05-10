@@ -397,11 +397,11 @@ static void ov13_02225C4C(UnkStruct_ov13_022213F0 *param0, u16 *param1, u8 param
     case 3:
     case 4:
     case 5:
-        if (param0->unk_04[param2 - 0].unk_04 == 0) {
+        if (param0->unk_04[param2 - 0].species == 0) {
             break;
         }
 
-        if (param0->unk_04[param2 - 0].unk_17_7 != 0) {
+        if (param0->unk_04[param2 - 0].isEgg != FALSE) {
             u16 v5[2];
 
             v5[0] = param1[2 * v1 + 6 - 1];
@@ -413,7 +413,7 @@ static void ov13_02225C4C(UnkStruct_ov13_022213F0 *param0, u16 *param1, u8 param
                 }
             }
         } else {
-            if (param0->unk_04[param2 - 0].unk_10 == 0) {
+            if (param0->unk_04[param2 - 0].currentHP == 0) {
                 for (v3 = 0; v3 < v1 * v2; v3++) {
                     param1[v3] = (param1[v3] & 0xfff) | (2 << 12);
                 }
@@ -502,8 +502,8 @@ static void ov13_02225EB8(UnkStruct_ov13_022213F0 *param0, u8 param1, u8 param2)
         ManagedSprite_OffsetPositionXY(param0->unk_1FB4[7 + param1 - 0], 0, Unk_ov13_02229896[param2]);
         break;
     case 7:
-        ManagedSprite_OffsetPositionXY(param0->unk_1FB4[0 + param0->unk_00->unk_11], 0, Unk_ov13_02229890[param2]);
-        ManagedSprite_OffsetPositionXY(param0->unk_1FB4[7 + param0->unk_00->unk_11], 0, Unk_ov13_02229890[param2]);
+        ManagedSprite_OffsetPositionXY(param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], 0, Unk_ov13_02229890[param2]);
+        ManagedSprite_OffsetPositionXY(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], 0, Unk_ov13_02229890[param2]);
         break;
     case 14:
     case 15:
@@ -602,7 +602,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         ov13_02225D8C(param0, 6, 0, 0);
         ov13_02225D8C(param0, 7, 0, 0);
 
-        if (param0->unk_04[param0->unk_00->unk_11].unk_17_7 != 0) {
+        if (param0->unk_04[param0->unk_00->selectedPartyIndex].isEgg != FALSE) {
             ov13_02225D8C(param0, 8, 3, 0);
             ov13_02225D8C(param0, 10, 3, 0);
         } else {
@@ -632,7 +632,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         }
 
         for (v0 = 0; v0 < 4; v0++) {
-            if (param0->unk_04[param0->unk_00->unk_11].unk_30[v0].unk_00 != 0) {
+            if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != 0) {
                 ov13_02225D8C(param0, 14 + v0, 0, 0);
             } else {
                 ov13_02225D8C(param0, 14 + v0, 3, 0);
@@ -655,7 +655,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         break;
     case 5:
         for (v0 = 0; v0 < 4; v0++) {
-            if (param0->unk_04[param0->unk_00->unk_11].unk_30[v0].unk_00 != 0) {
+            if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != 0) {
                 ov13_02225D8C(param0, 19 + v0, 0, 0);
             } else {
                 ov13_02225D8C(param0, 19 + v0, 3, 0);
@@ -710,7 +710,7 @@ static u8 ov13_02226484(UnkStruct_ov13_022213F0 *param0)
     u16 v0, v1 = 0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        if ((param0->unk_04[v0].unk_04 != 0) && (param0->unk_04[v0].unk_17_7 == 0)) {
+        if ((param0->unk_04[v0].species != 0) && (param0->unk_04[v0].isEgg == FALSE)) {
             v1++;
         }
     }
@@ -724,9 +724,9 @@ static u8 ov13_02226484(UnkStruct_ov13_022213F0 *param0)
 
 void ov13_022264C4(UnkStruct_ov13_022213F0 *param0)
 {
-    if (ov13_022213F0(param0, param0->unk_00->unk_11) == 2) {
-        ov13_02225D8C(param0, 0 + param0->unk_00->unk_11, 0, 1);
+    if (ov13_022213F0(param0, param0->unk_00->selectedPartyIndex) == 2) {
+        ov13_02225D8C(param0, 0 + param0->unk_00->selectedPartyIndex, 0, 1);
     } else {
-        ov13_02225D8C(param0, 0 + param0->unk_00->unk_11, 0, 0);
+        ov13_02225D8C(param0, 0 + param0->unk_00->selectedPartyIndex, 0, 0);
     }
 }

@@ -254,8 +254,8 @@ static void ov13_02224588(UnkStruct_ov13_022213F0 *param0)
     SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->unk_1FB0, v2, PokeIcon32KAnimationFileIndex(), FALSE, 45063);
 
     for (v1 = 0; v1 < 6; v1++) {
-        if (param0->unk_04[v1].unk_04 != 0) {
-            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v2, Pokemon_IconSpriteIndex(param0->unk_04[v1].unk_00), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
+        if (param0->unk_04[v1].species != 0) {
+            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v2, Pokemon_IconSpriteIndex(param0->unk_04[v1].pokemon), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
         } else {
             SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v2, PokeIconSpriteIndex(0, 0, 0), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
         }
@@ -376,11 +376,11 @@ static void ov13_022249CC(UnkStruct_ov13_022213F0 *param0)
     s32 v0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        if (param0->unk_04[v0].unk_04 == 0) {
+        if (param0->unk_04[v0].species == 0) {
             continue;
         }
 
-        ManagedSprite_SetExplicitPalette(param0->unk_1FB4[7 + v0], PokeIconPaletteIndex(param0->unk_04[v0].unk_04, param0->unk_04[v0].unk_2E, param0->unk_04[v0].unk_17_7));
+        ManagedSprite_SetExplicitPalette(param0->unk_1FB4[7 + v0], PokeIconPaletteIndex(param0->unk_04[v0].species, param0->unk_04[v0].form, param0->unk_04[v0].isEgg));
     }
 }
 
@@ -412,11 +412,11 @@ static void ov13_02224AB0(u16 param0, ManagedSprite *param1, const int param2, c
 
 static void ov13_02224AD4(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_02221ED0 *param1, const int *param2)
 {
-    ov13_02224A0C(param0, param0->unk_1FB4[19], 45070, param1->unk_14);
+    ov13_02224A0C(param0, param0->unk_1FB4[19], 45070, param1->type1);
     ov13_022249AC(param0->unk_1FB4[19], param2[0], param2[1]);
 
-    if (param1->unk_14 != param1->unk_15) {
-        ov13_02224A0C(param0, param0->unk_1FB4[20], 45071, param1->unk_15);
+    if (param1->type1 != param1->type2) {
+        ov13_02224A0C(param0, param0->unk_1FB4[20], 45071, param1->type2);
         ov13_022249AC(param0->unk_1FB4[20], param2[2], param2[3]);
     }
 }
@@ -493,14 +493,14 @@ static void ov13_02224C14(UnkStruct_ov13_022213F0 *param0)
     s32 v0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        if (param0->unk_04[v0].unk_04 == 0) {
+        if (param0->unk_04[v0].species == 0) {
             continue;
         }
 
         ov13_022249AC(param0->unk_1FB4[7 + v0], Unk_ov13_02229404[v0][0], Unk_ov13_02229404[v0][1]);
-        ov13_02224AB0(param0->unk_04[v0].unk_17_3, param0->unk_1FB4[13 + v0], Unk_ov13_02229434[v0][0], Unk_ov13_02229434[v0][1]);
-        ov13_02224B28(param0->unk_04[v0].unk_1A, param0->unk_1FB4[0 + v0], Unk_ov13_02229404[v0][0] + 8, Unk_ov13_02229404[v0][1] + 8);
-        ov13_02224B5C(param0->unk_04[v0].unk_2D, param0->unk_1FB4[32 + v0], Unk_ov13_02229404[v0][0] + 16, Unk_ov13_02229404[v0][1] + 8);
+        ov13_02224AB0(param0->unk_04[v0].status, param0->unk_1FB4[13 + v0], Unk_ov13_02229434[v0][0], Unk_ov13_02229434[v0][1]);
+        ov13_02224B28(param0->unk_04[v0].heldItem, param0->unk_1FB4[0 + v0], Unk_ov13_02229404[v0][0] + 8, Unk_ov13_02229404[v0][1] + 8);
+        ov13_02224B5C(param0->unk_04[v0].mail, param0->unk_1FB4[32 + v0], Unk_ov13_02229404[v0][0] + 16, Unk_ov13_02229404[v0][1] + 8);
     }
 }
 
@@ -509,11 +509,11 @@ static void ov13_02224CB0(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_0222921C[0], Unk_ov13_0222921C[1]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_0222921C[0] + 8, Unk_ov13_0222921C[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_0222921C[0] + 16, Unk_ov13_0222921C[1] + 8);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222921C[0], Unk_ov13_0222921C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222921C[0] + 8, Unk_ov13_0222921C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222921C[0] + 16, Unk_ov13_0222921C[1] + 8);
 }
 
 static void ov13_02224D08(UnkStruct_ov13_022213F0 *param0)
@@ -521,14 +521,14 @@ static void ov13_02224D08(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_0222923C[0], Unk_ov13_0222923C[1]);
-    ov13_02224AB0(v0->unk_17_3, param0->unk_1FB4[13 + param0->unk_00->unk_11], Unk_ov13_0222924C[0], Unk_ov13_0222924C[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222923C[0], Unk_ov13_0222923C[1]);
+    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222924C[0], Unk_ov13_0222924C[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_022292C4[0][0]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_0222923C[0] + 8, Unk_ov13_0222923C[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_0222923C[0] + 16, Unk_ov13_0222923C[1] + 8);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[6], 20, 132);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222923C[0] + 8, Unk_ov13_0222923C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222923C[0] + 16, Unk_ov13_0222923C[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[6], 20, 132);
 }
 
 static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0)
@@ -536,35 +536,35 @@ static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u32 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_02229244[0], Unk_ov13_02229244[1]);
-    ov13_02224AB0(v0->unk_17_3, param0->unk_1FB4[13 + param0->unk_00->unk_11], Unk_ov13_02229254[0], Unk_ov13_02229254[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229244[0], Unk_ov13_02229244[1]);
+    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229254[0], Unk_ov13_02229254[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_022292A4[0][0]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_02229244[0] + 8, Unk_ov13_02229244[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_02229244[0] + 16, Unk_ov13_02229244[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229244[0] + 8, Unk_ov13_02229244[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229244[0] + 16, Unk_ov13_02229244[1] + 8);
 
     for (v1 = 0; v1 < 4; v1++) {
-        if (v0->unk_30[v1].unk_00 == 0) {
+        if (v0->moves[v1].move == 0) {
             continue;
         }
 
-        ov13_02224A0C(param0, param0->unk_1FB4[21 + v1], 45072 + v1, v0->unk_30[v1].unk_04);
+        ov13_02224A0C(param0, param0->unk_1FB4[21 + v1], 45072 + v1, v0->moves[v1].type);
         ov13_022249AC(param0->unk_1FB4[21 + v1], Unk_ov13_02229324[v1][0], Unk_ov13_02229324[v1][1]);
     }
 }
 
 static void ov13_02224E78(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->unk_11];
+    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_02229264[0], Unk_ov13_02229264[1]);
-    ov13_02224AB0(v0->unk_17_3, param0->unk_1FB4[13 + param0->unk_00->unk_11], Unk_ov13_02229224[0], Unk_ov13_02229224[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0], Unk_ov13_02229264[1]);
+    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229224[0], Unk_ov13_02229224[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_022292B4[0][0]);
     ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222922C[0], Unk_ov13_0222922C[1]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_02229264[0] + 8, Unk_ov13_02229264[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_02229264[0] + 16, Unk_ov13_02229264[1] + 8);
-    ov13_02224A5C(param0, param0->unk_1FB4[26], v0->unk_30[param0->unk_00->unk_34].unk_05);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0] + 8, Unk_ov13_02229264[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0] + 16, Unk_ov13_02229264[1] + 8);
+    ov13_02224A5C(param0, param0->unk_1FB4[26], v0->moves[param0->unk_00->unk_34].class);
     ov13_022249AC(param0->unk_1FB4[26], Unk_ov13_02229214[0], Unk_ov13_02229214[1]);
 }
 
@@ -573,27 +573,27 @@ static void ov13_02224F3C(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229294[0][0]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
     ov13_022252E8(param0);
 }
 
 static void ov13_02224FA8(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->unk_11];
+    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229284[0][0]);
     ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222926C[0], Unk_ov13_0222926C[1]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
 
     if (param0->unk_00->unk_34 < 4) {
-        ov13_02224A5C(param0, param0->unk_1FB4[26], v0->unk_30[param0->unk_00->unk_34].unk_05);
+        ov13_02224A5C(param0, param0->unk_1FB4[26], v0->moves[param0->unk_00->unk_34].class);
     } else {
         ov13_02224A5C(param0, param0->unk_1FB4[26], MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_CLASS));
     }
@@ -606,33 +606,33 @@ static void ov13_0222506C(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229294[0][0]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
     ov13_022252E8(param0);
 }
 
 static void ov13_022250D8(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->unk_11];
+    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222925C[0], Unk_ov13_0222925C[1]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
     ov13_02225420(param0);
 }
 
 static void ov13_02225150(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->unk_11];
+    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->unk_11], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
-    ov13_02224B28(v0->unk_1A, param0->unk_1FB4[0 + param0->unk_00->unk_11], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
-    ov13_02224B5C(v0->unk_2D, param0->unk_1FB4[32 + param0->unk_00->unk_11], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
     ov13_022252E8(param0);
     ov13_02225420(param0);
 }
@@ -642,14 +642,14 @@ static void ov13_022251B4(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     for (v1 = 0; v1 < 4; v1++) {
-        if (v0->unk_30[v1].unk_00 == 0) {
+        if (v0->moves[v1].move == 0) {
             continue;
         }
 
-        ov13_02224A0C(param0, param0->unk_1FB4[21 + v1], 45072 + v1, v0->unk_30[v1].unk_04);
+        ov13_02224A0C(param0, param0->unk_1FB4[21 + v1], 45072 + v1, v0->moves[v1].type);
         ov13_022249AC(param0->unk_1FB4[21 + v1], Unk_ov13_022293DC[v1][0], Unk_ov13_022293DC[v1][1]);
     }
 
@@ -664,14 +664,14 @@ static void ov13_02225248(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     for (v1 = 0; v1 < 4; v1++) {
-        if (v0->unk_30[v1].unk_00 == 0) {
+        if (v0->moves[v1].move == 0) {
             continue;
         }
 
-        ov13_02224A0C(param0, param0->unk_1FB4[21 + v1], 45072 + v1, MoveTable_LoadParam(v0->unk_30[v1].unk_00, MOVEATTRIBUTE_CONTEST_TYPE) + 18);
+        ov13_02224A0C(param0, param0->unk_1FB4[21 + v1], 45072 + v1, MoveTable_LoadParam(v0->moves[v1].move, MOVEATTRIBUTE_CONTEST_TYPE) + 18);
         ov13_022249AC(param0->unk_1FB4[21 + v1], Unk_ov13_022293DC[v1][0], Unk_ov13_022293DC[v1][1]);
     }
 
@@ -702,15 +702,15 @@ static void ov13_02225304(ManagedSprite *param0, u8 param1)
 
 static u8 ov13_02225324(UnkStruct_ov13_02221ED0 *param0)
 {
-    if (param0->unk_10 == 0) {
+    if (param0->currentHP == 0) {
         return 0;
     }
 
-    if ((param0->unk_17_3 != 7) && (param0->unk_17_3 != 6)) {
+    if ((param0->status != SUMMARY_CONDITION_NONE) && (param0->status != SUMMARY_CONDITION_FAINTED)) {
         return 5;
     }
 
-    switch (HealthBar_Color(param0->unk_10, param0->unk_12, 48)) {
+    switch (HealthBar_Color(param0->currentHP, param0->maxHP, 48)) {
     case 4:
         return 1;
     case 3:
@@ -730,7 +730,7 @@ void ov13_0222537C(UnkStruct_ov13_022213F0 *param0)
     u16 v1;
 
     for (v0 = 0; v0 < Party_GetCurrentCount(param0->unk_00->unk_00); v0++) {
-        if (param0->unk_04[v0].unk_04 == 0) {
+        if (param0->unk_04[v0].species == 0) {
             continue;
         }
 
@@ -765,7 +765,7 @@ static void ov13_02225420(UnkStruct_ov13_022213F0 *param0)
     UnkStruct_ov13_02221ED0 *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->unk_11];
+    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     ov13_02225304(param0->unk_1FB4[27], 0);
     ov13_02225304(param0->unk_1FB4[28], 1);
@@ -773,11 +773,11 @@ static void ov13_02225420(UnkStruct_ov13_022213F0 *param0)
     ov13_02225304(param0->unk_1FB4[30], 4);
     ov13_02225304(param0->unk_1FB4[31], 2);
 
-    ov13_022249AC(param0->unk_1FB4[27], ov13_022253DC(v0->unk_28, 144, 144), ov13_022253DC(v0->unk_28, 2, 24));
-    ov13_022249AC(param0->unk_1FB4[28], ov13_022253DC(v0->unk_29, 164, 144), ov13_022253DC(v0->unk_29, 16, 24));
-    ov13_022249AC(param0->unk_1FB4[29], ov13_022253DC(v0->unk_2A, 156, 144), ov13_022253DC(v0->unk_2A, 41, 24));
-    ov13_022249AC(param0->unk_1FB4[30], ov13_022253DC(v0->unk_2B, 131, 143), ov13_022253DC(v0->unk_2B, 41, 24));
-    ov13_022249AC(param0->unk_1FB4[31], ov13_022253DC(v0->unk_2C, 123, 143), ov13_022253DC(v0->unk_2C, 16, 24));
+    ov13_022249AC(param0->unk_1FB4[27], ov13_022253DC(v0->cool, 144, 144), ov13_022253DC(v0->cool, 2, 24));
+    ov13_022249AC(param0->unk_1FB4[28], ov13_022253DC(v0->beauty, 164, 144), ov13_022253DC(v0->beauty, 16, 24));
+    ov13_022249AC(param0->unk_1FB4[29], ov13_022253DC(v0->cute, 156, 144), ov13_022253DC(v0->cute, 41, 24));
+    ov13_022249AC(param0->unk_1FB4[30], ov13_022253DC(v0->smart, 131, 143), ov13_022253DC(v0->smart, 41, 24));
+    ov13_022249AC(param0->unk_1FB4[31], ov13_022253DC(v0->tough, 123, 143), ov13_022253DC(v0->tough, 16, 24));
 }
 
 static void ov13_0222554C(UnkStruct_ov13_022213F0 *param0)
@@ -902,7 +902,7 @@ void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1)
 
     switch (param1) {
     case 0:
-        ov13_02228A68(param0->unk_2084, param0->unk_00->unk_11);
+        ov13_02228A68(param0->unk_2084, param0->unk_00->selectedPartyIndex);
         param0->unk_2088 = 0;
         param0->unk_00->unk_34 = 0;
         break;
