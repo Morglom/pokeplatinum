@@ -85,7 +85,7 @@ static u8 ov13_022212C4(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0);
-static int ov13_022213E4(UnkStruct_ov13_022213F0 *param0, const TouchScreenRect *rect);
+static int CheckTouchRectIsPressed(UnkStruct_ov13_022213F0 *param0, const TouchScreenRect *rect);
 static void ov13_022216C0(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static void ov13_02221738(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0);
@@ -590,7 +590,7 @@ static u8 ov13_022203A0(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_02220418(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228E0C);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228E0C);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -638,7 +638,7 @@ static u8 ov13_02220418(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228D14);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D14);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -703,7 +703,7 @@ static u8 ov13_02220628(UnkStruct_ov13_022213F0 *param0)
     int v1;
 
     v0 = param0->unk_00;
-    v1 = ov13_022213E4(param0, Unk_ov13_02228D64);
+    v1 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D64);
 
     if (v1 == 0xffffffff) {
         v1 = ov13_02228B64(param0->unk_2084);
@@ -844,7 +844,7 @@ static u8 ov13_02220834(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_02220848(UnkStruct_ov13_022213F0 *param0)
 {
-    if (Text_IsPrinterActive(param0->unk_2077) == 0) {
+    if (Text_IsPrinterActive(param0->unk_2077) == FALSE) {
         return 18;
     }
 
@@ -898,7 +898,7 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
     case 1:
         if (param0->unk_04[v0->selectedPartyIndex].currentHP != param0->unk_207A) {
             param0->unk_04[v0->selectedPartyIndex].currentHP++;
-            ov13_02223448(param0, v0->selectedPartyIndex);
+            DrawHealthDisplay(param0, v0->selectedPartyIndex);
             break;
         }
 
@@ -921,7 +921,7 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
     case 4:
         if (param0->unk_04[v0->selectedPartyIndex].currentHP != param0->unk_207A) {
             param0->unk_04[v0->selectedPartyIndex].currentHP++;
-            ov13_02223448(param0, v0->selectedPartyIndex);
+            DrawHealthDisplay(param0, v0->selectedPartyIndex);
             ov13_022264C4(param0);
         }
 
@@ -941,8 +941,8 @@ static u8 ov13_02220A4C(UnkStruct_ov13_022213F0 *param0)
     case 0:
         param0->unk_04[v0->selectedPartyIndex].pokemon = BattleSystem_PartyPokemon(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex]);
 
-        for (v1 = 0; v1 < 4; v1++) {
-            if (param0->unk_04[v0->selectedPartyIndex].moves[v1].move == 0) {
+        for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
+            if (param0->unk_04[v0->selectedPartyIndex].moves[v1].move == MOVE_NONE) {
                 continue;
             }
 
@@ -957,7 +957,7 @@ static u8 ov13_02220A4C(UnkStruct_ov13_022213F0 *param0)
         v2 = 0;
 
         for (v1 = 0; v1 < 4; v1++) {
-            if (param0->unk_04[v0->selectedPartyIndex].moves[v1].move == 0) {
+            if (param0->unk_04[v0->selectedPartyIndex].moves[v1].move == MOVE_NONE) {
                 v2++;
                 continue;
             }
@@ -1242,7 +1242,7 @@ static void ov13_02220F98(UnkStruct_ov13_022213F0 *param0)
         param0->unk_04[i].form = (u8)Pokemon_GetValue(param0->unk_04[i].pokemon, MON_DATA_FORM, NULL);
 
         for (l = 0; l < LEARNED_MOVES_MAX; l++) {
-            UnkStruct_ov13_022236B8 *moveData = &param0->unk_04[i].moves[l];
+            PartyPokemonMoveData *moveData = &param0->unk_04[i].moves[l];
 
             moveData->move = Pokemon_GetValue(param0->unk_04[i].pokemon, MON_DATA_MOVE1 + l, NULL);
 
@@ -1263,7 +1263,7 @@ static void ov13_02220F98(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_0222124C(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228DEC);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228DEC);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -1292,7 +1292,7 @@ static u8 ov13_0222124C(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_022212C4(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228D24);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D24);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -1311,7 +1311,7 @@ static u8 ov13_022212C4(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228D38);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D38);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -1330,7 +1330,7 @@ static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228E2C);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228E2C);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -1349,7 +1349,7 @@ static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0)
 {
-    int v0 = ov13_022213E4(param0, Unk_ov13_02228D4C);
+    int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D4C);
 
     if (v0 == 0xffffffff) {
         v0 = ov13_02228B64(param0->unk_2084);
@@ -1366,10 +1366,10 @@ static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0)
     return (u8)v0;
 }
 
-static int ov13_022213E4(UnkStruct_ov13_022213F0 *param0, const TouchScreenRect *rect)
+static int CheckTouchRectIsPressed(UnkStruct_ov13_022213F0 *param0, const TouchScreenRect *rect)
 {
-    int v0 = TouchScreen_CheckRectanglePressed(rect);
-    return v0;
+    int isPressed = TouchScreen_CheckRectanglePressed(rect);
+    return isPressed;
 }
 
 u8 ov13_022213F0(UnkStruct_ov13_022213F0 *param0, s32 param1)
@@ -1444,7 +1444,7 @@ static u8 ov13_02221428(UnkStruct_ov13_022213F0 *param0, s32 param1, s32 param2)
 
 static void ov13_022214E0(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
-    UnkStruct_ov13_02221ED0 *pokemonData;
+    PartyPokemonData *pokemonData;
     u32 expFromCurrentToNextLevel;
     u32 expTowardsNextLevel;
     u16 v3;
@@ -1523,7 +1523,7 @@ static void ov13_02221654(UnkStruct_ov13_022213F0 *param0, u8 param1)
     ov13_02221630(param0);
 
     if (param0->unk_00->unk_34 < 4) {
-        UnkStruct_ov13_022236B8 *v4 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
+        PartyPokemonMoveData *v4 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
 
         v2 = v4->move;
     } else {
@@ -1590,7 +1590,7 @@ static void ov13_02221738(UnkStruct_ov13_022213F0 *param0, u8 param1)
 
 static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     Strbuf *v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];

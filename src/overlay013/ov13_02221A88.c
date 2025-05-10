@@ -27,16 +27,16 @@
 #include "unk_0208C098.h"
 #include "unk_02094EDC.h"
 
-static void ov13_0222339C(UnkStruct_ov13_022213F0 *param0);
+static void DrawParty(UnkStruct_ov13_022213F0 *param0);
 static void ov13_022234C8(UnkStruct_ov13_022213F0 *param0);
-static void ov13_022237F8(UnkStruct_ov13_022213F0 *param0);
-static void ov13_022236B8(UnkStruct_ov13_022213F0 *param0);
+static void WritePokemonInfo(UnkStruct_ov13_022213F0 *param0);
+static void WriteMoves(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02223A10(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02223E68(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02223B74(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02223C9C(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02223F7C(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02223550(UnkStruct_ov13_022213F0 *param0, u32 param1);
+static void WriteNameGenderOther(UnkStruct_ov13_022213F0 *param0, u32 param1);
 
 static const WindowTemplate Unk_ov13_02228EA0[] = {
     { 0x4, 0x2, 0x15, 0x16, 0x2, 0xF, 0x1F },
@@ -173,7 +173,7 @@ static const WindowTemplate Unk_ov13_02228F84[] = {
     { 0x5, 0x7, 0x14, 0xC, 0x3, 0x9, 0x37 }
 };
 
-static const u32 Unk_ov13_02228EC4[] = {
+static const u32 partySlotEntryIDs[] = {
     0x0,
     0x1,
     0x2,
@@ -182,7 +182,7 @@ static const u32 Unk_ov13_02228EC4[] = {
     0x5
 };
 
-static const u32 Unk_ov13_02228EB0[] = {
+static const u32 moveSlotEntryIDs[] = {
     0x3D,
     0x40,
     0x43,
@@ -192,10 +192,10 @@ static const u32 Unk_ov13_02228EB0[] = {
 
 void ov13_02221A88(UnkStruct_ov13_022213F0 *param0)
 {
-    u32 v0;
+    u32 i;
 
-    for (v0 = 0; v0 < 2; v0++) {
-        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_204C[v0], &Unk_ov13_02228EA0[v0]);
+    for (i = 0; i < 2; i++) {
+        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_204C[i], &Unk_ov13_02228EA0[i]);
     }
 
     ov13_02221AC4(param0, param0->unk_2076);
@@ -204,7 +204,7 @@ void ov13_02221A88(UnkStruct_ov13_022213F0 *param0)
 void ov13_02221AC4(UnkStruct_ov13_022213F0 *param0, u32 param1)
 {
     const WindowTemplate *v0;
-    u8 v1;
+    u8 i;
 
     switch (param1) {
     case 0:
@@ -248,8 +248,8 @@ void ov13_02221AC4(UnkStruct_ov13_022213F0 *param0, u32 param1)
 
     param0->unk_206C = Window_New(param0->unk_00->heapID, param0->unk_2070);
 
-    for (v1 = 0; v1 < param0->unk_2070; v1++) {
-        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_206C[v1], &v0[v1]);
+    for (i = 0; i < param0->unk_2070; i++) {
+        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_206C[i], &v0[i]);
     }
 }
 
@@ -260,12 +260,12 @@ void ov13_02221BB0(UnkStruct_ov13_022213F0 *param0)
 
 void ov13_02221BC8(UnkStruct_ov13_022213F0 *param0)
 {
-    u32 v0;
+    u32 i;
 
     Windows_Delete(param0->unk_206C, param0->unk_2070);
 
-    for (v0 = 0; v0 < 2; v0++) {
-        Window_Remove(&param0->unk_204C[v0]);
+    for (i = 0; i < 2; i++) {
+        Window_Remove(&param0->unk_204C[i]);
     }
 }
 
@@ -273,16 +273,16 @@ void ov13_02221BF8(UnkStruct_ov13_022213F0 *param0, u32 param1)
 {
     switch (param1) {
     case 0:
-        ov13_0222339C(param0);
+        DrawParty(param0);
         break;
     case 1:
         ov13_022234C8(param0);
         break;
     case 2:
-        ov13_022237F8(param0);
+        WritePokemonInfo(param0);
         break;
     case 3:
-        ov13_022236B8(param0);
+        WriteMoves(param0);
         break;
     case 4:
         ov13_02223A10(param0);
@@ -303,51 +303,51 @@ void ov13_02221BF8(UnkStruct_ov13_022213F0 *param0, u32 param1)
     }
 }
 
-static void ov13_02221C54(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2, u16 param3, u8 param4, u8 param5)
+static void WriteNameGender(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, enum Font font, u16 partyIndex, u8 xOffset, u8 yOffset)
 {
     Window *v0;
-    UnkStruct_ov13_02221ED0 *v1;
+    PartyPokemonData *v1;
     Strbuf *v2;
     Strbuf *v3;
     u32 v4;
 
-    v0 = &param0->unk_206C[param1];
-    v1 = &param0->unk_04[param3];
+    v0 = &param0->unk_206C[windowIndex];
+    v1 = &param0->unk_04[partyIndex];
     v2 = Strbuf_Init(12, param0->unk_00->heapID);
-    v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, Unk_ov13_02228EC4[param3]);
+    v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, partySlotEntryIDs[partyIndex]);
 
     StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v1->pokemon));
     StringTemplate_Format(param0->unk_1FA8, v2, v3);
 
-    if (param2 == 0) {
-        Text_AddPrinterWithParamsAndColor(v0, param2, v2, param4, param5, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    if (font == FONT_SYSTEM) {
+        Text_AddPrinterWithParamsAndColor(v0, font, v2, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     } else {
-        Text_AddPrinterWithParamsAndColor(v0, param2, v2, param4, param5, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 9), NULL);
+        Text_AddPrinterWithParamsAndColor(v0, font, v2, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 9), NULL);
     }
 
     Strbuf_Free(v3);
     Strbuf_Free(v2);
 
     if ((v1->displayGender == FALSE) && (v1->isEgg == FALSE)) {
-        if (v1->gender == 0) {
+        if (v1->gender == GENDER_MALE) {
             v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 16);
             v4 = Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(FONT_SYSTEM, v3, 0);
 
-            if (param2 == 0) {
-                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, param5, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 0), NULL);
+            if (font == FONT_SYSTEM) {
+                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 0), NULL);
             } else {
-                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, param5, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(10, 11, 0), NULL);
+                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(10, 11, 0), NULL);
             }
 
             Strbuf_Free(v3);
-        } else if (v1->gender == 1) {
+        } else if (v1->gender == GENDER_FEMALE) {
             v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 17);
             v4 = Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(FONT_SYSTEM, v3, 0);
 
-            if (param2 == 0) {
-                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, param5, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(3, 4, 0), NULL);
+            if (font == FONT_SYSTEM) {
+                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(3, 4, 0), NULL);
             } else {
-                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, param5, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(12, 13, 0), NULL);
+                Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v3, v4, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(12, 13, 0), NULL);
             }
 
             Strbuf_Free(v3);
@@ -357,17 +357,17 @@ static void ov13_02221C54(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02221E08(UnkStruct_ov13_022213F0 *param0, u32 param1, u16 param2, u8 param3, u8 param4)
+static void ov13_02221E08(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u16 partyIndex, u8 x, u8 y)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param2];
+    PartyPokemonData *v0 = &param0->unk_04[partyIndex];
 
-    sub_0200C648(param0->unk_1FA0, 1, v0->level, 3, 0, &param0->unk_206C[param1], param3 + 8, param4);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    sub_0200C648(param0->unk_1FA0, 1, v0->level, 3, 0, &param0->unk_206C[windowIndex], x + 8, y);
+    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
 }
 
 static void ov13_02221E50(UnkStruct_ov13_022213F0 *param0, u32 param1, u16 param2, u8 param3, u8 param4)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param2];
+    PartyPokemonData *v0 = &param0->unk_04[param2];
 
     sub_0200C5BC(param0->unk_1FA0, v0->currentHP, 3, 1, &param0->unk_206C[param1], param3, param4);
     sub_0200C578(param0->unk_1FA0, 0, &param0->unk_206C[param1], param3 + 8 * 3, param4);
@@ -375,65 +375,64 @@ static void ov13_02221E50(UnkStruct_ov13_022213F0 *param0, u32 param1, u16 param
     Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
 }
 
-static void ov13_02221ED0(UnkStruct_ov13_022213F0 *param0, u32 param1, u16 param2, u8 param3, u8 param4)
+static void DrawHealthBar(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u16 partyIndex, u8 x, u8 y)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemon;
     u8 v1 = 1;
-    u8 v2;
+    u8 healthBarFilledPixels;
 
-    v0 = &param0->unk_04[param2];
-    v1 = 1;
-    v2 = App_PixelCount(v0->currentHP, v0->maxHP, 48);
+    pokemon = &param0->unk_04[partyIndex];
+    healthBarFilledPixels = App_PixelCount(pokemon->currentHP, pokemon->maxHP, 48);
 
-    switch (HealthBar_Color(v0->currentHP, v0->maxHP, 48)) {
-    case 0:
-        Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    switch (HealthBar_Color(pokemon->currentHP, pokemon->maxHP, 48)) {
+    case BARCOLOR_EMPTY:
+        Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
         return;
-    case 4:
-    case 3:
+    case BARCOLOR_MAX:
+    case BARCOLOR_GREEN:
         v1 = 1;
         break;
-    case 2:
+    case BARCOLOR_YELLOW:
         v1 = 3;
         break;
-    case 1:
+    case BARCOLOR_RED:
         v1 = 5;
         break;
     }
 
-    Window_FillRectWithColor(&param0->unk_206C[param1], v1 + 1, param3, param4 + 1, v2, 1);
-    Window_FillRectWithColor(&param0->unk_206C[param1], v1, param3, param4 + 2, v2, 2);
-    Window_FillRectWithColor(&param0->unk_206C[param1], v1 + 1, param3, param4 + 4, v2, 1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    Window_FillRectWithColor(&param0->unk_206C[windowIndex], v1 + 1, x, y + 1, healthBarFilledPixels, 1);
+    Window_FillRectWithColor(&param0->unk_206C[windowIndex], v1, x, y + 2, healthBarFilledPixels, 2);
+    Window_FillRectWithColor(&param0->unk_206C[windowIndex], v1 + 1, x, y + 4, healthBarFilledPixels, 1);
+    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
 }
 
-static void ov13_02221FA8(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteAbilityText(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
 
-    v0 = &param0->unk_04[param2];
+    pokemonData = &param0->unk_04[partyIndex];
     v1 = Strbuf_Init(16, param0->unk_00->heapID);
     v2 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 8);
 
-    StringTemplate_SetAbilityName(param0->unk_1FA8, 0, v0->ability);
+    StringTemplate_SetAbilityName(param0->unk_1FA8, 0, pokemonData->ability);
     StringTemplate_Format(param0->unk_1FA8, v1, v2);
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[param1], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[windowIndex], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v2);
     Strbuf_Free(v1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
 }
 
-static void ov13_02222030(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteHeldItem(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     Strbuf *v1;
     Strbuf *v2;
 
-    v0 = &param0->unk_04[param2];
+    v0 = &param0->unk_04[partyIndex];
 
-    if (v0->heldItem == 0) {
+    if (v0->heldItem == ITEM_NONE) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 20);
     } else {
         v1 = Strbuf_Init(18, param0->unk_00->heapID);
@@ -444,44 +443,44 @@ static void ov13_02222030(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
         Strbuf_Free(v2);
     }
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[param1], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[windowIndex], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
 }
 
-static void ov13_022220CC(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2, u32 param3, u16 param4, u16 param5, TextColor param6)
+static void WriteMoveName(UnkStruct_ov13_022213F0 *param0, u32 move, u32 windowIndex, u32 param3, u16 font, u16 yOffset, TextColor textColor)
 {
     Window *v0;
     Strbuf *v1;
     Strbuf *v2;
-    u32 v3;
+    u32 xOffset;
 
-    v0 = &param0->unk_206C[param2];
+    v0 = &param0->unk_206C[windowIndex];
     v1 = Strbuf_Init(16, param0->unk_00->heapID);
     v2 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, param3);
 
-    StringTemplate_SetMoveName(param0->unk_1FA8, 0, param1);
+    StringTemplate_SetMoveName(param0->unk_1FA8, 0, move);
     StringTemplate_Format(param0->unk_1FA8, v1, v2);
 
-    if (param4 == 2) {
-        v3 = (Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(param4, v1, 0)) / 2;
+    if (font == FONT_SUBSCREEN) {
+        xOffset = (Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(font, v1, 0)) / 2;
     } else {
-        v3 = 0;
+        xOffset = 0;
     }
 
-    Text_AddPrinterWithParamsAndColor(v0, param4, v1, v3, param5, TEXT_SPEED_NO_TRANSFER, param6, NULL);
+    Text_AddPrinterWithParamsAndColor(v0, font, v1, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, textColor, NULL);
     Strbuf_Free(v2);
     Strbuf_Free(v1);
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222170(UnkStruct_ov13_022213F0 *param0, u16 param1, u8 param2, u8 param3)
+static void ov13_02222170(UnkStruct_ov13_022213F0 *param0, u16 windowIndex, u8 xOffset, u8 yOffset)
 {
     Strbuf *v0 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 14);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[param1], FONT_SYSTEM, v0, param2, param3, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[windowIndex], FONT_SYSTEM, v0, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v0);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
 }
 
 static void ov13_022221C8(UnkStruct_ov13_022213F0 *param0, u32 param1)
@@ -498,30 +497,30 @@ static void ov13_022221C8(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_204C[0]);
 }
 
-static void ov13_0222222C(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void ov13_0222222C(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 param2)
 {
     Window *v0;
     Strbuf *v1;
-    u32 v2;
+    u32 xOffset;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, param2);
-    v2 = Font_CalcStrbufWidth(FONT_SUBSCREEN, v1, 0);
+    xOffset = Font_CalcStrbufWidth(FONT_SUBSCREEN, v1, 0);
 
-    Text_AddPrinterWithParamsAndColor(v0, FONT_SUBSCREEN, v1, (Window_GetWidth(v0) * 8 - v2) / 2, 6, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 9), NULL);
+    Text_AddPrinterWithParamsAndColor(v0, FONT_SUBSCREEN, v1, (Window_GetWidth(v0) * 8 - xOffset) / 2, 6, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 9), NULL);
     Strbuf_Free(v1);
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222290(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteLevel(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u16 v3;
     u16 v4;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v4 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 23);
 
@@ -531,7 +530,7 @@ static void ov13_02222290(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 24);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->level, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->level, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
     Text_AddPrinterWithParamsAndColor(&param0->unk_206C[11 + v4], FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
@@ -545,9 +544,9 @@ static void ov13_02222290(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 26);
     v2 = Strbuf_Init((6 + 1) * 2, param0->unk_00->heapID);
 
-    if (v0->level < 100) {
+    if (pokemonData->level < MAX_POKEMON_LEVEL) {
         StringTemplate_SetNumber(
-            param0->unk_1FA8, 0, v0->nextLevelExp - v0->exp, 6, 1, 1);
+            param0->unk_1FA8, 0, pokemonData->nextLevelExp - pokemonData->exp, 6, 1, 1);
     } else {
         StringTemplate_SetNumber(
             param0->unk_1FA8, 0, 0, 6, 1, 1);
@@ -566,16 +565,16 @@ static void ov13_02222290(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[12 + v4]);
 }
 
-static void ov13_02222464(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteAttackStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u16 v3;
     u8 v4;
     u8 v5;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 32);
 
@@ -585,7 +584,7 @@ static void ov13_02222464(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 33);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->attack, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->attack, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -598,16 +597,16 @@ static void ov13_02222464(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[5 + v3]);
 }
 
-static void ov13_02222560(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteDefenceStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u16 v3;
     u8 v4;
     u8 v5;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 34);
 
@@ -617,7 +616,7 @@ static void ov13_02222560(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 35);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->defence, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->defence, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -630,16 +629,16 @@ static void ov13_02222560(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[6 + v3]);
 }
 
-static void ov13_0222265C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteSpeedStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u16 v3;
     u8 v4;
     u8 v5;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 40);
 
@@ -649,7 +648,7 @@ static void ov13_0222265C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 41);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->speed, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->speed, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -663,16 +662,16 @@ static void ov13_0222265C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[7 + v3]);
 }
 
-static void ov13_0222275C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteSpAtkStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u16 v3;
     u8 v4;
     u8 v5;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 36);
 
@@ -682,7 +681,7 @@ static void ov13_0222275C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 37);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->spAtk, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->spAtk, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -695,16 +694,16 @@ static void ov13_0222275C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[8 + v3]);
 }
 
-static void ov13_0222285C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteSpDefStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u16 v3;
     u8 v4;
     u8 v5;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 38);
 
@@ -714,7 +713,7 @@ static void ov13_0222285C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 39);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->spDef, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->spDef, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -727,16 +726,16 @@ static void ov13_0222285C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[9 + v3]);
 }
 
-static void ov13_0222295C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteHPStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     Strbuf *v1;
     Strbuf *v2;
     u32 v3, v4;
     u16 v5;
     u16 v6;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v6 = 22 * param0->unk_2071;
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 28);
 
@@ -753,7 +752,7 @@ static void ov13_0222295C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 29);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->currentHP, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->currentHP, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -765,7 +764,7 @@ static void ov13_0222295C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 30);
     v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, v0->maxHP, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->maxHP, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
     Text_AddPrinterWithParamsAndColor(&param0->unk_206C[4 + v6], FONT_SYSTEM, v2, v5 + v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
@@ -774,17 +773,17 @@ static void ov13_0222295C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[4 + v6]);
 }
 
-static void ov13_02222AF4(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteAbilityStat(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *pokemonData;
     MessageLoader *v1;
     Strbuf *v2;
     u32 v3;
 
-    v0 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_Init(MESSAGE_LOADER_NARC_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_ABILITY_DESCRIPTIONS, param0->unk_00->heapID);
-    v2 = MessageLoader_GetNewStrbuf(v1, v0->ability);
+    v2 = MessageLoader_GetNewStrbuf(v1, pokemonData->ability);
 
     Text_AddPrinterWithParamsAndColor(&param0->unk_206C[2 + v3], FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v2);
@@ -792,12 +791,12 @@ static void ov13_02222AF4(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[2 + v3]);
 }
 
-static void ov13_02222B6C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void ov13_02222B6C(UnkStruct_ov13_022213F0 *param0, u32 windowIndex)
 {
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 51);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
@@ -805,7 +804,7 @@ static void ov13_02222B6C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222BB4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteMoveAccuracy(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 accuracy)
 {
     Window *v0;
     Strbuf *v1;
@@ -813,9 +812,9 @@ static void ov13_02222BB4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     u16 v3;
     u16 v4;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
 
-    if (param2 == 0) {
+    if (accuracy == 0) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 50);
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
         v4 = Window_GetWidth(v0) * 8 - v3;
@@ -826,7 +825,7 @@ static void ov13_02222BB4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 52);
         v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-        StringTemplate_SetNumber(param0->unk_1FA8, 0, param2, 3, 0, 1);
+        StringTemplate_SetNumber(param0->unk_1FA8, 0, accuracy, 3, 0, 1);
         StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -840,12 +839,12 @@ static void ov13_02222BB4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222C9C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void ov13_02222C9C(UnkStruct_ov13_022213F0 *param0, u32 windowIndex)
 {
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 48);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
@@ -853,7 +852,7 @@ static void ov13_02222C9C(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222CE4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteMovePower(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 power)
 {
     Window *v0;
     Strbuf *v1;
@@ -861,9 +860,9 @@ static void ov13_02222CE4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     u16 v3;
     u16 v4;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
 
-    if (param2 <= 1) {
+    if (power <= 1) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 50);
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
         v4 = Window_GetWidth(v0) * 8 - v3;
@@ -874,7 +873,7 @@ static void ov13_02222CE4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 49);
         v2 = Strbuf_Init((3 + 1) * 2, param0->unk_00->heapID);
 
-        StringTemplate_SetNumber(param0->unk_1FA8, 0, param2, 3, 0, 1);
+        StringTemplate_SetNumber(param0->unk_1FA8, 0, power, 3, 0, 1);
         StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -888,15 +887,15 @@ static void ov13_02222CE4(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222DCC(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteMoveDescription(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 move)
 {
     MessageLoader *v0;
     Window *v1;
     Strbuf *v2;
 
-    v1 = &param0->unk_206C[param1];
+    v1 = &param0->unk_206C[windowIndex];
     v0 = MessageLoader_Init(MESSAGE_LOADER_NARC_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_MOVE_DESCRIPTIONS, param0->unk_00->heapID);
-    v2 = MessageLoader_GetNewStrbuf(v0, param2);
+    v2 = MessageLoader_GetNewStrbuf(v0, move);
 
     Text_AddPrinterWithParamsAndColor(v1, FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v2);
@@ -904,7 +903,7 @@ static void ov13_02222DCC(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v1);
 }
 
-static void ov13_02222E2C(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteMoveContestEffect(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 move)
 {
     MessageLoader *v0;
     Window *v1;
@@ -912,8 +911,8 @@ static void ov13_02222E2C(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     u32 v3;
     u32 v4;
 
-    v1 = &param0->unk_206C[param1];
-    v3 = MoveTable_LoadParam(param2, MOVEATTRIBUTE_CONTEST_EFFECT);
+    v1 = &param0->unk_206C[windowIndex];
+    v3 = MoveTable_LoadParam(move, MOVEATTRIBUTE_CONTEST_EFFECT);
     v4 = sub_0209577C(v3);
     v0 = MessageLoader_Init(MESSAGE_LOADER_BANK_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_CONTEST_EFFECTS, param0->unk_00->heapID);
     v2 = MessageLoader_GetNewStrbuf(v0, v4);
@@ -925,14 +924,14 @@ static void ov13_02222E2C(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v1);
 }
 
-static void ov13_02222E94(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void ov13_02222E94(UnkStruct_ov13_022213F0 *param0, u32 windowIndex)
 {
     Window *v0;
     Strbuf *v1;
     u16 v2;
     u16 v3;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 53);
     v2 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
     v3 = (Window_GetWidth(v0) * 8 - v2) / 2;
@@ -942,21 +941,21 @@ static void ov13_02222E94(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222EF8(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2)
+static void WriteMoveClass(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 moveClass)
 {
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
 
-    switch (param2) {
-    case 0:
+    switch (moveClass) {
+    case CLASS_PHYSICAL:
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 54);
         break;
-    case 1:
+    case CLASS_SPECIAL:
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 56);
         break;
-    case 2:
+    case CLASS_STATUS:
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 55);
     }
 
@@ -969,7 +968,7 @@ static void ov13_02222EF8(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02222F74(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param2, u32 param3)
+static void WriteMovePP(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 currentPP, u32 maxPP)
 {
     Window *v0;
     Strbuf *v1;
@@ -977,7 +976,7 @@ static void ov13_02222F74(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     u32 v3, v4;
     u32 v5;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 46);
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
     v5 = (Window_GetWidth(v0) * 8 - v3) / 2;
@@ -988,7 +987,7 @@ static void ov13_02222F74(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 44);
     v2 = Strbuf_Init((2 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, param2, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, currentPP, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -1000,7 +999,7 @@ static void ov13_02222F74(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 45);
     v2 = Strbuf_Init((2 + 1) * 2, param0->unk_00->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, param3, 3, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, maxPP, 3, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v2, v5 + v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
@@ -1008,13 +1007,13 @@ static void ov13_02222F74(UnkStruct_ov13_022213F0 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_022230A8(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void ov13_022230A8(UnkStruct_ov13_022213F0 *param0, u32 windowIndex)
 {
     Window *v0;
     Strbuf *v1;
     u32 v2;
 
-    v0 = &param0->unk_206C[param1];
+    v0 = &param0->unk_206C[windowIndex];
 
     if (param0->unk_00->unk_34 == 4) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 59);
@@ -1049,14 +1048,14 @@ void ov13_02223118(UnkStruct_ov13_022213F0 *param0)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_0222317C(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_022236B8 *param1, u32 param2)
+static void WriteMovePPOther(UnkStruct_ov13_022213F0 *param0, PartyPokemonMoveData *moveData, u32 windowIndex)
 {
     Window *v0;
     Strbuf *v1;
     Strbuf *v2;
     u32 v3;
 
-    v0 = &param0->unk_206C[param2];
+    v0 = &param0->unk_206C[windowIndex];
     v2 = Strbuf_Init((2 + 1) * 2, param0->unk_00->heapID);
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 43);
 
@@ -1071,14 +1070,14 @@ static void ov13_0222317C(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_022236
 
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 45);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, param1->maxPP, 2, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, moveData->maxPP, 2, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v2, 80 + v3, 24, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 44);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, param1->currentPP, 2, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, moveData->currentPP, 2, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -1089,14 +1088,14 @@ static void ov13_0222317C(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_022236
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_022232C8(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_022236B8 *param1, u32 param2)
+static void WriteMoveCurrentPP(UnkStruct_ov13_022213F0 *param0, PartyPokemonMoveData *moveData, u32 windowIndex)
 {
     Window *v0;
     Strbuf *v1;
     Strbuf *v2;
     u32 v3;
 
-    v0 = &param0->unk_206C[param2];
+    v0 = &param0->unk_206C[windowIndex];
     v2 = Strbuf_Init((2 + 1) * 2, param0->unk_00->heapID);
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 43);
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
@@ -1106,7 +1105,7 @@ static void ov13_022232C8(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_022236
 
     v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 44);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, param1->currentPP, 2, 0, 1);
+    StringTemplate_SetNumber(param0->unk_1FA8, 0, moveData->currentPP, 2, 0, 1);
     StringTemplate_Format(param0->unk_1FA8, v2, v1);
 
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
@@ -1117,24 +1116,24 @@ static void ov13_022232C8(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_022236
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_0222339C(UnkStruct_ov13_022213F0 *param0)
+static void DrawParty(UnkStruct_ov13_022213F0 *param0)
 {
     s32 v0;
 
     for (v0 = 0; v0 < Party_GetCurrentCount(param0->unk_00->unk_00); v0++) {
         Window_FillTilemap(&param0->unk_206C[0 + v0], 0);
 
-        if (param0->unk_04[v0].species == 0) {
+        if (param0->unk_04[v0].species == SPECIES_NONE) {
             continue;
         }
 
-        ov13_02221C54(param0, 0 + v0, 2, v0, 32, 8);
+        WriteNameGender(param0, 0 + v0, 2, v0, 32, 8);
 
         if (param0->unk_04[v0].isEgg == FALSE) {
-            ov13_02223448(param0, v0);
+            DrawHealthDisplay(param0, v0);
         }
 
-        if (PokemonSummaryScreen_StatusIconAnimIdx(param0->unk_04[v0].pokemon) != 7) {
+        if (PokemonSummaryScreen_StatusIconAnimIdx(param0->unk_04[v0].pokemon) != SUMMARY_CONDITION_NONE) {
             continue;
         }
 
@@ -1148,19 +1147,19 @@ static void ov13_0222339C(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-void ov13_02223448(UnkStruct_ov13_022213F0 *param0, u8 param1)
+void DrawHealthDisplay(UnkStruct_ov13_022213F0 *param0, u8 partyIndex)
 {
-    Window_FillRectWithColor(&param0->unk_206C[0 + param1], 0, 56, 32, 24, 8);
-    Window_FillRectWithColor(&param0->unk_206C[0 + param1], 0, (48 + 16), 24, 64, 8);
+    Window_FillRectWithColor(&param0->unk_206C[0 + partyIndex], 0, 56, 32, 24, 8);
+    Window_FillRectWithColor(&param0->unk_206C[0 + partyIndex], 0, (48 + 16), 24, 64, 8);
 
-    ov13_02221E50(param0, 0 + param1, param1, 56, 32);
-    ov13_02221ED0(param0, 0 + param1, param1, (48 + 16), 24);
+    ov13_02221E50(param0, partyIndex, partyIndex, 56, 32);
+    DrawHealthBar(param0, partyIndex, partyIndex, (48 + 16), 24);
 }
 
-void ov13_022234A8(UnkStruct_ov13_022213F0 *param0, u8 param1)
+void ov13_022234A8(UnkStruct_ov13_022213F0 *param0, u8 partyIndex)
 {
-    if (param0->unk_04[param1].isEgg == FALSE) {
-        ov13_02221E08(param0, 0 + param1, param1, 0, 32);
+    if (param0->unk_04[partyIndex].isEgg == FALSE) {
+        ov13_02221E08(param0, partyIndex, partyIndex, 0, 32);
     }
 }
 
@@ -1171,7 +1170,7 @@ static void ov13_022234C8(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[2], 0);
     Window_FillTilemap(&param0->unk_206C[3], 0);
 
-    ov13_02223550(param0, param0->unk_00->selectedPartyIndex);
+    WriteNameGenderOther(param0, param0->unk_00->selectedPartyIndex);
 
     ov13_0222222C(param0, 1, 15);
 
@@ -1184,10 +1183,10 @@ static void ov13_022234C8(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-static void ov13_02223550(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static void WriteNameGenderOther(UnkStruct_ov13_022213F0 *param0, u32 partyIndex)
 {
     Window *v0;
-    UnkStruct_ov13_02221ED0 *v1;
+    PartyPokemonData *pokemonData;
     Strbuf *v2;
     Strbuf *v3;
     u8 v4;
@@ -1196,20 +1195,20 @@ static void ov13_02223550(UnkStruct_ov13_022213F0 *param0, u32 param1)
     u8 v7;
 
     v0 = &param0->unk_206C[0];
-    v1 = &param0->unk_04[param1];
+    pokemonData = &param0->unk_04[partyIndex];
     v2 = Strbuf_Init(12, param0->unk_00->heapID);
-    v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, Unk_ov13_02228EC4[param1]);
+    v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, partySlotEntryIDs[partyIndex]);
 
-    StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v1->pokemon));
+    StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(pokemonData->pokemon));
     StringTemplate_Format(param0->unk_1FA8, v2, v3);
     Strbuf_Free(v3);
 
     v3 = NULL;
 
-    if ((v1->displayGender == FALSE) && (v1->isEgg == FALSE)) {
-        if (v1->gender == 0) {
+    if ((pokemonData->displayGender == FALSE) && (pokemonData->isEgg == FALSE)) {
+        if (pokemonData->gender == GENDER_MALE) {
             v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 16);
-        } else if (v1->gender == 1) {
+        } else if (pokemonData->gender == GENDER_FEMALE) {
             v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 17);
         }
     }
@@ -1230,7 +1229,7 @@ static void ov13_02223550(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Strbuf_Free(v2);
 
     if (v3 != NULL) {
-        if (v1->gender == 0) {
+        if (pokemonData->gender == GENDER_MALE) {
             Text_AddPrinterWithParamsAndColor(
                 v0, FONT_SYSTEM, v3, v7 + v4 + v6, 8, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(10, 11, 0), NULL);
         } else {
@@ -1244,9 +1243,9 @@ static void ov13_02223550(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_022236B8(UnkStruct_ov13_022213F0 *param0)
+static void WriteMoves(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_022236B8 *v0;
+    PartyPokemonMoveData *moveData;
     u16 v1, v2;
 
     v2 = 6 * param0->unk_2071;
@@ -1258,17 +1257,17 @@ static void ov13_022236B8(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[4 + v2], 0);
     Window_FillTilemap(&param0->unk_206C[5], 0);
 
-    ov13_02221C54(param0, 0 + v2, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteNameGender(param0, 0 + v2, 0, param0->unk_00->selectedPartyIndex, 0, 0);
 
-    for (v1 = 0; v1 < 4; v1++) {
-        v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v1];
+    for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
+        moveData = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v1];
 
-        if (v0->move == 0) {
+        if (moveData->move == MOVE_NONE) {
             continue;
         }
 
-        ov13_022220CC(param0, v0->move, 1 + v2 + v1, Unk_ov13_02228EB0[v1], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
-        ov13_0222317C(param0, v0, 1 + v2 + v1);
+        WriteMoveName(param0, moveData->move, 1 + v2 + v1, moveSlotEntryIDs[v1], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
+        WriteMovePPOther(param0, moveData, 1 + v2 + v1);
     }
 
     ov13_0222222C(param0, 5, 18);
@@ -1281,7 +1280,7 @@ static void ov13_022236B8(UnkStruct_ov13_022213F0 *param0)
     param0->unk_2071 ^= 1;
 }
 
-static void ov13_022237F8(UnkStruct_ov13_022213F0 *param0)
+static void WritePokemonInfo(UnkStruct_ov13_022213F0 *param0)
 {
     u32 v0 = 22 * param0->unk_2071;
 
@@ -1309,18 +1308,18 @@ static void ov13_022237F8(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[2 + v0], 0);
     Window_FillTilemap(&param0->unk_206C[3 + v0], 0);
 
-    ov13_02221C54(param0, 0 + v0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
-    ov13_0222295C(param0, param0->unk_00->selectedPartyIndex);
-    ov13_02221ED0(param0, 10 + v0, param0->unk_00->selectedPartyIndex, 0, 0);
-    ov13_02222290(param0, param0->unk_00->selectedPartyIndex);
-    ov13_02222464(param0, param0->unk_00->selectedPartyIndex);
-    ov13_02222560(param0, param0->unk_00->selectedPartyIndex);
-    ov13_0222265C(param0, param0->unk_00->selectedPartyIndex);
-    ov13_0222275C(param0, param0->unk_00->selectedPartyIndex);
-    ov13_0222285C(param0, param0->unk_00->selectedPartyIndex);
-    ov13_02221FA8(param0, 1 + v0, param0->unk_00->selectedPartyIndex);
-    ov13_02222030(param0, 3 + v0, param0->unk_00->selectedPartyIndex);
-    ov13_02222AF4(param0, param0->unk_00->selectedPartyIndex);
+    WriteNameGender(param0, 0 + v0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteHPStat(param0, param0->unk_00->selectedPartyIndex);
+    DrawHealthBar(param0, 10 + v0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteLevel(param0, param0->unk_00->selectedPartyIndex);
+    WriteAttackStat(param0, param0->unk_00->selectedPartyIndex);
+    WriteDefenceStat(param0, param0->unk_00->selectedPartyIndex);
+    WriteSpeedStat(param0, param0->unk_00->selectedPartyIndex);
+    WriteSpAtkStat(param0, param0->unk_00->selectedPartyIndex);
+    WriteSpDefStat(param0, param0->unk_00->selectedPartyIndex);
+    WriteAbilityText(param0, 1 + v0, param0->unk_00->selectedPartyIndex);
+    WriteHeldItem(param0, 3 + v0, param0->unk_00->selectedPartyIndex);
+    WriteAbilityStat(param0, param0->unk_00->selectedPartyIndex);
     ov13_0222222C(param0, 21, 19);
 
     param0->unk_2071 ^= 1;
@@ -1328,7 +1327,7 @@ static void ov13_022237F8(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02223A10(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_022236B8 *v0;
+    PartyPokemonMoveData *v0;
     u32 v1 = 11 * param0->unk_2071;
 
     Window_FillTilemap(&param0->unk_206C[6], 0);
@@ -1345,24 +1344,24 @@ static void ov13_02223A10(UnkStruct_ov13_022213F0 *param0)
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
 
-    ov13_02221C54(param0, 6, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteNameGender(param0, 6, 0, param0->unk_00->selectedPartyIndex, 0, 0);
     ov13_02222170(param0, 7, 0, 0);
-    ov13_022220CC(param0, v0->move, 0 + v1, Unk_ov13_02228EB0[param0->unk_00->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
+    WriteMoveName(param0, v0->move, 0 + v1, moveSlotEntryIDs[param0->unk_00->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
     ov13_02222B6C(param0, 8);
-    ov13_02222BB4(param0, 2 + v1, v0->accuracy);
+    WriteMoveAccuracy(param0, 2 + v1, v0->accuracy);
     ov13_02222C9C(param0, 9);
-    ov13_02222CE4(param0, 3 + v1, v0->power);
-    ov13_02222DCC(param0, 4 + v1, v0->move);
+    WriteMovePower(param0, 3 + v1, v0->power);
+    WriteMoveDescription(param0, 4 + v1, v0->move);
     ov13_02222E94(param0, 10);
-    ov13_02222EF8(param0, 5 + v1, v0->class);
-    ov13_02222F74(param0, 1 + v1, v0->currentPP, v0->maxPP);
+    WriteMoveClass(param0, 5 + v1, v0->class);
+    WriteMovePP(param0, 1 + v1, v0->currentPP, v0->maxPP);
 
     param0->unk_2071 ^= 1;
 }
 
 static void ov13_02223B74(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_022236B8 *v0;
+    PartyPokemonMoveData *v0;
     u32 v1;
 
     Window_FillTilemap(&param0->unk_206C[0], 0);
@@ -1372,27 +1371,27 @@ static void ov13_02223B74(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[4], 0);
     Window_FillTilemap(&param0->unk_206C[5], 0);
 
-    ov13_02221C54(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteNameGender(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
 
-    for (v1 = 0; v1 < 4; v1++) {
+    for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
         v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v1];
 
-        if (v0->move == 0) {
+        if (v0->move == MOVE_NONE) {
             continue;
         }
 
-        ov13_022220CC(param0, v0->move, 1 + v1, Unk_ov13_02228EB0[v1], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
-        ov13_0222317C(param0, v0, 1 + v1);
+        WriteMoveName(param0, v0->move, 1 + v1, moveSlotEntryIDs[v1], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
+        WriteMovePPOther(param0, v0, 1 + v1);
     }
 
-    ov13_022220CC(param0, param0->unk_00->unk_24, 5, Unk_ov13_02228EB0[4], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
+    WriteMoveName(param0, param0->unk_00->unk_24, 5, moveSlotEntryIDs[4], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
     {
-        UnkStruct_ov13_022236B8 v2;
+        PartyPokemonMoveData v2;
 
         v2.currentPP = MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_PP);
         v2.maxPP = v2.currentPP;
 
-        ov13_0222317C(param0, &v2, 5);
+        WriteMovePPOther(param0, &v2, 5);
     }
 
     Window_ScheduleCopyToVRAM(&param0->unk_206C[1]);
@@ -1417,30 +1416,30 @@ static void ov13_02223C9C(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[8], 0);
     Window_FillTilemap(&param0->unk_206C[11], 0);
 
-    ov13_02221C54(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteNameGender(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
     ov13_02222170(param0, 2, 0, 0);
     ov13_02222B6C(param0, 4);
     ov13_02222C9C(param0, 5);
     ov13_02222E94(param0, 9);
 
-    if (param0->unk_00->unk_34 < 4) {
-        UnkStruct_ov13_022236B8 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
+    if (param0->unk_00->unk_34 < LEARNED_MOVES_MAX) {
+        PartyPokemonMoveData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
 
-        ov13_022220CC(param0, v0->move, 1, Unk_ov13_02228EB0[param0->unk_00->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
-        ov13_02222BB4(param0, 6, v0->accuracy);
-        ov13_02222CE4(param0, 7, v0->power);
-        ov13_02222DCC(param0, 8, v0->move);
-        ov13_02222EF8(param0, 10, v0->class);
-        ov13_02222F74(param0, 3, v0->currentPP, v0->maxPP);
+        WriteMoveName(param0, v0->move, 1, moveSlotEntryIDs[param0->unk_00->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
+        WriteMoveAccuracy(param0, 6, v0->accuracy);
+        WriteMovePower(param0, 7, v0->power);
+        WriteMoveDescription(param0, 8, v0->move);
+        WriteMoveClass(param0, 10, v0->class);
+        WriteMovePP(param0, 3, v0->currentPP, v0->maxPP);
     } else {
         u32 v1 = MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_PP);
 
-        ov13_022220CC(param0, param0->unk_00->unk_24, 1, Unk_ov13_02228EB0[4], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
-        ov13_02222DCC(param0, 8, param0->unk_00->unk_24);
-        ov13_02222BB4(param0, 6, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_ACCURACY));
-        ov13_02222CE4(param0, 7, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_POWER));
-        ov13_02222EF8(param0, 10, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_CLASS));
-        ov13_02222F74(param0, 3, v1, v1);
+        WriteMoveName(param0, param0->unk_00->unk_24, 1, moveSlotEntryIDs[4], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
+        WriteMoveDescription(param0, 8, param0->unk_00->unk_24);
+        WriteMoveAccuracy(param0, 6, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_ACCURACY));
+        WriteMovePower(param0, 7, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_POWER));
+        WriteMoveClass(param0, 10, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_CLASS));
+        WriteMovePP(param0, 3, v1, v1);
     }
 
     ov13_022230A8(param0, 11);
@@ -1448,7 +1447,7 @@ static void ov13_02223C9C(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02223E68(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_022236B8 *v0;
+    PartyPokemonMoveData *v0;
     u32 v1;
 
     Window_FillTilemap(&param0->unk_206C[0], 0);
@@ -1457,20 +1456,20 @@ static void ov13_02223E68(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[3], 0);
     Window_FillTilemap(&param0->unk_206C[4], 0);
 
-    ov13_02221C54(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteNameGender(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
 
-    for (v1 = 0; v1 < 4; v1++) {
+    for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
         v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v1];
 
         if (v0->move == 0) {
             continue;
         }
 
-        ov13_022220CC(param0, v0->move, 1 + v1, Unk_ov13_02228EB0[v1], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
-        ov13_0222317C(param0, v0, 1 + v1);
+        WriteMoveName(param0, v0->move, 1 + v1, moveSlotEntryIDs[v1], FONT_SUBSCREEN, 8, TEXT_COLOR(7, 8, 9));
+        WriteMovePPOther(param0, v0, 1 + v1);
     }
 
-    if (Item_LoadParam(param0->unk_00->unk_22, 37, param0->unk_00->heapID) == 0) {
+    if (Item_LoadParam(param0->unk_00->unk_22, 37, param0->unk_00->heapID) == ITEM_NONE) {
         ov13_022221C8(param0, 94);
     }
 
@@ -1480,10 +1479,10 @@ static void ov13_02223E68(UnkStruct_ov13_022213F0 *param0)
     Window_ScheduleCopyToVRAM(&param0->unk_206C[4]);
 }
 
-void ov13_02223F5C(UnkStruct_ov13_022213F0 *param0, u16 param1, u16 param2)
+void ov13_02223F5C(UnkStruct_ov13_022213F0 *param0, u16 windowIndex, u16 moveIndex)
 {
-    UnkStruct_ov13_022236B8 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param2];
-    ov13_022232C8(param0, v0, param1);
+    PartyPokemonMoveData *moveData = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[moveIndex];
+    WriteMoveCurrentPP(param0, moveData, windowIndex);
 }
 
 static void ov13_02223F7C(UnkStruct_ov13_022213F0 *param0)
@@ -1496,7 +1495,7 @@ static void ov13_02223F7C(UnkStruct_ov13_022213F0 *param0)
     Window_FillTilemap(&param0->unk_206C[5], 0);
     Window_FillTilemap(&param0->unk_206C[6], 0);
 
-    ov13_02221C54(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
+    WriteNameGender(param0, 0, 0, param0->unk_00->selectedPartyIndex, 0, 0);
     ov13_02222170(param0, 2, 0, 0);
 
     {
@@ -1514,17 +1513,17 @@ static void ov13_02223F7C(UnkStruct_ov13_022213F0 *param0)
     }
 
     if (param0->unk_00->unk_34 < 4) {
-        UnkStruct_ov13_022236B8 *v2 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
+        PartyPokemonMoveData *v2 = &param0->unk_04[param0->unk_00->selectedPartyIndex].moves[param0->unk_00->unk_34];
 
-        ov13_022220CC(param0, v2->move, 1, Unk_ov13_02228EB0[param0->unk_00->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
-        ov13_02222E2C(param0, 5, v2->move);
-        ov13_02222F74(param0, 3, v2->currentPP, v2->maxPP);
+        WriteMoveName(param0, v2->move, 1, moveSlotEntryIDs[param0->unk_00->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
+        WriteMoveContestEffect(param0, 5, v2->move);
+        WriteMovePP(param0, 3, v2->currentPP, v2->maxPP);
     } else {
         u32 v3 = MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_PP);
 
-        ov13_022220CC(param0, param0->unk_00->unk_24, 1, Unk_ov13_02228EB0[4], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
-        ov13_02222E2C(param0, 5, param0->unk_00->unk_24);
-        ov13_02222F74(param0, 3, v3, v3);
+        WriteMoveName(param0, param0->unk_00->unk_24, 1, moveSlotEntryIDs[4], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
+        WriteMoveContestEffect(param0, 5, param0->unk_00->unk_24);
+        WriteMovePP(param0, 3, v3, v3);
     }
 
     ov13_022230A8(param0, 6);

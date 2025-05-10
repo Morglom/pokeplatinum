@@ -34,7 +34,7 @@ typedef struct {
     u8 tough;
     u8 mail;
     u8 form;
-    UnkStruct_ov13_022236B8 moves[4];
-} UnkStruct_ov13_02221ED0;
+    PartyPokemonMoveData moves[4];
+} PartyPokemonData;
 
 #endif // POKEPLATINUM_STRUCT_OV13_02221ED0_H

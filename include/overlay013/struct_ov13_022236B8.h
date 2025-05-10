@@ -9,6 +9,6 @@ typedef struct {
     u8 class;
     u8 accuracy;
     u8 power;
-} UnkStruct_ov13_022236B8;
+} PartyPokemonMoveData;
 
 #endif // POKEPLATINUM_STRUCT_OV13_022236B8_H

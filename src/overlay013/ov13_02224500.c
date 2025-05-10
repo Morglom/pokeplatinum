@@ -410,7 +410,7 @@ static void ov13_02224AB0(u16 param0, ManagedSprite *param1, const int param2, c
     ov13_022249AC(param1, param2, param3);
 }
 
-static void ov13_02224AD4(UnkStruct_ov13_022213F0 *param0, UnkStruct_ov13_02221ED0 *param1, const int *param2)
+static void ov13_02224AD4(UnkStruct_ov13_022213F0 *param0, PartyPokemonData *param1, const int *param2)
 {
     ov13_02224A0C(param0, param0->unk_1FB4[19], 45070, param1->type1);
     ov13_022249AC(param0->unk_1FB4[19], param2[0], param2[1]);
@@ -506,7 +506,7 @@ static void ov13_02224C14(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02224CB0(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -518,7 +518,7 @@ static void ov13_02224CB0(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02224D08(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -533,7 +533,7 @@ static void ov13_02224D08(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u32 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -556,7 +556,7 @@ static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02224E78(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0], Unk_ov13_02229264[1]);
     ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229224[0], Unk_ov13_02229224[1]);
@@ -570,7 +570,7 @@ static void ov13_02224E78(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02224F3C(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -584,7 +584,7 @@ static void ov13_02224F3C(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02224FA8(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229284[0][0]);
@@ -603,7 +603,7 @@ static void ov13_02224FA8(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_0222506C(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -617,7 +617,7 @@ static void ov13_0222506C(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_022250D8(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222925C[0], Unk_ov13_0222925C[1]);
@@ -628,7 +628,7 @@ static void ov13_022250D8(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02225150(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
@@ -639,7 +639,7 @@ static void ov13_02225150(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_022251B4(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -661,7 +661,7 @@ static void ov13_022251B4(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02225248(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
@@ -700,7 +700,7 @@ static void ov13_02225304(ManagedSprite *param0, u8 param1)
     ManagedSprite_SetAnim(param0, param1);
 }
 
-static u8 ov13_02225324(UnkStruct_ov13_02221ED0 *param0)
+static u8 ov13_02225324(PartyPokemonData *param0)
 {
     if (param0->currentHP == 0) {
         return 0;
@@ -762,7 +762,7 @@ static s16 ov13_022253DC(u32 param0, s16 param1, s16 param2)
 
 static void ov13_02225420(UnkStruct_ov13_022213F0 *param0)
 {
-    UnkStruct_ov13_02221ED0 *v0;
+    PartyPokemonData *v0;
     u16 v1;
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];

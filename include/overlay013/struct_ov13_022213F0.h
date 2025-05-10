@@ -16,7 +16,7 @@
 
 typedef struct {
     UnkStruct_ov13_0221FC20 *unk_00;
-    UnkStruct_ov13_02221ED0 unk_04[6];
+    PartyPokemonData unk_04[6];
     BgConfig *unk_1E0;
     PaletteData *unk_1E4;
     u16 unk_1E8[4][96];
@@ -43,16 +43,16 @@ typedef struct {
     Strbuf *unk_1FAC;
     SpriteManager *unk_1FB0;
     ManagedSprite *unk_1FB4[38];
-    Window unk_204C[2];
-    Window *unk_206C;
-    u8 unk_2070;
+    Window unk_204C[2]; // Window
+    Window *unk_206C; // Window array
+    u8 unk_2070; // Window num
     u8 unk_2071;
     u8 unk_2072;
     u8 unk_2073_0 : 4;
-    u8 unk_2073_4 : 4;
+    u8 unk_2073_4 : 4; // Some sort of enum
     u8 unk_2074;
     u8 unk_2075;
-    u8 unk_2076;
+    u8 unk_2076; // Enum of some kind
     u8 unk_2077;
     u8 unk_2078;
     u8 unk_2079;
