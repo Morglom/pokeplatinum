@@ -14,6 +14,19 @@
 #include "strbuf.h"
 #include "string_template.h"
 
+enum InBattleScreenIndex {
+    IN_BATTLE_SCREEN_INDEX_PARTY_LIST = 0,
+    IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON,
+    IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY,
+    IN_BATTLE_SCREEN_INDEX_CHECK_MOVES,
+    IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY,
+    IN_BATTLE_SCREEN_INDEX_RESTORE_PP,
+    IN_BATTLE_SCREEN_LEARN_MOVE_1,
+    IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM,
+    IN_BATTLE_SCREEN_LEARN_MOVE_2,
+    IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST,
+};
+
 typedef struct {
     UnkStruct_ov13_0221FC20 *unk_00;
     PartyPokemonData unk_04[6];
@@ -57,7 +70,7 @@ typedef struct {
     u8 unk_2078;
     u8 unk_2079;
     u16 unk_207A;
-    u16 unk_207C[4];
+    u16 unk_207C[4]; // Moves
     UnkStruct_ov13_02228A50 *unk_2084;
     u8 unk_2088;
     u8 unk_2089;

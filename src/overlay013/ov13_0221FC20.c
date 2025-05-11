@@ -296,10 +296,10 @@ static u8 ov13_0221FE5C(UnkStruct_ov13_022213F0 *param0)
     G2S_BlendNone();
 
     if (param0->unk_00->unk_35 == 3) {
-        param0->unk_2076 = 6;
+        param0->unk_2076 = IN_BATTLE_SCREEN_LEARN_MOVE_1;
         v0 = 19;
     } else {
-        param0->unk_2076 = 0;
+        param0->unk_2076 = IN_BATTLE_SCREEN_INDEX_PARTY_LIST;
         v0 = 1;
     }
 
@@ -318,7 +318,7 @@ static u8 ov13_0221FE5C(UnkStruct_ov13_022213F0 *param0)
     ov13_02224500(param0);
     ov13_02224B7C(param0, param0->unk_2076);
     ov13_02221A88(param0);
-    ov13_02221BF8(param0, param0->unk_2076);
+    DrawInBattleScreen(param0, param0->unk_2076);
 
     if (param0->unk_00->unk_32 != 0) {
         ov13_02228A60(param0->unk_2084, 1);
@@ -783,9 +783,9 @@ static u8 ov13_0222075C(UnkStruct_ov13_022213F0 *param0)
 static u8 ov13_02220768(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_2073_0 == 0) {
-        ov13_022216C0(param0, 6);
+        ov13_022216C0(param0, IN_BATTLE_SCREEN_LEARN_MOVE_1);
     } else {
-        ov13_022216C0(param0, 8);
+        ov13_022216C0(param0, IN_BATTLE_SCREEN_LEARN_MOVE_2);
     }
 
     return 19;
@@ -818,11 +818,11 @@ static u8 ov13_022207B8(UnkStruct_ov13_022213F0 *param0)
 static u8 ov13_022207DC(UnkStruct_ov13_022213F0 *param0)
 {
     ov13_02224B7C(param0, param0->unk_2076);
-    ov13_02221BF8(param0, param0->unk_2076);
+    DrawInBattleScreen(param0, param0->unk_2076);
     ov13_022260EC(param0, param0->unk_2076);
     ov13_022214E0(param0, param0->unk_2076);
 
-    if (param0->unk_2076 == 2) {
+    if (param0->unk_2076 == IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY) {
         return 3;
     }
 
@@ -878,7 +878,7 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
         param0->unk_04[v0->selectedPartyIndex].pokemon = BattleSystem_PartyPokemon(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex]);
         ov13_02224144(param0);
 
-        if (param0->unk_2076 == 5) {
+        if (param0->unk_2076 == IN_BATTLE_SCREEN_INDEX_RESTORE_PP) {
             param0->unk_207C[0] = (u16)Pokemon_GetValue(param0->unk_04[v0->selectedPartyIndex].pokemon, MON_DATA_MOVE1_CUR_PP + v0->unk_34, NULL);
             param0->unk_2078 = 2;
         } else {
@@ -1550,7 +1550,7 @@ static void ov13_022216C0(UnkStruct_ov13_022213F0 *param0, u8 param1)
     ov13_02224B7C(param0, param1);
     ov13_02221BB0(param0);
     ov13_02221AC4(param0, param1);
-    ov13_02221BF8(param0, param1);
+    DrawInBattleScreen(param0, param1);
     ov13_022214E0(param0, param1);
     ov13_02221654(param0, param1);
     ov13_0222563C(param0, param1);
