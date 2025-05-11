@@ -48,7 +48,7 @@ typedef struct {
     u8 unk_2070; // Window num
     u8 unk_2071;
     u8 unk_2072;
-    u8 unk_2073_0 : 4;
+    u8 unk_2073_0 : 4; // Num windows
     u8 unk_2073_4 : 4; // Some sort of enum
     u8 unk_2074; // Another enum
     u8 unk_2075;
