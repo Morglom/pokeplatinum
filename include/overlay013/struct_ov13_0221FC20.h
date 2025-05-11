@@ -24,7 +24,7 @@ typedef struct {
     u8 unk_2C[6];
     u8 unk_32;
     u8 unk_33; // Item Category?
-    u8 unk_34;
+    u8 unk_34; // Num Learned Moves?
     u8 unk_35;
     u8 unk_36;
 } UnkStruct_ov13_0221FC20;

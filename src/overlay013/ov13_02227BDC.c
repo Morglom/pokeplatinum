@@ -112,24 +112,24 @@ static void ov13_02227D48(UnkStruct_ov13_02227244 *param0, u16 param1, u16 param
 
 static ManagedSprite *ov13_02227D78(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
-    SpriteTemplate v0;
-    SpriteSystem *v1 = ov16_0223E010(param0->unk_00->unk_00);
+    SpriteTemplate template;
+    SpriteSystem *spriteSystem = ov16_0223E010(param0->unk_00->unk_00);
 
-    v0.x = 0;
-    v0.y = 0;
-    v0.z = 0;
-    v0.animIdx = 0;
-    v0.priority = Unk_ov13_02229CBC[param1][4];
-    v0.plttIdx = 0;
-    v0.vramType = NNS_G2D_VRAM_TYPE_2DSUB;
-    v0.resources[0] = Unk_ov13_02229CBC[param1][0];
-    v0.resources[1] = Unk_ov13_02229CBC[param1][1];
-    v0.resources[2] = Unk_ov13_02229CBC[param1][2];
-    v0.resources[3] = Unk_ov13_02229CBC[param1][3];
-    v0.bgPriority = 1;
-    v0.vramTransfer = FALSE;
+    template.x = 0;
+    template.y = 0;
+    template.z = 0;
+    template.animIdx = 0;
+    template.priority = Unk_ov13_02229CBC[param1][4];
+    template.plttIdx = 0;
+    template.vramType = NNS_G2D_VRAM_TYPE_2DSUB;
+    template.resources[0] = Unk_ov13_02229CBC[param1][0];
+    template.resources[1] = Unk_ov13_02229CBC[param1][1];
+    template.resources[2] = Unk_ov13_02229CBC[param1][2];
+    template.resources[3] = Unk_ov13_02229CBC[param1][3];
+    template.bgPriority = 1;
+    template.vramTransfer = FALSE;
 
-    return SpriteSystem_NewSprite(v1, param0->unk_30C, &v0);
+    return SpriteSystem_NewSprite(spriteSystem, param0->unk_30C, &template);
 }
 
 static void ov13_02227DE8(UnkStruct_ov13_02227244 *param0)
