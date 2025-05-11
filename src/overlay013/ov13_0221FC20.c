@@ -318,7 +318,7 @@ static u8 ov13_0221FE5C(UnkStruct_ov13_022213F0 *param0)
     ov13_02224500(param0);
     ov13_02224B7C(param0, param0->unk_2076);
     ov13_02221A88(param0);
-    DrawInBattleScreen(param0, param0->unk_2076);
+    DrawInBattlePartyScreen(param0, param0->unk_2076);
 
     if (param0->unk_00->unk_32 != 0) {
         ov13_02228A60(param0->unk_2084, 1);
@@ -819,7 +819,7 @@ static u8 ov13_022207B8(UnkStruct_ov13_022213F0 *param0)
 static u8 ov13_022207DC(UnkStruct_ov13_022213F0 *param0)
 {
     ov13_02224B7C(param0, param0->unk_2076);
-    DrawInBattleScreen(param0, param0->unk_2076);
+    DrawInBattlePartyScreen(param0, param0->unk_2076);
     ov13_022260EC(param0, param0->unk_2076);
     ov13_022214E0(param0, param0->unk_2076);
 
@@ -1549,9 +1549,9 @@ static void ov13_022216C0(UnkStruct_ov13_022213F0 *param0, u8 param1)
     Bg_ScheduleFillTilemap(param0->unk_1E0, 5, 0);
 
     ov13_02224B7C(param0, param1);
-    ClearInBattleScreen(param0);
-    InitializeInBattleScreen(param0, param1);
-    DrawInBattleScreen(param0, param1);
+    ClearInBattlePartyScreen(param0);
+    InitializeInBattlePartyScreen(param0, param1);
+    DrawInBattlePartyScreen(param0, param1);
     ov13_022214E0(param0, param1);
     ov13_02221654(param0, param1);
     ov13_0222563C(param0, param1);

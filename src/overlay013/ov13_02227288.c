@@ -101,10 +101,10 @@ static const WindowTemplate useBagItemScreenWindowTemplates[] = {
 void ov13_02227288(UnkStruct_ov13_02227244 *param0)
 {
     Window_AddFromTemplate(param0->unk_04, &param0->unk_1C, &Unk_ov13_02229A60);
-    ov13_022272AC(param0, param0->unk_114C);
+    InitializeInBattleBagScreen(param0, param0->unk_114C);
 }
 
-void ov13_022272AC(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex screenIndex)
+void InitializeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
@@ -131,7 +131,7 @@ void ov13_022272AC(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex 
     }
 }
 
-void ov13_02227324(UnkStruct_ov13_02227244 *param0)
+void ClearInBattleBagScreen(UnkStruct_ov13_02227244 *param0)
 {
     Windows_Delete(param0->unk_2C, param0->unk_30);
 }
@@ -144,7 +144,7 @@ void ov13_02227334(UnkStruct_ov13_02227244 *param0)
     Window_Remove(&param0->unk_1C);
 }
 
-void ov13_02227350(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex screenIndex)
+void DrawInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex screenIndex)
 {
     switch (screenIndex) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
@@ -159,7 +159,7 @@ void ov13_02227350(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex 
     }
 }
 
-static void ov13_02227374(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
+static void WriteTitleText(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
 {
     Window *v0;
     Strbuf *v1;
@@ -184,12 +184,12 @@ static void DrawBagMenuScreen(UnkStruct_ov13_02227244 *param0)
         Window_FillTilemap(&param0->unk_2C[v0], 0);
     }
 
-    ov13_02227374(param0, 0, IN_BATTLE_BAG_TEXT_ID_HP_PP, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
-    ov13_02227374(param0, 0, IN_BATTLE_BAG_TEXT_ID_RESTORE, FONT_SUBSCREEN, 24, TEXT_COLOR(3, 2, 1));
-    ov13_02227374(param0, 1, IN_BATTLE_BAG_TEXT_ID_STATUS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
-    ov13_02227374(param0, 1, IN_BATTLE_BAG_TEXT_ID_HEALERS, FONT_SUBSCREEN, 24, TEXT_COLOR(3, 2, 1));
-    ov13_02227374(param0, 2, IN_BATTLE_BAG_TEXT_ID_POKE_BALLS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
-    ov13_02227374(param0, 3, IN_BATTLE_BAG_TEXT_ID_BATTLE_ITEMS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
+    WriteTitleText(param0, 0, IN_BATTLE_BAG_TEXT_ID_HP_PP, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
+    WriteTitleText(param0, 0, IN_BATTLE_BAG_TEXT_ID_RESTORE, FONT_SUBSCREEN, 24, TEXT_COLOR(3, 2, 1));
+    WriteTitleText(param0, 1, IN_BATTLE_BAG_TEXT_ID_STATUS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
+    WriteTitleText(param0, 1, IN_BATTLE_BAG_TEXT_ID_HEALERS, FONT_SUBSCREEN, 24, TEXT_COLOR(3, 2, 1));
+    WriteTitleText(param0, 2, IN_BATTLE_BAG_TEXT_ID_POKE_BALLS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
+    WriteTitleText(param0, 3, IN_BATTLE_BAG_TEXT_ID_BATTLE_ITEMS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
 
     if (param0->unk_00->unk_20 != ITEM_NONE) {
         Strbuf *v1 = MessageLoader_GetNewStrbuf(param0->unk_10, IN_BATTLE_BAG_TEXT_ID_LAST_USED_ITEM);
@@ -209,7 +209,7 @@ static const u32 Unk_ov13_02229AB0[][2] = {
     { 0x13, 0x14 }
 };
 
-static void ov13_022274A8(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
+static void WriteBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
 {
     Window *v0;
     Strbuf *v1;
@@ -220,7 +220,7 @@ static void ov13_022274A8(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param
 
     Window_FillTilemap(v0, 0);
 
-    if (param0->unk_3C[param0->unk_114D][param1].item != 0) {
+    if (param0->unk_3C[param0->unk_114D][param1].item != ITEM_NONE) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_10, Unk_ov13_02229AB0[param2][0]);
 
         StringTemplate_SetItemName(param0->unk_14, 0, param0->unk_3C[param0->unk_114D][param1].item);
@@ -236,7 +236,7 @@ static void ov13_022274A8(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_0222754C(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, u32 param5, TextColor param6)
+static void WriteBagItemQuantity(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, u32 param5, TextColor param6)
 {
     Strbuf *v0;
     Window *v1 = &param0->unk_2C[param3];
@@ -255,7 +255,7 @@ static void ov13_0222754C(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param
     Window_ScheduleCopyToVRAM(v1);
 }
 
-static void ov13_022275E0(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void DrawBagSubMenuItem(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     u32 v0;
     u32 v1 = param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1;
@@ -266,24 +266,24 @@ static void ov13_022275E0(UnkStruct_ov13_02227244 *param0, u32 param1)
         v0 = 12;
     }
 
-    ov13_022274A8(param0, v1, param1, v0 + param1 * 2, FONT_SUBSCREEN, TEXT_COLOR(3, 2, 1));
-    ov13_0222754C(param0, v1, param1, v0 + 1 + param1 * 2, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
+    WriteBagItemName(param0, v1, param1, v0 + param1 * 2, FONT_SUBSCREEN, TEXT_COLOR(3, 2, 1));
+    WriteBagItemQuantity(param0, v1, param1, v0 + 1 + param1 * 2, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
 }
 
-void ov13_02227650(UnkStruct_ov13_02227244 *param0)
+void DrawBagSubMenuPage(UnkStruct_ov13_02227244 *param0)
 {
     u16 v0;
 
     Bg_FillTilemapRect(param0->unk_04, 5, 0, 0, 0, 32, 19, 17);
 
     for (v0 = 0; v0 < 6; v0++) {
-        ov13_022275E0(param0, v0);
+        DrawBagSubMenuItem(param0, v0);
     }
 
     param0->unk_31 ^= 1;
 }
 
-void ov13_02227698(UnkStruct_ov13_02227244 *param0)
+void DrawBagSubMenuPageInfo(UnkStruct_ov13_02227244 *param0)
 {
     Window *v0;
     Strbuf *v1;
@@ -316,36 +316,36 @@ void ov13_02227698(UnkStruct_ov13_02227244 *param0)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_022277C8(UnkStruct_ov13_02227244 *param0)
+static void DrawBagSubMenuTitle(UnkStruct_ov13_02227244 *param0)
 {
     Window_FillTilemap(&param0->unk_2C[24], 0);
 
     switch (param0->unk_114D) {
-    case 0:
-        ov13_02227374(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_HP_PP, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
-        ov13_02227374(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_RESTORE, FONT_SYSTEM, (4 + 16), TEXT_COLOR(1, 2, 0));
+    case IN_BATTLE_BAG_SUB_MENU_INDEX_HP_PP_RESTORE:
+        WriteTitleText(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_HP_PP, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
+        WriteTitleText(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_RESTORE, FONT_SYSTEM, (4 + 16), TEXT_COLOR(1, 2, 0));
         break;
-    case 1:
-        ov13_02227374(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_STATUS, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
-        ov13_02227374(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_HEALERS, FONT_SYSTEM, (4 + 16), TEXT_COLOR(1, 2, 0));
+    case IN_BATTLE_BAG_SUB_MENU_INDEX_STATUS_HEALERS:
+        WriteTitleText(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_STATUS, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
+        WriteTitleText(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_HEALERS, FONT_SYSTEM, (4 + 16), TEXT_COLOR(1, 2, 0));
         break;
-    case 2:
-        ov13_02227374(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_POKE_BALLS, FONT_SYSTEM, 12, TEXT_COLOR(1, 2, 0));
+    case IN_BATTLE_BAG_SUB_MENU_INDEX_POKE_BALLS:
+        WriteTitleText(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_POKE_BALLS, FONT_SYSTEM, 12, TEXT_COLOR(1, 2, 0));
         break;
-    case 3:
-        ov13_02227374(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_BATTLE_ITEMS, FONT_SYSTEM, 12, TEXT_COLOR(1, 2, 0));
+    case IN_BATTLE_BAG_SUB_MENU_INDEX_BATTLE_ITEMS:
+        WriteTitleText(param0, 24, IN_BATTLE_BAG_TEXT_ID_SUB_MENU_BATTLE_ITEMS, FONT_SYSTEM, 12, TEXT_COLOR(1, 2, 0));
         break;
     }
 }
 
 static void DrawBagSubMenuScreen(UnkStruct_ov13_02227244 *param0)
 {
-    ov13_02227650(param0);
-    ov13_022277C8(param0);
-    ov13_02227698(param0);
+    DrawBagSubMenuPage(param0);
+    DrawBagSubMenuTitle(param0);
+    DrawBagSubMenuPageInfo(param0);
 }
 
-static void ov13_022278A0(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void WriteBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     Window *v0;
     Strbuf *v1;
@@ -361,7 +361,7 @@ static void ov13_022278A0(UnkStruct_ov13_02227244 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void ov13_02227910(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void WriteBagItemDescription(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     Window *v0;
     Strbuf *v1;
@@ -386,10 +386,10 @@ static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0)
 
     v1 = param0->unk_00->unk_2C[param0->unk_114D] * 6 + param0->unk_00->unk_27[param0->unk_114D];
 
-    ov13_022278A0(param0, v1);
-    ov13_0222754C(param0, v1, 0, 1, FONT_SYSTEM, 0, TEXT_COLOR(1, 2, 0));
-    ov13_02227910(param0, v1);
-    ov13_02227374(param0, 3, IN_BATTLE_BAG_TEXT_ID_USE, FONT_SUBSCREEN, 6, TEXT_COLOR(3, 2, 1));
+    WriteBagItemName(param0, v1);
+    WriteBagItemQuantity(param0, v1, 0, 1, FONT_SYSTEM, 0, TEXT_COLOR(1, 2, 0));
+    WriteBagItemDescription(param0, v1);
+    WriteTitleText(param0, 3, IN_BATTLE_BAG_TEXT_ID_USE, FONT_SUBSCREEN, 6, TEXT_COLOR(3, 2, 1));
 }
 
 void ov13_022279F4(UnkStruct_ov13_02227244 *param0)

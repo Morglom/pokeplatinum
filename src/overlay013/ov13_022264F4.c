@@ -202,7 +202,7 @@ static u8 ov13_0222668C(UnkStruct_ov13_02227244 *param0)
     ov13_02227AC8(param0);
     ov13_02228924(param0, param0->unk_114C);
     ov13_02227288(param0);
-    ov13_02227350(param0, param0->unk_114C);
+    DrawInBattleBagScreen(param0, param0->unk_114C);
     ov13_02227BDC(param0);
     ov13_02227E68(param0, param0->unk_114C);
 
@@ -346,8 +346,8 @@ static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
         param0->unk_00->unk_2C[param0->unk_114D] = v0;
     }
 
-    ov13_02227650(param0);
-    ov13_02227698(param0);
+    DrawBagSubMenuPage(param0);
+    DrawBagSubMenuPageInfo(param0);
     ov13_02227E68(param0, param0->unk_114C);
     ov13_02228924(param0, param0->unk_114C);
 
@@ -800,9 +800,9 @@ static void ov13_022271D0(UnkStruct_ov13_02227244 *param0, u8 param1)
     Bg_ScheduleFillTilemap(param0->unk_04, 4, 0);
     Bg_ScheduleFillTilemap(param0->unk_04, 5, 0);
 
-    ov13_02227324(param0);
-    ov13_022272AC(param0, param1);
-    ov13_02227350(param0, param1);
+    ClearInBattleBagScreen(param0);
+    InitializeInBattleBagScreen(param0, param1);
+    DrawInBattleBagScreen(param0, param1);
     ov13_02228924(param0, param1);
     ov13_02228008(param0, param1);
     ov13_022280F0(param0, param1);

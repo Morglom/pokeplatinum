@@ -4,10 +4,10 @@
 #include "overlay013/struct_ov13_022213F0.h"
 
 void ov13_02221A88(UnkStruct_ov13_022213F0 *param0);
-void InitializeInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex);
-void ClearInBattleScreen(UnkStruct_ov13_022213F0 *param0);
+void InitializeInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex);
+void ClearInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0);
 void ov13_02221BC8(UnkStruct_ov13_022213F0 *param0);
-void DrawInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex);
+void DrawInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex);
 void ov13_02223118(UnkStruct_ov13_022213F0 *param0);
 void DrawHealthDisplay(UnkStruct_ov13_022213F0 *param0, u8 param1);
 void ov13_022234A8(UnkStruct_ov13_022213F0 *param0, u8 param1);

@@ -276,10 +276,10 @@ void ov13_02221A88(UnkStruct_ov13_022213F0 *param0)
         Window_AddFromTemplate(param0->unk_1E0, &param0->unk_204C[i], &Unk_ov13_02228EA0[i]);
     }
 
-    InitializeInBattleScreen(param0, param0->unk_2076);
+    InitializeInBattlePartyScreen(param0, param0->unk_2076);
 }
 
-void InitializeInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
+void InitializeInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
@@ -331,7 +331,7 @@ void InitializeInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScre
     }
 }
 
-void ClearInBattleScreen(UnkStruct_ov13_022213F0 *param0)
+void ClearInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0)
 {
     Windows_Delete(param0->unk_206C, param0->unk_2070);
 }
@@ -347,7 +347,7 @@ void ov13_02221BC8(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-void DrawInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
+void DrawInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
 {
     switch (screenIndex) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
