@@ -8,14 +8,16 @@
 #include "bag.h"
 #include "item.h"
 
+#define BAG_POCKETS_NUM 8
+
 BOOL ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
 {
-    if (param0->unk_00->unk_20 == 0) {
+    if (param0->unk_00->unk_20 == ITEM_NONE) {
         return FALSE;
     }
 
     if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->unk_20, 1, param0->unk_00->heapID) == FALSE) {
-        param0->unk_00->unk_20 = 0;
+        param0->unk_00->unk_20 = ITEM_NONE;
         param0->unk_00->unk_1F = 0;
         return FALSE;
     }
@@ -47,24 +49,24 @@ static const u8 Unk_ov13_02229BB0[] = {
 void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
 {
     BagItem *v0;
-    u32 v1, v2, v3;
+    u32 i, slotIndex, v3;
     s32 v4;
 
-    for (v1 = 0; v1 < 8; v1++) {
-        v2 = 0;
+    for (i = 0; i < BAG_POCKETS_NUM; i++) {
+        slotIndex = 0;
 
         while (TRUE) {
-            v0 = Bag_GetItemSlot(param0->unk_00->unk_08, v1, v2);
+            v0 = Bag_GetItemSlot(param0->unk_00->unk_08, i, slotIndex);
 
             if (v0 == NULL) {
                 break;
             }
 
-            if (!((v0->item == 0) || (v0->quantity == 0))) {
-                v4 = Item_LoadParam(v0->item, 13, param0->unk_00->heapID);
+            if (!((v0->item == ITEM_NONE) || (v0->quantity == 0))) {
+                v4 = Item_LoadParam(v0->item, ITEM_PARAM_BATTLE_POCKET, param0->unk_00->heapID);
 
                 for (v3 = 0; v3 < 5; v3++) {
-                    if ((v4 & (1 << v3)) == 0) {
+                    if ((v4 & (1 << v3)) == FALSE) {
                         continue;
                     }
 
@@ -73,19 +75,19 @@ void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
                 }
             }
 
-            v2++;
+            slotIndex++;
         }
     }
 
-    for (v1 = 0; v1 < 5; v1++) {
-        if (param0->unk_114F[v1] == 0) {
-            param0->unk_1154[v1] = 0;
+    for (i = 0; i < 5; i++) {
+        if (param0->unk_114F[i] == 0) {
+            param0->unk_1154[i] = 0;
         } else {
-            param0->unk_1154[v1] = (param0->unk_114F[v1] - 1) / 6;
+            param0->unk_1154[i] = (param0->unk_114F[i] - 1) / 6;
         }
 
-        if (param0->unk_1154[v1] < param0->unk_00->unk_2C[v1]) {
-            param0->unk_00->unk_2C[v1] = param0->unk_1154[v1];
+        if (param0->unk_1154[i] < param0->unk_00->unk_2C[i]) {
+            param0->unk_00->unk_2C[i] = param0->unk_1154[i];
         }
     }
 }

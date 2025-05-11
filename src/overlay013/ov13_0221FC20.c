@@ -370,6 +370,7 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
 {
     UnkStruct_ov13_0221FC20 *v0 = param0->unk_00;
 
+    // Embargo blocking item use
     if (((v0->selectedPartyIndex == 0) && (v0->unk_18[0] != 0)) || ((v0->selectedPartyIndex == 1) && (v0->unk_18[1] != 0))) {
         ov13_0222449C(param0);
         ov13_022240E0(param0);

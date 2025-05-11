@@ -21,8 +21,8 @@
 
 static void ov13_02227C08(UnkStruct_ov13_02227244 *param0);
 static void ov13_02227C54(UnkStruct_ov13_02227244 *param0);
-static void ov13_02227D10(UnkStruct_ov13_02227244 *param0, u16 param1, u32 param2);
-static void ov13_02227D48(UnkStruct_ov13_02227244 *param0, u16 param1, u16 param2, u32 param3);
+static void ov13_02227D10(UnkStruct_ov13_02227244 *param0, u16 item, u32 param2);
+static void ov13_02227D48(UnkStruct_ov13_02227244 *param0, u16 item, u16 param2, u32 param3);
 static void ov13_02227DE8(UnkStruct_ov13_02227244 *param0);
 static void ov13_02227EAC(UnkStruct_ov13_02227244 *param0);
 static void ov13_02227EE0(UnkStruct_ov13_02227244 *param0);
@@ -99,15 +99,15 @@ static void ov13_02227C54(UnkStruct_ov13_02227244 *param0)
     NARC_dtor(v2);
 }
 
-static void ov13_02227D10(UnkStruct_ov13_02227244 *param0, u16 param1, u32 param2)
+static void ov13_02227D10(UnkStruct_ov13_02227244 *param0, u16 item, u32 param2)
 {
     SpriteSystem *v0 = ov16_0223E010(param0->unk_00->unk_00);
-    SpriteSystem_ReplaceCharResObj(v0, param0->unk_30C, 16, Item_FileID(param1, 1), 0, param2);
+    SpriteSystem_ReplaceCharResObj(v0, param0->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), 0, param2);
 }
 
-static void ov13_02227D48(UnkStruct_ov13_02227244 *param0, u16 param1, u16 param2, u32 param3)
+static void ov13_02227D48(UnkStruct_ov13_02227244 *param0, u16 item, u16 param2, u32 param3)
 {
-    PaletteData_LoadBufferFromFileStart(param0->unk_08, 16, Item_FileID(param1, 2), param0->unk_00->heapID, 3, 0x20, param2 * 16);
+    PaletteData_LoadBufferFromFileStart(param0->unk_08, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_PALETTE), param0->unk_00->heapID, PLTTBUF_SUB_OBJ, 0x20, param2 * 16);
 }
 
 static ManagedSprite *ov13_02227D78(UnkStruct_ov13_02227244 *param0, u32 param1)
@@ -157,9 +157,9 @@ void ov13_02227E08(UnkStruct_ov13_02227244 *param0)
     SpriteSystem_FreeResourcesAndManager(v0, param0->unk_30C);
 }
 
-static void ov13_02227E48(ManagedSprite *param0, const int param1, const int param2)
+static void DrawPartyPokemonSprite(ManagedSprite *param0, const int param1, const int param2)
 {
-    ManagedSprite_SetDrawFlag(param0, 1);
+    ManagedSprite_SetDrawFlag(param0, TRUE);
     ManagedSprite_SetPositionXY(param0, param1, param2);
 }
 
@@ -168,7 +168,7 @@ void ov13_02227E68(UnkStruct_ov13_02227244 *param0, u32 param1)
     u32 v0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        ManagedSprite_SetDrawFlag(param0->unk_310[v0], 0);
+        ManagedSprite_SetDrawFlag(param0->unk_310[v0], FALSE);
     }
 
     switch (param1) {
@@ -188,38 +188,38 @@ static void ov13_02227EAC(UnkStruct_ov13_02227244 *param0)
 {
     u16 v0;
 
-    if (param0->unk_00->unk_20 != 0) {
+    if (param0->unk_00->unk_20 != ITEM_NONE) {
         ov13_02227D10(param0, param0->unk_00->unk_20, 46263);
         ov13_02227D48(param0, param0->unk_00->unk_20, 0, 46263);
-        ov13_02227E48(param0->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
+        DrawPartyPokemonSprite(param0->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
     }
 }
 
 static void ov13_02227EE0(UnkStruct_ov13_02227244 *param0)
 {
     u32 v0;
-    u16 v1;
+    u16 item;
 
     for (v0 = 0; v0 < 6; v0++) {
-        v1 = ov13_02227BA8(param0, v0);
+        item = ov13_02227BA8(param0, v0);
 
-        if (v1 == 0) {
+        if (item == ITEM_NONE) {
             continue;
         }
 
-        ov13_02227D10(param0, v1, 46263 + v0);
-        ov13_02227D48(param0, v1, (u16)v0, 46263 + v0);
-        ov13_02227E48(param0->unk_310[v0], Unk_ov13_02229C44[v0][0], Unk_ov13_02229C44[v0][1]);
+        ov13_02227D10(param0, item, 46263 + v0);
+        ov13_02227D48(param0, item, (u16)v0, 46263 + v0);
+        DrawPartyPokemonSprite(param0->unk_310[v0], Unk_ov13_02229C44[v0][0], Unk_ov13_02229C44[v0][1]);
     }
 }
 
 static void ov13_02227F38(UnkStruct_ov13_02227244 *param0)
 {
-    u16 v0 = ov13_02227BA8(param0, param0->unk_00->unk_27[param0->unk_114D]);
+    u16 item = ov13_02227BA8(param0, param0->unk_00->unk_27[param0->unk_114D]);
 
-    ov13_02227D10(param0, v0, 46263);
-    ov13_02227D48(param0, v0, 0, 46263);
-    ov13_02227E48(param0->unk_310[0], Unk_ov13_02229BB8[0], Unk_ov13_02229BB8[1]);
+    ov13_02227D10(param0, item, 46263);
+    ov13_02227D48(param0, item, 0, 46263);
+    DrawPartyPokemonSprite(param0->unk_310[0], Unk_ov13_02229BB8[0], Unk_ov13_02229BB8[1]);
 }
 
 static void ov13_02227F7C(UnkStruct_ov13_02227244 *param0)

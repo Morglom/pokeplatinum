@@ -20,7 +20,7 @@ typedef struct {
     u16 unk_20;
     u16 unk_22; // Item?
     u16 unk_24; // Move to learn
-    s32 unk_28;
+    s32 unk_28; // Trainer / Player?
     u8 unk_2C[6];
     u8 unk_32;
     u8 unk_33; // Item Category?

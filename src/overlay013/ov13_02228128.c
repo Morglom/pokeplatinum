@@ -11,10 +11,10 @@
 #include "sprite_system.h"
 
 typedef struct {
-    u8 unk_00;
-    u8 unk_01;
-    u8 unk_02;
-    u8 unk_03;
+    u8 xCoord;
+    u8 yCoord;
+    u8 width;
+    u8 height;
 } UnkStruct_ov13_02229D7C;
 
 static void ov13_02228460(u16 *param0, u16 *param1, u8 param2, u8 param3, u8 param4, u8 param5);
@@ -328,7 +328,7 @@ static void ov13_0222863C(UnkStruct_ov13_02227244 *param0, u16 *param1, u8 param
     v0 = ov13_022284B0(param0, param2, param3);
     v1 = ov13_02228558(param0, param2, param3, param4) << 12;
 
-    for (v2 = 0; v2 < Unk_ov13_02229D7C[param2].unk_02 * Unk_ov13_02229D7C[param2].unk_03; v2++) {
+    for (v2 = 0; v2 < Unk_ov13_02229D7C[param2].width * Unk_ov13_02229D7C[param2].height; v2++) {
         param1[v2] = v1 | (v0[v2] & 0xfff);
     }
 
@@ -337,11 +337,11 @@ static void ov13_0222863C(UnkStruct_ov13_02227244 *param0, u16 *param1, u8 param
 
 static void ov13_022286B8(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2, u8 param3)
 {
-    u16 *v0 = Heap_AllocFromHeap(param0->unk_00->heapID, Unk_ov13_02229D7C[param1].unk_02 * Unk_ov13_02229D7C[param1].unk_03 * 2);
+    u16 *v0 = Heap_AllocFromHeap(param0->unk_00->heapID, Unk_ov13_02229D7C[param1].width * Unk_ov13_02229D7C[param1].height * 2);
 
     ov13_0222863C(param0, v0, param1, param2, param3);
 
-    Bg_LoadToTilemapRect(param0->unk_04, 6, v0, Unk_ov13_02229D7C[param1].unk_00, Unk_ov13_02229D7C[param1].unk_01, Unk_ov13_02229D7C[param1].unk_02, Unk_ov13_02229D7C[param1].unk_03);
+    Bg_LoadToTilemapRect(param0->unk_04, 6, v0, Unk_ov13_02229D7C[param1].xCoord, Unk_ov13_02229D7C[param1].yCoord, Unk_ov13_02229D7C[param1].width, Unk_ov13_02229D7C[param1].height);
     Bg_ScheduleTilemapTransfer(param0->unk_04, 6);
     Heap_FreeToHeap(v0);
 }

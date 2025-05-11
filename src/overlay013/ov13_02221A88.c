@@ -95,6 +95,16 @@ enum InBattleTextIds {
     IN_BATTLE_TEXT_IDS_ITEM_USE_PREVENTED_TEXT,
 };
 
+#define PARTY_LIST_SCREEN_WINDOW_NUM      6
+#define SELECT_POKEMON_SCREEN_WINDOW_NUM  4
+#define POKEMON_SUMMARY_SCREEN_WINDOW_NUM 35
+#define CHECK_MOVES_SCREEN_WINDOW_NUM     11
+#define MOVE_SUMMARY_SCREEN_WINDOW_NUM    17
+#define RESTORE_PP_SCREEN_WINDOW_NUM      5
+#define LEARN_MOVE_SCREEN_WINDOW_NUM      6
+#define LEARN_MOVE_CONFIRM_WINDOW_NUM     12
+#define LEARN_MOVE_CONTEST_WINDOW_NUM     7
+
 static void DrawPartyList(UnkStruct_ov13_022213F0 *param0);
 static void DrawSelectPartyPokemonScreen(UnkStruct_ov13_022213F0 *param0);
 static void DrawInBattlePokemonSummaryScreen(UnkStruct_ov13_022213F0 *param0);
@@ -111,7 +121,7 @@ static const WindowTemplate Unk_ov13_02228EA0[] = {
     { 0x4, 0x2, 0x13, 0x1B, 0x4, 0xF, 0x1F }
 };
 
-static const WindowTemplate Unk_ov13_02228F54[] = {
+static const WindowTemplate partyListScreenWindowTemplates[] = {
     { 0x5, 0x0, 0x0, 0xF, 0x5, 0x9, 0x85 },
     { 0x5, 0x10, 0x1, 0xF, 0x5, 0x9, 0xD0 },
     { 0x5, 0x0, 0x6, 0xF, 0x5, 0x9, 0x11B },
@@ -120,14 +130,14 @@ static const WindowTemplate Unk_ov13_02228F54[] = {
     { 0x5, 0x10, 0xD, 0xF, 0x5, 0x9, 0x1FC }
 };
 
-static const WindowTemplate Unk_ov13_02228EDC[] = {
+static const WindowTemplate selectPokemonScreenWindowTemplates[] = {
     { 0x5, 0xA, 0x4, 0xC, 0x3, 0x9, 0x1 },
     { 0x5, 0xB, 0xC, 0xA, 0x3, 0x9, 0x25 },
     { 0x5, 0x1, 0x14, 0xB, 0x3, 0x9, 0x43 },
     { 0x5, 0xE, 0x14, 0xB, 0x3, 0x9, 0x64 }
 };
 
-static const WindowTemplate Unk_ov13_02228FBC[] = {
+static const WindowTemplate checkMovesScreenWindowTemplates[] = {
     { 0x5, 0x5, 0x1, 0x9, 0x2, 0xD, 0x125 },
     { 0x5, 0x1, 0x6, 0xE, 0x5, 0x9, 0x149 },
     { 0x5, 0x11, 0x6, 0xE, 0x5, 0x9, 0x18F },
@@ -141,7 +151,7 @@ static const WindowTemplate Unk_ov13_02228FBC[] = {
     { 0x5, 0x11, 0xC, 0xE, 0x5, 0x9, 0x333 }
 };
 
-static const WindowTemplate Unk_ov13_022290FC[] = {
+static const WindowTemplate summaryScreenWindowTemplates[] = {
     { 0x5, 0x5, 0x1, 0x9, 0x2, 0xD, 0x125 },
     { 0x5, 0x1, 0x9, 0xB, 0x2, 0xD, 0x149 },
     { 0x5, 0x1, 0xB, 0x12, 0x4, 0xD, 0x15F },
@@ -179,7 +189,7 @@ static const WindowTemplate Unk_ov13_022290FC[] = {
     { 0x5, 0xD, 0x6, 0x6, 0x2, 0xD, 0x30F }
 };
 
-static const WindowTemplate Unk_ov13_02229074[] = {
+static const WindowTemplate moveSummaryScreenWindowTemplates[] = {
     { 0x4, 0x4, 0x5, 0xB, 0x2, 0xD, 0x9D },
     { 0x4, 0x17, 0x5, 0x5, 0x2, 0xD, 0xB7 },
     { 0x4, 0xA, 0x10, 0x3, 0x2, 0xD, 0xE1 },
@@ -199,7 +209,7 @@ static const WindowTemplate Unk_ov13_02229074[] = {
     { 0x4, 0x6, 0xA, 0x8, 0x2, 0xD, 0x26D }
 };
 
-static const WindowTemplate Unk_ov13_02228F24[] = {
+static const WindowTemplate learnMoveScreenWindowTemplates[] = {
     { 0x4, 0x5, 0x1, 0x9, 0x2, 0xD, 0x85 },
     { 0x4, 0x1, 0x6, 0xE, 0x5, 0x9, 0x97 },
     { 0x4, 0x11, 0x6, 0xE, 0x5, 0x9, 0xDD },
@@ -208,7 +218,7 @@ static const WindowTemplate Unk_ov13_02228F24[] = {
     { 0x4, 0x9, 0x12, 0xE, 0x5, 0x9, 0x1AF }
 };
 
-static const WindowTemplate Unk_ov13_02229014[] = {
+static const WindowTemplate learnMoveConfirmScreenWindowTemplates[] = {
     { 0x5, 0x5, 0x1, 0x9, 0x2, 0xD, 0x1 },
     { 0x5, 0x4, 0x5, 0xB, 0x2, 0xD, 0x13 },
     { 0x5, 0x14, 0x5, 0x2, 0x2, 0xD, 0x29 },
@@ -223,7 +233,7 @@ static const WindowTemplate Unk_ov13_02229014[] = {
     { 0x5, 0x7, 0x14, 0xC, 0x3, 0x9, 0x37 }
 };
 
-static const WindowTemplate Unk_ov13_02228EFC[] = {
+static const WindowTemplate restorePPScreenWindowTemplates[] = {
     { 0x4, 0x5, 0x1, 0x9, 0x2, 0xD, 0x8B },
     { 0x4, 0x1, 0x6, 0xE, 0x5, 0x9, 0x9D },
     { 0x4, 0x11, 0x6, 0xE, 0x5, 0x9, 0xE3 },
@@ -231,7 +241,7 @@ static const WindowTemplate Unk_ov13_02228EFC[] = {
     { 0x4, 0x11, 0xC, 0xE, 0x5, 0x9, 0x16F }
 };
 
-static const WindowTemplate Unk_ov13_02228F84[] = {
+static const WindowTemplate learnMoveContestScreenWindowTemplates[] = {
     { 0x5, 0x5, 0x1, 0x9, 0x2, 0xD, 0x1 },
     { 0x5, 0x4, 0x8, 0xB, 0x2, 0xD, 0x13 },
     { 0x5, 0x14, 0x8, 0x2, 0x2, 0xD, 0x29 },
@@ -271,53 +281,53 @@ void ov13_02221A88(UnkStruct_ov13_022213F0 *param0)
 
 void InitializeInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
 {
-    const WindowTemplate *v0;
+    const WindowTemplate *windowTemplates;
     u8 i;
 
     switch (screenIndex) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
-        v0 = Unk_ov13_02228F54;
-        param0->unk_2070 = 6;
+        windowTemplates = partyListScreenWindowTemplates;
+        param0->unk_2070 = PARTY_LIST_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
-        v0 = Unk_ov13_02228EDC;
-        param0->unk_2070 = 4;
+        windowTemplates = selectPokemonScreenWindowTemplates;
+        param0->unk_2070 = SELECT_POKEMON_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY:
-        v0 = Unk_ov13_022290FC;
-        param0->unk_2070 = 35;
+        windowTemplates = summaryScreenWindowTemplates;
+        param0->unk_2070 = POKEMON_SUMMARY_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
-        v0 = Unk_ov13_02228FBC;
-        param0->unk_2070 = 11;
+        windowTemplates = checkMovesScreenWindowTemplates;
+        param0->unk_2070 = CHECK_MOVES_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
-        v0 = Unk_ov13_02229074;
-        param0->unk_2070 = 17;
+        windowTemplates = moveSummaryScreenWindowTemplates;
+        param0->unk_2070 = MOVE_SUMMARY_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_RESTORE_PP:
-        v0 = Unk_ov13_02228EFC;
-        param0->unk_2070 = 5;
+        windowTemplates = restorePPScreenWindowTemplates;
+        param0->unk_2070 = RESTORE_PP_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_1:
     case IN_BATTLE_SCREEN_LEARN_MOVE_2:
-        v0 = Unk_ov13_02228F24;
-        param0->unk_2070 = 6;
+        windowTemplates = learnMoveScreenWindowTemplates;
+        param0->unk_2070 = LEARN_MOVE_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
-        v0 = Unk_ov13_02229014;
-        param0->unk_2070 = 12;
+        windowTemplates = learnMoveConfirmScreenWindowTemplates;
+        param0->unk_2070 = LEARN_MOVE_CONFIRM_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
-        v0 = Unk_ov13_02228F84;
-        param0->unk_2070 = 7;
+        windowTemplates = learnMoveContestScreenWindowTemplates;
+        param0->unk_2070 = LEARN_MOVE_CONTEST_WINDOW_NUM;
         break;
     }
 
     param0->unk_206C = Window_New(param0->unk_00->heapID, param0->unk_2070);
 
     for (i = 0; i < param0->unk_2070; i++) {
-        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_206C[i], &v0[i]);
+        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_206C[i], &windowTemplates[i]);
     }
 }
 
@@ -565,7 +575,7 @@ static void DrawPartyListSubText(UnkStruct_ov13_022213F0 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(&param0->unk_204C[0]);
 }
 
-static void ov13_0222222C(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 param2)
+static void DrawSelectPartyPokemonButton(UnkStruct_ov13_022213F0 *param0, u32 windowIndex, u32 param2)
 {
     Window *v0;
     Strbuf *v1;
@@ -1240,11 +1250,11 @@ static void DrawSelectPartyPokemonScreen(UnkStruct_ov13_022213F0 *param0)
 
     WriteNameGenderOther(param0, param0->unk_00->selectedPartyIndex);
 
-    ov13_0222222C(param0, 1, IN_BATTLE_TEXT_IDS_SHIFT);
+    DrawSelectPartyPokemonButton(param0, 1, IN_BATTLE_TEXT_IDS_SHIFT);
 
     if (param0->unk_04[param0->unk_00->selectedPartyIndex].isEgg == FALSE) {
-        ov13_0222222C(param0, 2, IN_BATTLE_TEXT_IDS_SUMMARY);
-        ov13_0222222C(param0, 3, IN_BATTLE_TEXT_IDS_CHECK_MOVES);
+        DrawSelectPartyPokemonButton(param0, 2, IN_BATTLE_TEXT_IDS_SUMMARY);
+        DrawSelectPartyPokemonButton(param0, 3, IN_BATTLE_TEXT_IDS_CHECK_MOVES);
     } else {
         Window_ScheduleCopyToVRAM(&param0->unk_206C[2]);
         Window_ScheduleCopyToVRAM(&param0->unk_206C[3]);
@@ -1338,7 +1348,7 @@ static void DrawCheckMovesScreen(UnkStruct_ov13_022213F0 *param0)
         WriteMovePP(param0, moveData, 1 + v2 + v1);
     }
 
-    ov13_0222222C(param0, 5, IN_BATTLE_TEXT_IDS_SUMMARY);
+    DrawSelectPartyPokemonButton(param0, 5, IN_BATTLE_TEXT_IDS_SUMMARY);
 
     Window_ScheduleCopyToVRAM(&param0->unk_206C[1 + v2]);
     Window_ScheduleCopyToVRAM(&param0->unk_206C[2 + v2]);
@@ -1388,7 +1398,7 @@ static void DrawInBattlePokemonSummaryScreen(UnkStruct_ov13_022213F0 *param0)
     WriteAbilityText(param0, 1 + v0, param0->unk_00->selectedPartyIndex);
     WriteHeldItem(param0, 3 + v0, param0->unk_00->selectedPartyIndex);
     WriteAbilityStat(param0, param0->unk_00->selectedPartyIndex);
-    ov13_0222222C(param0, 21, 19);
+    DrawSelectPartyPokemonButton(param0, 21, 19);
 
     param0->unk_2071 ^= 1;
 }
@@ -1614,58 +1624,57 @@ void ov13_02224144(UnkStruct_ov13_022213F0 *param0)
 {
     Pokemon *v0;
     UnkStruct_ov13_0221FC20 *v1;
-    void *v2;
+    void *itemData;
     Strbuf *v3;
-    u16 v4;
+    u16 currentHP;
     u8 v5;
-    u8 v6;
 
     v1 = param0->unk_00;
-    v2 = Item_Load(v1->unk_22, 0, v1->heapID);
+    itemData = Item_Load(v1->unk_22, ITEM_FILE_TYPE_DATA, v1->heapID);
     v0 = BattleSystem_PartyPokemon(v1->unk_08, v1->unk_28, v1->unk_2C[v1->selectedPartyIndex]);
-    v4 = Pokemon_GetValue(v0, MON_DATA_CURRENT_HP, NULL);
+    currentHP = Pokemon_GetValue(v0, MON_DATA_CURRENT_HP, NULL);
     v5 = 0;
 
-    if (Item_Get(v2, 15) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_SLEEP) != 0) {
         v5 |= 0x1;
     }
 
-    if (Item_Get(v2, 16) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_POISON) != 0) {
         v5 |= 0x2;
     }
 
-    if (Item_Get(v2, 17) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_BURN) != 0) {
         v5 |= 0x4;
     }
 
-    if (Item_Get(v2, 18) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_FREEZE) != 0) {
         v5 |= 0x8;
     }
 
-    if (Item_Get(v2, 19) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_PARALYSIS) != 0) {
         v5 |= 0x10;
     }
 
-    if (Item_Get(v2, 20) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_CONFUSION) != 0) {
         v5 |= 0x20;
     }
 
-    if (Item_Get(v2, 21) != 0) {
+    if (Item_Get(itemData, ITEM_PARAM_HEAL_ATTRACT) != 0) {
         v5 |= 0x40;
     }
 
-    if ((param0->unk_04[v1->selectedPartyIndex].currentHP == 0) && (v4 != 0)) {
+    if ((param0->unk_04[v1->selectedPartyIndex].currentHP == 0) && (currentHP != 0)) {
         v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_FAINTED_CURED_TEXT);
         StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
         Strbuf_Free(v3);
-    } else if (param0->unk_04[v1->selectedPartyIndex].currentHP != v4) {
+    } else if (param0->unk_04[v1->selectedPartyIndex].currentHP != currentHP) {
         v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HP_RESTORED_TEXT);
         StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_SetNumber(param0->unk_1FA8, 1, v4 - param0->unk_04[v1->selectedPartyIndex].currentHP, 3, 0, 1);
+        StringTemplate_SetNumber(param0->unk_1FA8, 1, currentHP - param0->unk_04[v1->selectedPartyIndex].currentHP, 3, 0, 1);
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
         Strbuf_Free(v3);
-    } else if ((Item_Get(v2, 36) != 0) || (Item_Get(v2, 37) != 0)) {
+    } else if ((Item_Get(itemData, 36) != 0) || (Item_Get(itemData, 37) != 0)) {
         MessageLoader_GetStrbuf(param0->unk_1FA4, 87, param0->unk_1FAC);
     } else if (v5 == 0x1) {
         v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SLEEP_CURED_TEXT);
@@ -1709,7 +1718,7 @@ void ov13_02224144(UnkStruct_ov13_022213F0 *param0)
         Strbuf_Free(v3);
     }
 
-    Heap_FreeToHeap(v2);
+    Heap_FreeToHeap(itemData);
 }
 
 void ov13_0222449C(UnkStruct_ov13_022213F0 *param0)
