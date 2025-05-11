@@ -21,6 +21,13 @@ enum InBattleBagScreenIndex {
     IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM,
 };
 
+enum InBattleBagSubMenuIndex {
+    IN_BATTLE_BAG_SUB_MENU_INDEX_HP_PP_RESTORE = 0,
+    IN_BATTLE_BAG_SUB_MENU_INDEX_STATUS_HEALERS,
+    IN_BATTLE_BAG_SUB_MENU_INDEX_POKE_BALLS,
+    IN_BATTLE_BAG_SUB_MENU_INDEX_BATTLE_ITEMS,
+};
+
 typedef struct {
     UnkStruct_ov13_022264F4 *unk_00;
     BgConfig *unk_04;
@@ -36,7 +43,7 @@ typedef struct {
     u8 unk_32;
     UnkStruct_ov13_02228A50 *unk_34; // Bag
     UnkStruct_ov16_0226DEEC *unk_38;
-    BagItem unk_3C[5][36];
+    BagItem unk_3C[5][36]; // Sub menu bag items
     SpriteManager *unk_30C;
     ManagedSprite *unk_310[6]; // Party pokemon sprites
     u16 unk_328[3][144];
@@ -58,9 +65,9 @@ typedef struct {
     u8 unk_114A;
     u8 unk_114B;
     u8 unk_114C; // Screen Index
-    u8 unk_114D;
+    u8 unk_114D; // Sub Menu Index
     s8 unk_114E;
-    u8 unk_114F[5];
+    u8 unk_114F[5]; // Num bag items in sub menu
     u8 unk_1154[5];
     u8 unk_1159;
     u8 unk_115A;

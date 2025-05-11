@@ -8,7 +8,8 @@
 #include "bag.h"
 #include "item.h"
 
-#define BAG_POCKETS_NUM 8
+#define BAG_POCKETS_NUM        8
+#define BAG_SUB_MENU_MAX_ITEMS 36
 
 BOOL ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
 {
@@ -27,12 +28,12 @@ BOOL ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
 
 void ov13_02227A7C(UnkStruct_ov13_02227244 *param0)
 {
-    u32 v0;
+    u32 i;
 
-    for (v0 = 0; v0 < 36; v0++) {
-        if (param0->unk_00->unk_20 == param0->unk_3C[param0->unk_114D][v0].item) {
-            param0->unk_00->unk_27[param0->unk_114D] = v0 % 6;
-            param0->unk_00->unk_2C[param0->unk_114D] = v0 / 6;
+    for (i = 0; i < BAG_SUB_MENU_MAX_ITEMS; i++) {
+        if (param0->unk_00->unk_20 == param0->unk_3C[param0->unk_114D][i].item) {
+            param0->unk_00->unk_27[param0->unk_114D] = i % NUM_BAG_ITEMS_PER_PAGE;
+            param0->unk_00->unk_2C[param0->unk_114D] = i / NUM_BAG_ITEMS_PER_PAGE;
             break;
         }
     }
@@ -46,7 +47,7 @@ static const u8 Unk_ov13_02229BB0[] = {
     0x0
 };
 
-void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
+void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
 {
     BagItem *v0;
     u32 i, slotIndex, v3;
@@ -83,7 +84,7 @@ void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
         if (param0->unk_114F[i] == 0) {
             param0->unk_1154[i] = 0;
         } else {
-            param0->unk_1154[i] = (param0->unk_114F[i] - 1) / 6;
+            param0->unk_1154[i] = (param0->unk_114F[i] - 1) / NUM_BAG_ITEMS_PER_PAGE;
         }
 
         if (param0->unk_1154[i] < param0->unk_00->unk_2C[i]) {
@@ -92,12 +93,11 @@ void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-// Get item
-u16 ov13_02227BA8(UnkStruct_ov13_02227244 *param0, u32 param1)
+u16 GetCurrentlySelectedBagItem(UnkStruct_ov13_02227244 *param0, u32 indexOnPage)
 {
-    if ((param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].item != 0) && (param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].quantity != 0)) {
-        return param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].item;
+    if ((param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * NUM_BAG_ITEMS_PER_PAGE + indexOnPage].item != ITEM_NONE) && (param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * NUM_BAG_ITEMS_PER_PAGE + indexOnPage].quantity != 0)) {
+        return param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * NUM_BAG_ITEMS_PER_PAGE + indexOnPage].item;
     }
 
-    return 0;
+    return ITEM_NONE;
 }

@@ -102,7 +102,7 @@ static void ov13_02227C54(UnkStruct_ov13_02227244 *param0)
 static void ov13_02227D10(UnkStruct_ov13_02227244 *param0, u16 item, u32 param2)
 {
     SpriteSystem *v0 = ov16_0223E010(param0->unk_00->unk_00);
-    SpriteSystem_ReplaceCharResObj(v0, param0->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), 0, param2);
+    SpriteSystem_ReplaceCharResObj(v0, param0->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), FALSE, param2);
 }
 
 static void ov13_02227D48(UnkStruct_ov13_02227244 *param0, u16 item, u16 param2, u32 param3)
@@ -157,10 +157,10 @@ void ov13_02227E08(UnkStruct_ov13_02227244 *param0)
     SpriteSystem_FreeResourcesAndManager(v0, param0->unk_30C);
 }
 
-static void DrawPartyPokemonSprite(ManagedSprite *param0, const int param1, const int param2)
+static void DrawPartyPokemonSprite(ManagedSprite *sprite, const int x, const int y)
 {
-    ManagedSprite_SetDrawFlag(param0, TRUE);
-    ManagedSprite_SetPositionXY(param0, param1, param2);
+    ManagedSprite_SetDrawFlag(sprite, TRUE);
+    ManagedSprite_SetPositionXY(sprite, x, y);
 }
 
 void ov13_02227E68(UnkStruct_ov13_02227244 *param0, u32 param1)
@@ -172,13 +172,13 @@ void ov13_02227E68(UnkStruct_ov13_02227244 *param0, u32 param1)
     }
 
     switch (param1) {
-    case 0:
+    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
         ov13_02227EAC(param0);
         break;
-    case 1:
+    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
         ov13_02227EE0(param0);
         break;
-    case 2:
+    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         ov13_02227F38(param0);
         break;
     }
@@ -201,7 +201,7 @@ static void ov13_02227EE0(UnkStruct_ov13_02227244 *param0)
     u16 item;
 
     for (v0 = 0; v0 < 6; v0++) {
-        item = ov13_02227BA8(param0, v0);
+        item = GetCurrentlySelectedBagItem(param0, v0);
 
         if (item == ITEM_NONE) {
             continue;
@@ -215,7 +215,7 @@ static void ov13_02227EE0(UnkStruct_ov13_02227244 *param0)
 
 static void ov13_02227F38(UnkStruct_ov13_02227244 *param0)
 {
-    u16 item = ov13_02227BA8(param0, param0->unk_00->unk_27[param0->unk_114D]);
+    u16 item = GetCurrentlySelectedBagItem(param0, param0->unk_00->unk_27[param0->unk_114D]);
 
     ov13_02227D10(param0, item, 46263);
     ov13_02227D48(param0, item, 0, 46263);
