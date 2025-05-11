@@ -79,7 +79,7 @@ static void ov13_02220D1C(BgConfig *param0);
 static void ov13_02220D4C(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02220F08(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02220F60(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02220F98(UnkStruct_ov13_022213F0 *param0);
+static void InitialisePartyPokemon(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222124C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_022212C4(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0);
@@ -305,7 +305,7 @@ static u8 ov13_0221FE5C(UnkStruct_ov13_022213F0 *param0)
 
     param0->unk_2084 = ov13_02228A38(param0->unk_00->heapID);
 
-    ov13_02220F98(param0);
+    InitialisePartyPokemon(param0);
     ov13_02220C0C(param0);
     ov13_02220D4C(param0);
     ov13_02220F08(param0);
@@ -1190,7 +1190,7 @@ static void ov13_02220F60(UnkStruct_ov13_022213F0 *param0)
     Strbuf_Free(param0->unk_1FAC);
 }
 
-static void ov13_02220F98(UnkStruct_ov13_022213F0 *param0)
+static void InitialisePartyPokemon(UnkStruct_ov13_022213F0 *param0)
 {
     u16 i, l;
 
@@ -1548,8 +1548,8 @@ static void ov13_022216C0(UnkStruct_ov13_022213F0 *param0, u8 param1)
     Bg_ScheduleFillTilemap(param0->unk_1E0, 5, 0);
 
     ov13_02224B7C(param0, param1);
-    ov13_02221BB0(param0);
-    ov13_02221AC4(param0, param1);
+    ClearInBattleScreen(param0);
+    InitializeInBattleScreen(param0, param1);
     DrawInBattleScreen(param0, param1);
     ov13_022214E0(param0, param1);
     ov13_02221654(param0, param1);

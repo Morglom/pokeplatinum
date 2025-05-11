@@ -29,7 +29,7 @@ enum InBattleScreenIndex {
 
 typedef struct {
     UnkStruct_ov13_0221FC20 *unk_00;
-    PartyPokemonData unk_04[6];
+    PartyPokemonData unk_04[6]; // Party Pokemon
     BgConfig *unk_1E0;
     PaletteData *unk_1E4;
     u16 unk_1E8[4][96];
@@ -71,7 +71,7 @@ typedef struct {
     u8 unk_2079;
     u16 unk_207A;
     u16 unk_207C[4]; // Moves
-    UnkStruct_ov13_02228A50 *unk_2084;
+    UnkStruct_ov13_02228A50 *unk_2084; // Bag
     u8 unk_2088;
     u8 unk_2089;
     u8 unk_208A;

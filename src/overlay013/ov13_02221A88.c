@@ -266,15 +266,15 @@ void ov13_02221A88(UnkStruct_ov13_022213F0 *param0)
         Window_AddFromTemplate(param0->unk_1E0, &param0->unk_204C[i], &Unk_ov13_02228EA0[i]);
     }
 
-    ov13_02221AC4(param0, param0->unk_2076);
+    InitializeInBattleScreen(param0, param0->unk_2076);
 }
 
-void ov13_02221AC4(UnkStruct_ov13_022213F0 *param0, u32 param1)
+void InitializeInBattleScreen(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
 {
     const WindowTemplate *v0;
     u8 i;
 
-    switch (param1) {
+    switch (screenIndex) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
         v0 = Unk_ov13_02228F54;
         param0->unk_2070 = 6;
@@ -321,7 +321,7 @@ void ov13_02221AC4(UnkStruct_ov13_022213F0 *param0, u32 param1)
     }
 }
 
-void ov13_02221BB0(UnkStruct_ov13_022213F0 *param0)
+void ClearInBattleScreen(UnkStruct_ov13_022213F0 *param0)
 {
     Windows_Delete(param0->unk_206C, param0->unk_2070);
 }

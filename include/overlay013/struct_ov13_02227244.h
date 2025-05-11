@@ -28,7 +28,7 @@ typedef struct {
     u8 unk_30;
     u8 unk_31;
     u8 unk_32;
-    UnkStruct_ov13_02228A50 *unk_34;
+    UnkStruct_ov13_02228A50 *unk_34; // Bag
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem unk_3C[5][36];
     SpriteManager *unk_30C;

@@ -90,7 +90,7 @@ static const int Unk_ov13_02229514[][5] = {
     { 0xB016, 0xB00A, 0xB00A, 0xB00A, 0x0 }
 };
 
-static const int Unk_ov13_02229404[][2] = {
+static const int PartyListSlotCoordinates[][2] = {
     { 0x10, 0x10 },
     { 0x90, 0x18 },
     { 0x10, 0x40 },
@@ -365,10 +365,10 @@ void ov13_02224970(UnkStruct_ov13_022213F0 *param0)
     SpriteSystem_FreeResourcesAndManager(v0, param0->unk_1FB0);
 }
 
-static void ov13_022249AC(ManagedSprite *param0, const int param1, const int param2)
+static void ov13_022249AC(ManagedSprite *param0, const int x, const int y)
 {
     ManagedSprite_SetDrawFlag(param0, 1);
-    ManagedSprite_SetPositionXY(param0, param1, param2);
+    ManagedSprite_SetPositionXY(param0, x, y);
 }
 
 static void ov13_022249CC(UnkStruct_ov13_022213F0 *param0)
@@ -446,7 +446,7 @@ static void ov13_02224B5C(u8 param0, ManagedSprite *param1, const int param2, co
     ov13_022249AC(param1, param2, param3);
 }
 
-void ov13_02224B7C(UnkStruct_ov13_022213F0 *param0, u32 param1)
+void ov13_02224B7C(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
 {
     u32 v0;
 
@@ -454,35 +454,35 @@ void ov13_02224B7C(UnkStruct_ov13_022213F0 *param0, u32 param1)
         ManagedSprite_SetDrawFlag(param0->unk_1FB4[v0], 0);
     }
 
-    switch (param1) {
-    case 0:
+    switch (screenIndex) {
+    case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
         ov13_02224C14(param0);
         break;
-    case 1:
+    case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
         ov13_02224CB0(param0);
         break;
-    case 2:
+    case IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY:
         ov13_02224D08(param0);
         break;
-    case 3:
+    case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
         ov13_02224DA0(param0);
         break;
-    case 4:
+    case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
         ov13_02224E78(param0);
         break;
-    case 5:
+    case IN_BATTLE_SCREEN_INDEX_RESTORE_PP:
         ov13_0222506C(param0);
         break;
-    case 6:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_1:
         ov13_02224F3C(param0);
         break;
-    case 7:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
         ov13_02224FA8(param0);
         break;
-    case 8:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_2:
         ov13_02225150(param0);
         break;
-    case 9:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
         ov13_022250D8(param0);
         break;
     }
@@ -493,14 +493,14 @@ static void ov13_02224C14(UnkStruct_ov13_022213F0 *param0)
     s32 v0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        if (param0->unk_04[v0].species == 0) {
+        if (param0->unk_04[v0].species == SPECIES_NONE) {
             continue;
         }
 
-        ov13_022249AC(param0->unk_1FB4[7 + v0], Unk_ov13_02229404[v0][0], Unk_ov13_02229404[v0][1]);
+        ov13_022249AC(param0->unk_1FB4[7 + v0], PartyListSlotCoordinates[v0][0], PartyListSlotCoordinates[v0][1]);
         ov13_02224AB0(param0->unk_04[v0].status, param0->unk_1FB4[13 + v0], Unk_ov13_02229434[v0][0], Unk_ov13_02229434[v0][1]);
-        ov13_02224B28(param0->unk_04[v0].heldItem, param0->unk_1FB4[0 + v0], Unk_ov13_02229404[v0][0] + 8, Unk_ov13_02229404[v0][1] + 8);
-        ov13_02224B5C(param0->unk_04[v0].mail, param0->unk_1FB4[32 + v0], Unk_ov13_02229404[v0][0] + 16, Unk_ov13_02229404[v0][1] + 8);
+        ov13_02224B28(param0->unk_04[v0].heldItem, param0->unk_1FB4[0 + v0], PartyListSlotCoordinates[v0][0] + 8, PartyListSlotCoordinates[v0][1] + 8);
+        ov13_02224B5C(param0->unk_04[v0].mail, param0->unk_1FB4[32 + v0], PartyListSlotCoordinates[v0][0] + 16, PartyListSlotCoordinates[v0][1] + 8);
     }
 }
 
