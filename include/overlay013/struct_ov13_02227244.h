@@ -15,6 +15,12 @@
 #include "strbuf.h"
 #include "string_template.h"
 
+enum InBattleBagScreenIndex {
+    IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU = 0,
+    IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU,
+    IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM,
+};
+
 typedef struct {
     UnkStruct_ov13_022264F4 *unk_00;
     BgConfig *unk_04;
@@ -23,9 +29,9 @@ typedef struct {
     MessageLoader *unk_10;
     StringTemplate *unk_14;
     Strbuf *unk_18;
-    Window unk_1C;
-    Window *unk_2C;
-    u8 unk_30;
+    Window unk_1C; // Window
+    Window *unk_2C; // Windows
+    u8 unk_30; // Window num
     u8 unk_31;
     u8 unk_32;
     UnkStruct_ov13_02228A50 *unk_34; // Bag
@@ -51,7 +57,7 @@ typedef struct {
     u8 unk_1142[8];
     u8 unk_114A;
     u8 unk_114B;
-    u8 unk_114C;
+    u8 unk_114C; // Screen Index
     u8 unk_114D;
     s8 unk_114E;
     u8 unk_114F[5];
