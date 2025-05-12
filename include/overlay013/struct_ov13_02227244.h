@@ -36,7 +36,7 @@ typedef struct {
     MessageLoader *unk_10;
     StringTemplate *unk_14;
     Strbuf *unk_18;
-    Window unk_1C; // Window
+    Window unk_1C; // Message box window
     Window *unk_2C; // Windows
     u8 unk_30; // Window num
     u8 unk_31;

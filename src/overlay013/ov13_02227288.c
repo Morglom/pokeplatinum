@@ -44,7 +44,7 @@ static void DrawBagMenuScreen(UnkStruct_ov13_02227244 *param0);
 static void DrawBagSubMenuScreen(UnkStruct_ov13_02227244 *param0);
 static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0);
 
-static const WindowTemplate Unk_ov13_02229A60 = {
+static const WindowTemplate bagScreenMessageBoxWindowTemplate = {
     0x4,
     0x2,
     0x13,
@@ -100,7 +100,7 @@ static const WindowTemplate useBagItemScreenWindowTemplates[] = {
 
 void ov13_02227288(UnkStruct_ov13_02227244 *param0)
 {
-    Window_AddFromTemplate(param0->unk_04, &param0->unk_1C, &Unk_ov13_02229A60);
+    Window_AddFromTemplate(param0->unk_04, &param0->unk_1C, &bagScreenMessageBoxWindowTemplate);
     InitializeInBattleBagScreen(param0, param0->unk_114C);
 }
 

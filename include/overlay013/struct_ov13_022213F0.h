@@ -49,14 +49,14 @@ typedef struct {
     u8 unk_1F9E;
     u8 unk_1F9F_0 : 4;
     u8 unk_1F9F_4 : 3;
-    u8 unk_1F9F_7 : 1;
+    u8 unk_1F9F_7 : 1; // Some bool
     UnkStruct_0200C440 *unk_1FA0;
     MessageLoader *unk_1FA4;
     StringTemplate *unk_1FA8;
     Strbuf *unk_1FAC;
     SpriteManager *unk_1FB0;
     ManagedSprite *unk_1FB4[38];
-    Window unk_204C[2]; // Window
+    Window unk_204C[2]; // Message box windows
     Window *unk_206C; // Window array
     u8 unk_2070; // Window num
     u8 unk_2071;
@@ -66,7 +66,7 @@ typedef struct {
     u8 unk_2074; // Another enum
     u8 unk_2075; // Enum
     u8 unk_2076; // Enum of some kind
-    u8 unk_2077;
+    u8 unk_2077; // Printer id
     u8 unk_2078;
     u8 unk_2079;
     u16 unk_207A;

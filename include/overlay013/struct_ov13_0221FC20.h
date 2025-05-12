@@ -6,9 +6,9 @@
 #include "party.h"
 
 typedef struct {
-    Party *unk_00;
+    Party *unk_00; // Party
     void *unk_04;
-    BattleSystem *unk_08;
+    BattleSystem *unk_08; // Battle system
     u32 heapID;
     u8 unk_10;
     u8 selectedPartyIndex;
@@ -18,10 +18,10 @@ typedef struct {
     u8 unk_15;
     u32 unk_18[2];
     u16 unk_20;
-    u16 unk_22; // Item?
+    u16 unk_22; // Item selected for use
     u16 unk_24; // Move to learn
-    s32 unk_28; // Trainer / Player?
-    u8 unk_2C[6];
+    s32 unk_28; // Battler
+    u8 unk_2C[6]; // Party slots
     u8 unk_32;
     u8 unk_33; // Item Category?
     u8 unk_34; // Index of selected move

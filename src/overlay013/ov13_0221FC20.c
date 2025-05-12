@@ -43,6 +43,16 @@
 #include "unk_0208C098.h"
 #include "unk_02094EDC.h"
 
+enum InBattleBagScreenIndex {
+    IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE = 17,
+    IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE,
+    IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP = 21,
+    IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE,
+    IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL = 24,
+    IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT,
+    IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP,
+};
+
 #define EXP_BAR_MAX_PIXELS 64
 
 static void ov13_0221FCAC(SysTask *param0, void *param1);
@@ -52,14 +62,14 @@ static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_022201DC(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222081C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02220834(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_02220848(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_02220864(UnkStruct_ov13_022213F0 *param0);
+static u8 TextQueue(UnkStruct_ov13_022213F0 *param0);
+static u8 InputQueue(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_022207DC(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_022203A0(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02220418(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_02220628(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_0222088C(UnkStruct_ov13_022213F0 *param0);
+static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0);
+static u8 SomeTypeOfQueue(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222072C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02220738(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02220750(UnkStruct_ov13_022213F0 *param0);
@@ -69,9 +79,9 @@ static u8 ov13_02220768(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222078C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_022207B8(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_02220A4C(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_02220B78(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_02220BA4(SysTask *param0, UnkStruct_ov13_022213F0 *param1);
+static u8 UsePPAllRestoreItem(UnkStruct_ov13_022213F0 *param0);
+static u8 StartFadeOut(UnkStruct_ov13_022213F0 *param0);
+static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_022213F0 *param1);
 static u8 ov13_0222029C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02220C0C(UnkStruct_ov13_022213F0 *param0);
@@ -250,11 +260,11 @@ static void ov13_0221FCAC(SysTask *param0, void *param1)
     case 16:
         v0->unk_2074 = ov13_02220834(v0);
         break;
-    case 17:
-        v0->unk_2074 = ov13_02220848(v0);
+    case IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE:
+        v0->unk_2074 = TextQueue(v0);
         break;
-    case 18:
-        v0->unk_2074 = ov13_02220864(v0);
+    case IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE:
+        v0->unk_2074 = InputQueue(v0);
         break;
     case 19:
         v0->unk_2074 = ov13_02220418(v0);
@@ -262,24 +272,24 @@ static void ov13_0221FCAC(SysTask *param0, void *param1)
     case 20:
         v0->unk_2074 = ov13_0222050C(v0);
         break;
-    case 21:
-        v0->unk_2074 = ov13_02220628(v0);
+    case IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP:
+        v0->unk_2074 = UsePPRestoreItem(v0);
         break;
-    case 22:
-        v0->unk_2074 = ov13_0222088C(v0);
+    case IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE:
+        v0->unk_2074 = SomeTypeOfQueue(v0);
         break;
     case 23:
         v0->unk_2074 = ov13_022208A4(v0);
         break;
-    case 24:
-        v0->unk_2074 = ov13_02220A4C(v0);
+    case IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL:
+        v0->unk_2074 = UsePPAllRestoreItem(v0);
         break;
-    case 25:
-        v0->unk_2074 = ov13_02220B78(v0);
+    case IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT:
+        v0->unk_2074 = StartFadeOut(v0);
         break;
 
-    case 26:
-        if (ov13_02220BA4(param0, v0) == 1) {
+    case IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP:
+        if (CleanupScreen(param0, v0) == TRUE) {
             return;
         }
     }
@@ -347,7 +357,7 @@ static u8 ov13_0221FF60(UnkStruct_ov13_022213F0 *param0)
             if (param0->unk_00->unk_35 != 1) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 ov13_02225FCC(param0, 6);
-                return 25;
+                return IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
             }
         } else {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
@@ -359,7 +369,7 @@ static u8 ov13_0221FF60(UnkStruct_ov13_022213F0 *param0)
                 param0->unk_2075 = 7;
             }
 
-            return 22;
+            return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
         }
     }
 
@@ -370,21 +380,20 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
 {
     UnkStruct_ov13_0221FC20 *v0 = param0->unk_00;
 
-    // Embargo blocking item use
     if (((v0->selectedPartyIndex == 0) && (v0->unk_18[0] != 0)) || ((v0->selectedPartyIndex == 1) && (v0->unk_18[1] != 0))) {
-        ov13_0222449C(param0);
+        OnEmbargoBlockingItem(param0);
         DisplayBattleMessageBox(param0);
         param0->unk_00->selectedPartyIndex = 6;
-        param0->unk_2075 = 25;
-        return 17;
+        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
     }
 
-    if ((Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE, v0->heapID) != 0) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) == 0) && (param0->unk_04[v0->selectedPartyIndex].isEgg == FALSE)) {
+    if ((Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE, v0->heapID) != FALSE) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) == FALSE) && (param0->unk_04[v0->selectedPartyIndex].isEgg == FALSE)) {
         param0->unk_2075 = 13;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
-    if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], 0, v0->unk_22) == 1) {
+    if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], 0, v0->unk_22) == TRUE) {
         if (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) != 0) {
             param0->unk_2075 = 13;
         } else {
@@ -400,16 +409,16 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
         }
 
         param0->unk_2078 = 0;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     } else {
         MessageLoader_GetStrbuf(param0->unk_1FA4, 81, param0->unk_1FAC);
         DisplayBattleMessageBox(param0);
         param0->unk_00->selectedPartyIndex = 6;
-        param0->unk_2075 = 25;
-        return 17;
+        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
     }
 
-    return 17;
+    return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
 }
 
 static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0)
@@ -426,7 +435,7 @@ static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0)
         }
 
         param0->unk_2075 = 15;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1:
         if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
             break;
@@ -435,7 +444,7 @@ static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 8);
         param0->unk_2075 = 8;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 2:
         if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
             break;
@@ -444,12 +453,12 @@ static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 10);
         param0->unk_2075 = 9;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 3:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2075 = 6;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 2;
@@ -472,7 +481,7 @@ static u8 ov13_022201DC(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 12);
         param0->unk_2075 = 14;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1: {
         u8 v2 = ov13_02221428(param0, param0->unk_00->selectedPartyIndex, 1);
 
@@ -485,18 +494,18 @@ static u8 ov13_022201DC(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 13);
         param0->unk_2075 = 14;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 2:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 11);
         param0->unk_2075 = 9;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 3:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2088 = 1;
         param0->unk_2075 = 7;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 3;
@@ -519,7 +528,7 @@ static u8 ov13_0222029C(UnkStruct_ov13_022213F0 *param0)
         ov13_02225FCC(param0, 14 + v0);
         param0->unk_00->unk_34 = v0;
         param0->unk_2075 = 10;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 4: {
         u8 v1 = ov13_02221428(param0, param0->unk_00->selectedPartyIndex, -1);
 
@@ -532,7 +541,7 @@ static u8 ov13_0222029C(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 12);
         param0->unk_2075 = 14;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
 
     case 5: {
         u8 v2 = ov13_02221428(param0, param0->unk_00->selectedPartyIndex, 1);
@@ -551,13 +560,13 @@ static u8 ov13_0222029C(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 9);
         param0->unk_2075 = 8;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 7:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2088 = 2;
         param0->unk_2075 = 7;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 4;
@@ -583,7 +592,7 @@ static u8 ov13_022203A0(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2075 = 9;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 5;
@@ -614,7 +623,7 @@ static u8 ov13_02220418(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 23 + v0);
         param0->unk_2075 = 12;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 5:
         if (param0->unk_2073_4 == 0) {
             break;
@@ -625,13 +634,13 @@ static u8 ov13_02220418(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 18);
         param0->unk_2075 = 11;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 6:
         param0->unk_00->unk_34 = 4;
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
-        param0->unk_2075 = 25;
-        return 22;
+        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 19;
@@ -672,10 +681,10 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
 
             param0->unk_2075 = 20;
         } else {
-            param0->unk_2075 = 25;
+            param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
         }
 
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1:
         if (param0->unk_2073_4 == 0) {
             break;
@@ -686,22 +695,22 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
         param0->unk_2073_0 ^= 1;
         param0->unk_208A = (u8)v0;
         param0->unk_2075 = 12;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 2:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_208A = 0;
         param0->unk_2075 = 11;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 20;
 }
 
-static u8 ov13_02220628(UnkStruct_ov13_022213F0 *param0)
+static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0)
 {
     UnkStruct_ov13_0221FC20 *v0;
-    int v1;
+    int v1; // Move Index
 
     v0 = param0->unk_00;
     v1 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D64);
@@ -729,23 +738,23 @@ static u8 ov13_02220628(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 19 + v1);
 
-        if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], v1, v0->unk_22) == 1) {
+        if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], v1, v0->unk_22) == TRUE) {
             param0->unk_2078 = 0;
             param0->unk_2075 = 23;
-            return 22;
+            return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
         } else {
             MessageLoader_GetStrbuf(param0->unk_1FA4, 81, param0->unk_1FAC);
             DisplayBattleMessageBox(param0);
             param0->unk_00->selectedPartyIndex = 6;
-            param0->unk_2075 = 25;
-            return 17;
+            param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+            return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
         }
         break;
     case 4:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2075 = 6;
-        return 22;
+        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 21;
@@ -809,8 +818,8 @@ static u8 ov13_022207B8(UnkStruct_ov13_022213F0 *param0)
 {
     ov13_022216C0(param0, 5);
 
-    if (Item_LoadParam(param0->unk_00->unk_22, ITEM_PARAM_PP_RESTORE_ALL, param0->unk_00->heapID) != 0) {
-        return 24;
+    if (Item_LoadParam(param0->unk_00->unk_22, ITEM_PARAM_PP_RESTORE_ALL, param0->unk_00->heapID) != FALSE) {
+        return IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL;
     }
 
     return 21;
@@ -834,7 +843,7 @@ static u8 ov13_0222081C(UnkStruct_ov13_022213F0 *param0)
 {
     DisplayBattleMessageBox(param0);
     param0->unk_2075 = 16;
-    return 17;
+    return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
 }
 
 static u8 ov13_02220834(UnkStruct_ov13_022213F0 *param0)
@@ -843,31 +852,31 @@ static u8 ov13_02220834(UnkStruct_ov13_022213F0 *param0)
     return 2;
 }
 
-static u8 ov13_02220848(UnkStruct_ov13_022213F0 *param0)
+static u8 TextQueue(UnkStruct_ov13_022213F0 *param0)
 {
     if (Text_IsPrinterActive(param0->unk_2077) == FALSE) {
-        return 18;
+        return IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE;
     }
 
-    return 17;
+    return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
 }
 
-static u8 ov13_02220864(UnkStruct_ov13_022213F0 *param0)
+static u8 InputQueue(UnkStruct_ov13_022213F0 *param0)
 {
     if ((gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B)) || (TouchScreen_Tapped() == TRUE)) {
         return param0->unk_2075;
     }
 
-    return 18;
+    return IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE;
 }
 
-static u8 ov13_0222088C(UnkStruct_ov13_022213F0 *param0)
+static u8 SomeTypeOfQueue(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_1F9F_7 == 0) {
         return param0->unk_2075;
     }
 
-    return 22;
+    return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
 }
 
 static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
@@ -917,8 +926,8 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
     case 3:
         ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
         DisplayBattleMessageBox(param0);
-        param0->unk_2075 = 25;
-        return 17;
+        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
     case 4:
         if (param0->unk_04[v0->selectedPartyIndex].currentHP != param0->unk_207A) {
             param0->unk_04[v0->selectedPartyIndex].currentHP++;
@@ -933,7 +942,7 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
     return 23;
 }
 
-static u8 ov13_02220A4C(UnkStruct_ov13_022213F0 *param0)
+static u8 UsePPAllRestoreItem(UnkStruct_ov13_022213F0 *param0)
 {
     UnkStruct_ov13_0221FC20 *v0 = param0->unk_00;
     u32 v1, v2;
@@ -978,23 +987,23 @@ static u8 ov13_02220A4C(UnkStruct_ov13_022213F0 *param0)
     case 2:
         ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
         DisplayBattleMessageBox(param0);
-        param0->unk_2075 = 25;
-        return 17;
+        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
     }
 
-    return 24;
+    return IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL;
 }
 
-static u8 ov13_02220B78(UnkStruct_ov13_022213F0 *param0)
+static u8 StartFadeOut(UnkStruct_ov13_022213F0 *param0)
 {
     PaletteData_StartFade(param0->unk_1E4, (0x2 | 0x8), 0xffff, -8, 0, 16, 0);
-    return 26;
+    return IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP;
 }
 
-static u8 ov13_02220BA4(SysTask *param0, UnkStruct_ov13_022213F0 *param1)
+static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_022213F0 *param1)
 {
     if (PaletteData_GetSelectedBuffersMask(param1->unk_1E4) != 0) {
-        return 0;
+        return FALSE;
     }
 
     ov13_02220F60(param1);
@@ -1010,7 +1019,7 @@ static u8 ov13_02220BA4(SysTask *param0, UnkStruct_ov13_022213F0 *param1)
     param1->unk_00->unk_36 = 1;
     SysTask_FinishAndFreeParam(param0);
 
-    return 1;
+    return TRUE;
 }
 
 static void ov13_02220C0C(UnkStruct_ov13_022213F0 *param0)

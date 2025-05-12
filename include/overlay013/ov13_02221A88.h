@@ -15,6 +15,6 @@ void ov13_02223F5C(UnkStruct_ov13_022213F0 *param0, u16 windowIndex, u16 moveInd
 void DisplayBattleMessageBox(UnkStruct_ov13_022213F0 *param0);
 void ov13_02224108(UnkStruct_ov13_022213F0 *param0);
 void ov13_02224144(UnkStruct_ov13_022213F0 *param0);
-void ov13_0222449C(UnkStruct_ov13_022213F0 *param0);
+void OnEmbargoBlockingItem(UnkStruct_ov13_022213F0 *param0);
 
 #endif // POKEPLATINUM_OV13_02221A88_H

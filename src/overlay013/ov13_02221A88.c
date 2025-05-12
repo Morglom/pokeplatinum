@@ -116,7 +116,7 @@ static void DrawConfirmLearnMove(UnkStruct_ov13_022213F0 *param0);
 static void DrawConfirmLearnMoveContest(UnkStruct_ov13_022213F0 *param0);
 static void WriteNameGenderOther(UnkStruct_ov13_022213F0 *param0, u32 param1);
 
-static const WindowTemplate Unk_ov13_02228EA0[] = {
+static const WindowTemplate partyScreenMessageBoxWindowTemplates[] = {
     { 0x4, 0x2, 0x15, 0x16, 0x2, 0xF, 0x1F },
     { 0x4, 0x2, 0x13, 0x1B, 0x4, 0xF, 0x1F }
 };
@@ -273,7 +273,7 @@ void ov13_02221A88(UnkStruct_ov13_022213F0 *param0)
     u32 i;
 
     for (i = 0; i < 2; i++) {
-        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_204C[i], &Unk_ov13_02228EA0[i]);
+        Window_AddFromTemplate(param0->unk_1E0, &param0->unk_204C[i], &partyScreenMessageBoxWindowTemplates[i]);
     }
 
     InitializeInBattlePartyScreen(param0, param0->unk_2076);
@@ -1721,7 +1721,7 @@ void ov13_02224144(UnkStruct_ov13_022213F0 *param0)
     Heap_FreeToHeap(itemData);
 }
 
-void ov13_0222449C(UnkStruct_ov13_022213F0 *param0)
+void OnEmbargoBlockingItem(UnkStruct_ov13_022213F0 *param0)
 {
     Pokemon *pokemonData;
     UnkStruct_ov13_0221FC20 *v1;
