@@ -901,26 +901,26 @@ void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1)
     ov13_02228A9C(param0->unk_2084, Unk_ov13_0222938C[param1]);
 
     switch (param1) {
-    case 0:
+    case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
         ov13_02228A68(param0->unk_2084, param0->unk_00->selectedPartyIndex);
         param0->unk_2088 = 0;
         param0->unk_00->unk_34 = 0;
         break;
-    case 1:
+    case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
         ov13_02228A68(param0->unk_2084, param0->unk_2088);
         param0->unk_00->unk_34 = 0;
         break;
-    case 3:
-    case 4:
+    case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
+    case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
         ov13_02228A68(param0->unk_2084, param0->unk_00->unk_34);
         break;
-    case 6:
-    case 8:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_1:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_2:
         ov13_022255EC(param0);
         ov13_02228A68(param0->unk_2084, param0->unk_2089);
         break;
-    case 7:
-    case 9:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
         ov13_02225614(param0);
         ov13_02228A68(param0->unk_2084, param0->unk_208A);
         break;

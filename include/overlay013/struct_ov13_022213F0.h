@@ -65,7 +65,7 @@ typedef struct {
     u8 unk_2073_4 : 4; // Some sort of enum
     u8 unk_2074; // Another enum
     u8 unk_2075; // Screen queue
-    u8 unk_2076; // Enum of some kind
+    u8 unk_2076; // In battle screen index
     u8 unk_2077; // Printer id
     u8 unk_2078;
     u8 unk_2079;

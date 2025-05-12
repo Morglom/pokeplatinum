@@ -579,7 +579,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
     u16 v0, v1;
 
     switch (param1) {
-    case 0:
+    case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
         for (v0 = 0; v0 < 6; v0++) {
             v1 = ov13_022213F0(param0, v0);
 
@@ -598,7 +598,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
             ov13_02225D8C(param0, 6, 0, 0);
         }
         break;
-    case 1:
+    case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
         ov13_02225D8C(param0, 6, 0, 0);
         ov13_02225D8C(param0, 7, 0, 0);
 
@@ -610,7 +610,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
             ov13_02225D8C(param0, 10, 0, 0);
         }
         break;
-    case 2:
+    case IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY:
         if (CheckCanDoubleBattle(param0) == TRUE) {
             ov13_02225D8C(param0, 12, 0, 0);
             ov13_02225D8C(param0, 13, 0, 0);
@@ -622,7 +622,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         ov13_02225D8C(param0, 11, 0, 0);
         ov13_02225D8C(param0, 6, 0, 0);
         break;
-    case 3:
+    case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
         if (CheckCanDoubleBattle(param0) == TRUE) {
             ov13_02225D8C(param0, 12, 0, 0);
             ov13_02225D8C(param0, 13, 0, 0);
@@ -642,7 +642,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         ov13_02225D8C(param0, 9, 0, 0);
         ov13_02225D8C(param0, 6, 0, 0);
         break;
-    case 4:
+    case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
         ov13_02225D8C(param0, 6, 0, 0);
 
         for (v0 = 0; v0 < 4; v0++) {
@@ -653,7 +653,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
             }
         }
         break;
-    case 5:
+    case IN_BATTLE_SCREEN_INDEX_RESTORE_PP:
         for (v0 = 0; v0 < 4; v0++) {
             if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != MOVE_NONE) {
                 ov13_02225D8C(param0, 19 + v0, 0, 0);
@@ -664,8 +664,8 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
 
         ov13_02225D8C(param0, 6, 0, 0);
         break;
-    case 6:
-    case 8:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_1:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_2:
         ov13_02225D8C(param0, 23, 0, 0);
         ov13_02225D8C(param0, 24, 0, 0);
         ov13_02225D8C(param0, 25, 0, 0);
@@ -677,7 +677,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
             ov13_02225D8C(param0, 18, 0, 0);
         }
         break;
-    case 7:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
         ov13_02225D8C(param0, 28, 0, 0);
         ov13_02225D8C(param0, 6, 0, 0);
 
@@ -685,7 +685,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
             ov13_02225D8C(param0, 18, 0, 0);
         }
         break;
-    case 9:
+    case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
         ov13_02225D8C(param0, 29, 0, 0);
         ov13_02225D8C(param0, 6, 0, 0);
 
@@ -698,7 +698,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
 
 void ov13_02226444(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
-    if (param1 == 3) {
+    if (param1 == IN_BATTLE_SCREEN_INDEX_CHECK_MOVES) {
         PaletteData_LoadBuffer(param0->unk_1E4, &param0->unk_1F5C[16], 1, 12 * 16, 0x20);
     } else {
         PaletteData_LoadBuffer(param0->unk_1E4, &param0->unk_1F5C[0], 1, 12 * 16, 0x20);

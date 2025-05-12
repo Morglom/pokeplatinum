@@ -69,6 +69,14 @@ enum InBattleBagScreenIndex {
     IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP,
 };
 
+enum InBattleTextIndex {
+    IN_BATTLE_TEXT_INDEX_POKEMON_ALREADY_IN_BATTLE = 76,
+    IN_BATTLE_TEXT_INDEX_POKEMON_HAS_NO_HP_LEFT,
+    IN_BATTLE_TEXT_INDEX_POKEMON_CANT_BE_SWITCHED_OUT,
+    IN_BATTLE_TEXT_INDEX_POKEMON_EGG_CANT_BATTLE,
+    IN_BATTLE_TEXT_INDEX_CANT_SWITCH_TO_PARTNERS_POKEMON,
+};
+
 #define EXP_BAR_MAX_PIXELS 64
 
 static void ov13_0221FCAC(SysTask *param0, void *param1);
@@ -112,18 +120,18 @@ static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0);
 static int CheckTouchRectIsPressed(UnkStruct_ov13_022213F0 *param0, const TouchScreenRect *rect);
-static void ov13_022216C0(UnkStruct_ov13_022213F0 *param0, u8 param1);
+static void ChangeInBattleScreen(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static void ov13_02221738(UnkStruct_ov13_022213F0 *param0, u8 param1);
-static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0);
+static u8 CheckPokemonCanBeSwitchedTo(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02221428(UnkStruct_ov13_022213F0 *param0, s32 param1, s32 param2);
-static void ov13_022214E0(UnkStruct_ov13_022213F0 *param0, u8 param1);
+static void SetupEXPBar(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static void ov13_02221560(UnkStruct_ov13_022213F0 *param0, u16 param1, u16 param2, u16 param3);
-static void ov13_02221654(UnkStruct_ov13_022213F0 *param0, u8 param1);
-static u8 ov13_022219DC(UnkStruct_ov13_022213F0 *param0);
+static void SetupMoveContestInfo(UnkStruct_ov13_022213F0 *param0, u8 param1);
+static u8 CheckSelectedMoveIsHM(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02221A04(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02221A3C(UnkStruct_ov13_022213F0 *param0);
 static u8 CheckSelectedPokemonIsEgg(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02221A54(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
+static void UseBagBattleItem(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
 
 static const TouchScreenRect Unk_ov13_02228DEC[] = {
     { 0x0, 0x2F, 0x0, 0x7F },
@@ -355,7 +363,7 @@ static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0)
     }
 
     ov13_0222563C(param0, param0->unk_2076);
-    ov13_022214E0(param0, param0->unk_2076);
+    SetupEXPBar(param0, param0->unk_2076);
 
     PaletteData_StartFade(param0->unk_1E4, (0x2 | 0x8), 0xffff, -8, 16, 0, 0);
 
@@ -414,7 +422,7 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
             param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_CHECK_WHICH_PP_ITEM;
         } else {
             if ((ov13_022213F0(param0, v0->selectedPartyIndex) == 1) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_REVIVE, v0->heapID) == 0)) {
-                ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
+                UseBagBattleItem(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
                 param0->unk_04[v0->selectedPartyIndex].pokemon = BattleSystem_PartyPokemon(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex]);
                 v0->unk_20 = Pokemon_GetValue(param0->unk_04[v0->selectedPartyIndex].pokemon, MON_DATA_CURRENT_HP, NULL);
                 v0->unk_20 -= param0->unk_04[v0->selectedPartyIndex].currentHP;
@@ -446,11 +454,11 @@ static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 7);
 
-        if (ov13_022217A4(param0) == 1) {
+        if (CheckPokemonCanBeSwitchedTo(param0) == TRUE) {
             return IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
         }
 
-        param0->unk_2075 = 15;
+        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_CANT_SHIFT;
         return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1:
         if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
@@ -686,7 +694,7 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
             ov13_02225FCC(param0, 29);
         }
 
-        if (ov13_022219DC(param0) == 1) {
+        if (CheckSelectedMoveIsHM(param0) == TRUE) {
             ov13_02223118(param0);
 
             if (param0->unk_2073_0 == 0) {
@@ -778,40 +786,40 @@ static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0)
 
 static u8 PartyList(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022216C0(param0, IN_BATTLE_SCREEN_INDEX_PARTY_LIST);
+    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_PARTY_LIST);
     return 1;
 }
 
 static u8 SelectPokemon(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022216C0(param0, IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON);
+    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON);
     return 2;
 }
 
 static u8 PokemonSummaryDisplay(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022216C0(param0, IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY);
+    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY);
     return 3;
 }
 
 static u8 CheckMoves(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022216C0(param0, IN_BATTLE_SCREEN_INDEX_CHECK_MOVES);
+    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_CHECK_MOVES);
     return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_LIST;
 }
 
 static u8 MoveSummary(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022216C0(param0, IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY);
+    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY);
     return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_DETAIL;
 }
 
 static u8 ov13_02220768(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_2073_0 == 0) {
-        ov13_022216C0(param0, IN_BATTLE_SCREEN_LEARN_MOVE_1);
+        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_1);
     } else {
-        ov13_022216C0(param0, IN_BATTLE_SCREEN_LEARN_MOVE_2);
+        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_2);
     }
 
     return 19;
@@ -822,9 +830,9 @@ static u8 LearnMove(UnkStruct_ov13_022213F0 *param0)
     ov13_022252E8(param0);
 
     if (param0->unk_2073_0 == 0) {
-        ov13_022216C0(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM);
+        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM);
     } else {
-        ov13_022216C0(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST);
+        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST);
     }
 
     return 20;
@@ -832,7 +840,7 @@ static u8 LearnMove(UnkStruct_ov13_022213F0 *param0)
 
 static u8 CheckWhichPPItem(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022216C0(param0, IN_BATTLE_SCREEN_INDEX_RESTORE_PP);
+    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_RESTORE_PP);
 
     if (Item_LoadParam(param0->unk_00->unk_22, ITEM_PARAM_PP_RESTORE_ALL, param0->unk_00->heapID) != FALSE) {
         return IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL;
@@ -846,7 +854,7 @@ static u8 SummaryScreen(UnkStruct_ov13_022213F0 *param0)
     ov13_02224B7C(param0, param0->unk_2076);
     DrawInBattlePartyScreen(param0, param0->unk_2076);
     ov13_022260EC(param0, param0->unk_2076);
-    ov13_022214E0(param0, param0->unk_2076);
+    SetupEXPBar(param0, param0->unk_2076);
 
     if (param0->unk_2076 == IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY) {
         return IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_DETAILS;
@@ -940,7 +948,7 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
         param0->unk_2078 = 3;
         break;
     case 3:
-        ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
+        UseBagBattleItem(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
         DisplayBattleMessageBox(param0);
         param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
         return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
@@ -1001,7 +1009,7 @@ static u8 UsePPAllRestoreItem(UnkStruct_ov13_022213F0 *param0)
         }
         break;
     case 2:
-        ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
+        UseBagBattleItem(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
         DisplayBattleMessageBox(param0);
         param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
         return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
@@ -1468,7 +1476,7 @@ static u8 ov13_02221428(UnkStruct_ov13_022213F0 *param0, s32 param1, s32 param2)
     return 0xff;
 }
 
-static void ov13_022214E0(UnkStruct_ov13_022213F0 *param0, u8 param1)
+static void SetupEXPBar(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
     PartyPokemonData *pokemonData;
     u32 expFromCurrentToNextLevel;
@@ -1478,7 +1486,7 @@ static void ov13_022214E0(UnkStruct_ov13_022213F0 *param0, u8 param1)
     u8 expBarFilledPixels;
     u8 v7;
 
-    if (param1 != 2) {
+    if (param1 != IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY) {
         return;
     }
 
@@ -1535,14 +1543,14 @@ static void ov13_02221630(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-static void ov13_02221654(UnkStruct_ov13_022213F0 *param0, u8 param1)
+static void SetupMoveContestInfo(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
     u32 v0;
     u16 v1;
     u16 v2;
     s8 v3;
 
-    if (param1 != 9) {
+    if (param1 != IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST) {
         return;
     }
 
@@ -1566,22 +1574,22 @@ static void ov13_02221654(UnkStruct_ov13_022213F0 *param0, u8 param1)
     Bg_ScheduleTilemapTransfer(param0->unk_1E0, 7);
 }
 
-static void ov13_022216C0(UnkStruct_ov13_022213F0 *param0, u8 param1)
+static void ChangeInBattleScreen(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
     ov13_02221738(param0, param1);
 
     Bg_ScheduleFillTilemap(param0->unk_1E0, 4, 0);
     Bg_ScheduleFillTilemap(param0->unk_1E0, 5, 0);
 
-    ov13_02224B7C(param0, param1);
+    ov13_02224B7C(param0, param1); // Sprite related
     ClearInBattlePartyScreen(param0);
     InitializeInBattlePartyScreen(param0, param1);
     DrawInBattlePartyScreen(param0, param1);
-    ov13_022214E0(param0, param1);
-    ov13_02221654(param0, param1);
-    ov13_0222563C(param0, param1);
-    ov13_022260EC(param0, param1);
-    ov13_02226444(param0, param1);
+    SetupEXPBar(param0, param1);
+    SetupMoveContestInfo(param0, param1);
+    ov13_0222563C(param0, param1); // Some kind of setup
+    ov13_022260EC(param0, param1); // Another setup
+    ov13_02226444(param0, param1); // Setup pallete
 
     param0->unk_2076 = param1;
 }
@@ -1614,69 +1622,66 @@ static void ov13_02221738(UnkStruct_ov13_022213F0 *param0, u8 param1)
     }
 }
 
-static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0)
+static u8 CheckPokemonCanBeSwitchedTo(UnkStruct_ov13_022213F0 *param0)
 {
-    PartyPokemonData *v0;
-    Strbuf *v1;
+    PartyPokemonData *selectedPokemonData;
+    Strbuf *strBuf;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    selectedPokemonData = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
     if (CheckIfSwitchingWithPartnersPokemon(param0, param0->unk_00->selectedPartyIndex) == TRUE) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 80);
+        strBuf = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_INDEX_CANT_SWITCH_TO_PARTNERS_POKEMON);
         {
-            int v2;
+            int partnerID;
 
-            v2 = BattleSystem_Partner(param0->unk_00->unk_08, param0->unk_00->unk_28);
-            StringTemplate_SetTrainerNameBattle(param0->unk_1FA8, 0, BattleSystem_GetTrainer(param0->unk_00->unk_08, v2));
+            partnerID = BattleSystem_Partner(param0->unk_00->unk_08, param0->unk_00->unk_28);
+            StringTemplate_SetTrainerNameBattle(param0->unk_1FA8, 0, BattleSystem_GetTrainer(param0->unk_00->unk_08, partnerID));
         }
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
-        Strbuf_Free(v1);
+        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, strBuf);
+        Strbuf_Free(strBuf);
         return FALSE;
     }
 
-    // Select pokemon with no health
-    if (v0->currentHP == 0) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 77);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
-        Strbuf_Free(v1);
+    if (selectedPokemonData->currentHP == 0) {
+        strBuf = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_INDEX_POKEMON_HAS_NO_HP_LEFT);
+        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(selectedPokemonData->pokemon));
+        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, strBuf);
+        Strbuf_Free(strBuf);
         return FALSE;
     }
 
-    // Select already active pokemon
     if ((param0->unk_00->unk_2C[param0->unk_00->selectedPartyIndex] == param0->unk_00->unk_14) || (param0->unk_00->unk_2C[param0->unk_00->selectedPartyIndex] == param0->unk_00->unk_15)) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 76);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
-        Strbuf_Free(v1);
+        strBuf = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_INDEX_POKEMON_ALREADY_IN_BATTLE);
+        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(selectedPokemonData->pokemon));
+        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, strBuf);
+        Strbuf_Free(strBuf);
         return FALSE;
     }
 
-    // Pokemon is egg
     if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
-        MessageLoader_GetStrbuf(param0->unk_1FA4, 79, param0->unk_1FAC);
+        MessageLoader_GetStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_INDEX_POKEMON_EGG_CANT_BATTLE, param0->unk_1FAC);
         return FALSE;
     }
 
     // Has already been selected
     if ((param0->unk_00->unk_12 != 6) && (param0->unk_00->unk_2C[param0->unk_00->selectedPartyIndex] == param0->unk_00->unk_12)) {
-        v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 93);
+        selectedPokemonData = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+        strBuf = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 93);
 
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
-        Strbuf_Free(v1);
+        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(selectedPokemonData->pokemon));
+        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, strBuf);
+        Strbuf_Free(strBuf);
         return FALSE;
     }
 
     // Can't be switched out as needs to learn move
     if (param0->unk_00->unk_24 != MOVE_NONE) {
-        v0 = &param0->unk_04[param0->unk_2072];
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 78);
+        selectedPokemonData = &param0->unk_04[param0->unk_2072];
+        strBuf = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 78);
 
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
-        Strbuf_Free(v1);
+        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(selectedPokemonData->pokemon));
+        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, strBuf);
+        Strbuf_Free(strBuf);
         return FALSE;
     }
 
@@ -1735,7 +1740,7 @@ u8 CheckIfSwitchingWithPartnersPokemon(UnkStruct_ov13_022213F0 *param0, u8 party
     return FALSE;
 }
 
-static u8 ov13_022219DC(UnkStruct_ov13_022213F0 *param0)
+static u8 CheckSelectedMoveIsHM(UnkStruct_ov13_022213F0 *param0)
 {
     u16 v0;
 
@@ -1762,7 +1767,7 @@ static void ov13_02221A3C(UnkStruct_ov13_022213F0 *param0)
     Bg_ScheduleTilemapTransfer(param0->unk_1E0, 7);
 }
 
-static void ov13_02221A54(BattleSystem *battleSys, u16 item, u16 category, u32 heapID)
+static void UseBagBattleItem(BattleSystem *battleSys, u16 item, u16 category, u32 heapID)
 {
     if (item != ITEM_BLUE_FLUTE && item != ITEM_RED_FLUTE && item != ITEM_YELLOW_FLUTE) {
         Bag_TryRemoveItem(BattleSystem_Bag(battleSys), item, 1, heapID);
