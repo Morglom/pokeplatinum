@@ -294,7 +294,7 @@ static u8 ov13_02226838(UnkStruct_ov13_02227244 *param0)
         case 3:
         case 4:
         case 5:
-            if (GetCurrentlySelectedBagItem(param0, v0) != 0) {
+            if (GetBagItemOnPage(param0, v0) != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 param0->unk_00->unk_27[param0->unk_114D] = (u8)v0;
                 param0->unk_114B = 6;
@@ -372,7 +372,7 @@ static u8 ov13_022269C0(UnkStruct_ov13_02227244 *param0)
         switch (v0) {
         case 0:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->unk_1C = GetCurrentlySelectedBagItem(param0, param0->unk_00->unk_27[param0->unk_114D]);
+            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->unk_27[param0->unk_114D]);
             param0->unk_00->unk_1E = param0->unk_114D;
             ov13_0222880C(param0, 15, 0);
             return ov13_02226A5C(param0);
@@ -615,7 +615,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
     case 4:
         if (ov16_0226DFD4(param0->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->unk_1C = GetCurrentlySelectedBagItem(param0, param0->unk_00->unk_27[param0->unk_114D]);
+            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->unk_27[param0->unk_114D]);
             param0->unk_00->unk_1E = param0->unk_114D;
             ov13_0222880C(param0, 15, 0);
             return ov13_02226A5C(param0);

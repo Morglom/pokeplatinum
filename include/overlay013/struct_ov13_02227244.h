@@ -68,7 +68,7 @@ typedef struct {
     u8 unk_114D; // Sub Menu Index
     s8 unk_114E;
     u8 unk_114F[5]; // Num bag items in sub menu
-    u8 unk_1154[5];
+    u8 unk_1154[5]; // Pages in sub menu
     u8 unk_1159;
     u8 unk_115A;
 } UnkStruct_ov13_02227244;

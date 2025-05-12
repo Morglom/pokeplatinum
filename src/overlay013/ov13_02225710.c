@@ -19,7 +19,7 @@ typedef struct {
 } UnkStruct_ov13_02229924;
 
 static void ov13_02225AF0(u16 *param0, u16 *param1, u8 param2, u8 param3, u8 param4, u8 param5);
-static u8 ov13_02226484(UnkStruct_ov13_022213F0 *param0);
+static u8 CheckCanDoubleBattle(UnkStruct_ov13_022213F0 *param0);
 
 static const UnkStruct_ov13_02229924 Unk_ov13_02229924[] = {
     { 0x0, 0x0, 0x10, 0x6 },
@@ -417,7 +417,7 @@ static void ov13_02225C4C(UnkStruct_ov13_022213F0 *param0, u16 *param1, u8 param
                 for (v3 = 0; v3 < v1 * v2; v3++) {
                     param1[v3] = (param1[v3] & 0xfff) | (2 << 12);
                 }
-            } else if (ov13_022219AC(param0, param2 - 0) == 1) {
+            } else if (CheckIfSwitchingWithPartnersPokemon(param0, param2 - 0) == 1) {
                 for (v3 = 0; v3 < v1 * v2; v3++) {
                     param1[v3] = (param1[v3] & 0xfff) | (1 << 12);
                 }
@@ -611,7 +611,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         }
         break;
     case 2:
-        if (ov13_02226484(param0) == 1) {
+        if (CheckCanDoubleBattle(param0) == TRUE) {
             ov13_02225D8C(param0, 12, 0, 0);
             ov13_02225D8C(param0, 13, 0, 0);
         } else {
@@ -623,7 +623,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         ov13_02225D8C(param0, 6, 0, 0);
         break;
     case 3:
-        if (ov13_02226484(param0) == 1) {
+        if (CheckCanDoubleBattle(param0) == TRUE) {
             ov13_02225D8C(param0, 12, 0, 0);
             ov13_02225D8C(param0, 13, 0, 0);
         } else {
@@ -631,8 +631,8 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
             ov13_02225D8C(param0, 13, 3, 0);
         }
 
-        for (v0 = 0; v0 < 4; v0++) {
-            if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != 0) {
+        for (v0 = 0; v0 < LEARNED_MOVES_MAX; v0++) {
+            if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != MOVE_NONE) {
                 ov13_02225D8C(param0, 14 + v0, 0, 0);
             } else {
                 ov13_02225D8C(param0, 14 + v0, 3, 0);
@@ -655,7 +655,7 @@ void ov13_022260EC(UnkStruct_ov13_022213F0 *param0, u8 param1)
         break;
     case 5:
         for (v0 = 0; v0 < 4; v0++) {
-            if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != 0) {
+            if (param0->unk_04[param0->unk_00->selectedPartyIndex].moves[v0].move != MOVE_NONE) {
                 ov13_02225D8C(param0, 19 + v0, 0, 0);
             } else {
                 ov13_02225D8C(param0, 19 + v0, 3, 0);
@@ -705,21 +705,21 @@ void ov13_02226444(UnkStruct_ov13_022213F0 *param0, u8 param1)
     }
 }
 
-static u8 ov13_02226484(UnkStruct_ov13_022213F0 *param0)
+static u8 CheckCanDoubleBattle(UnkStruct_ov13_022213F0 *param0)
 {
-    u16 v0, v1 = 0;
+    u16 i, numValidPokemon = 0;
 
-    for (v0 = 0; v0 < 6; v0++) {
-        if ((param0->unk_04[v0].species != 0) && (param0->unk_04[v0].isEgg == FALSE)) {
-            v1++;
+    for (i = 0; i < MAX_PARTY_SIZE; i++) {
+        if ((param0->unk_04[i].species != SPECIES_NONE) && (param0->unk_04[i].isEgg == FALSE)) {
+            numValidPokemon++;
         }
     }
 
-    if (v1 >= 2) {
-        return 1;
+    if (numValidPokemon >= 2) {
+        return TRUE;
     }
 
-    return 0;
+    return FALSE;
 }
 
 void ov13_022264C4(UnkStruct_ov13_022213F0 *param0)

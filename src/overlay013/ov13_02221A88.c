@@ -1607,7 +1607,7 @@ static void DrawConfirmLearnMoveContest(UnkStruct_ov13_022213F0 *param0)
     DrawCancelForgetButton(param0, 6);
 }
 
-void ov13_022240E0(UnkStruct_ov13_022213F0 *param0)
+void DisplayBattleMessageBox(UnkStruct_ov13_022213F0 *param0)
 {
     Window_DrawMessageBoxWithScrollCursor(&param0->unk_204C[1], 1, 1, 14);
     Window_FillTilemap(&param0->unk_204C[1], 15);

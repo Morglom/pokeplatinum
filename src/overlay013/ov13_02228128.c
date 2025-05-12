@@ -473,13 +473,13 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
         ov13_022286B8(param0, 5, 0, param1);
         break;
     case 1: {
-        u32 v0;
+        u32 i;
 
-        for (v0 = 0; v0 < 6; v0++) {
-            if (GetCurrentlySelectedBagItem(param0, v0) == 0) {
-                ov13_022286B8(param0, 6 + v0, 3, param1);
+        for (i = 0; i < NUM_BAG_ITEMS_PER_PAGE; i++) {
+            if (GetBagItemOnPage(param0, i) == ITEM_NONE) {
+                ov13_022286B8(param0, 6 + i, 3, param1);
             } else {
-                ov13_022286B8(param0, 6 + v0, 0, param1);
+                ov13_022286B8(param0, 6 + i, 0, param1);
             }
         }
     }

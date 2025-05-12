@@ -93,7 +93,7 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-u16 GetCurrentlySelectedBagItem(UnkStruct_ov13_02227244 *param0, u32 indexOnPage)
+u16 GetBagItemOnPage(UnkStruct_ov13_02227244 *param0, u32 indexOnPage)
 {
     if ((param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * NUM_BAG_ITEMS_PER_PAGE + indexOnPage].item != ITEM_NONE) && (param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * NUM_BAG_ITEMS_PER_PAGE + indexOnPage].quantity != 0)) {
         return param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * NUM_BAG_ITEMS_PER_PAGE + indexOnPage].item;

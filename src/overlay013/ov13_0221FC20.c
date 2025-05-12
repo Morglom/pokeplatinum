@@ -96,7 +96,7 @@ static void ov13_02221654(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static u8 ov13_022219DC(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02221A04(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02221A3C(UnkStruct_ov13_022213F0 *param0);
-static u8 ov13_0222194C(UnkStruct_ov13_022213F0 *param0);
+static u8 CheckSelectedPokemonIsEgg(UnkStruct_ov13_022213F0 *param0);
 static void ov13_02221A54(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
 
 static const TouchScreenRect Unk_ov13_02228DEC[] = {
@@ -324,7 +324,7 @@ static u8 ov13_0221FE5C(UnkStruct_ov13_022213F0 *param0)
         ov13_02228A60(param0->unk_2084, 1);
     }
 
-    if ((param0->unk_2076 == 0) && (ov13_022219AC(param0, 0) == 1)) {
+    if ((param0->unk_2076 == 0) && (CheckIfSwitchingWithPartnersPokemon(param0, 0) == TRUE)) {
         param0->unk_00->selectedPartyIndex = 1;
     }
 
@@ -373,22 +373,22 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
     // Embargo blocking item use
     if (((v0->selectedPartyIndex == 0) && (v0->unk_18[0] != 0)) || ((v0->selectedPartyIndex == 1) && (v0->unk_18[1] != 0))) {
         ov13_0222449C(param0);
-        ov13_022240E0(param0);
+        DisplayBattleMessageBox(param0);
         param0->unk_00->selectedPartyIndex = 6;
         param0->unk_2075 = 25;
         return 17;
     }
 
-    if ((Item_LoadParam(v0->unk_22, 36, v0->heapID) != 0) && (Item_LoadParam(v0->unk_22, 37, v0->heapID) == 0) && (param0->unk_04[v0->selectedPartyIndex].isEgg == FALSE)) {
+    if ((Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE, v0->heapID) != 0) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) == 0) && (param0->unk_04[v0->selectedPartyIndex].isEgg == FALSE)) {
         param0->unk_2075 = 13;
         return 22;
     }
 
     if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], 0, v0->unk_22) == 1) {
-        if (Item_LoadParam(v0->unk_22, 37, v0->heapID) != 0) {
+        if (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) != 0) {
             param0->unk_2075 = 13;
         } else {
-            if ((ov13_022213F0(param0, v0->selectedPartyIndex) == 1) && (Item_LoadParam(v0->unk_22, 23, v0->heapID) == 0)) {
+            if ((ov13_022213F0(param0, v0->selectedPartyIndex) == 1) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_REVIVE, v0->heapID) == 0)) {
                 ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
                 param0->unk_04[v0->selectedPartyIndex].pokemon = BattleSystem_PartyPokemon(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex]);
                 v0->unk_20 = Pokemon_GetValue(param0->unk_04[v0->selectedPartyIndex].pokemon, MON_DATA_CURRENT_HP, NULL);
@@ -403,7 +403,7 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
         return 22;
     } else {
         MessageLoader_GetStrbuf(param0->unk_1FA4, 81, param0->unk_1FAC);
-        ov13_022240E0(param0);
+        DisplayBattleMessageBox(param0);
         param0->unk_00->selectedPartyIndex = 6;
         param0->unk_2075 = 25;
         return 17;
@@ -428,7 +428,7 @@ static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0)
         param0->unk_2075 = 15;
         return 22;
     case 1:
-        if (ov13_0222194C(param0) == TRUE) {
+        if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
             break;
         }
 
@@ -437,7 +437,7 @@ static u8 ov13_0222012C(UnkStruct_ov13_022213F0 *param0)
         param0->unk_2075 = 8;
         return 22;
     case 2:
-        if (ov13_0222194C(param0) == TRUE) {
+        if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
             break;
         }
 
@@ -735,7 +735,7 @@ static u8 ov13_02220628(UnkStruct_ov13_022213F0 *param0)
             return 22;
         } else {
             MessageLoader_GetStrbuf(param0->unk_1FA4, 81, param0->unk_1FAC);
-            ov13_022240E0(param0);
+            DisplayBattleMessageBox(param0);
             param0->unk_00->selectedPartyIndex = 6;
             param0->unk_2075 = 25;
             return 17;
@@ -809,7 +809,7 @@ static u8 ov13_022207B8(UnkStruct_ov13_022213F0 *param0)
 {
     ov13_022216C0(param0, 5);
 
-    if (Item_LoadParam(param0->unk_00->unk_22, 37, param0->unk_00->heapID) != 0) {
+    if (Item_LoadParam(param0->unk_00->unk_22, ITEM_PARAM_PP_RESTORE_ALL, param0->unk_00->heapID) != 0) {
         return 24;
     }
 
@@ -832,7 +832,7 @@ static u8 ov13_022207DC(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_0222081C(UnkStruct_ov13_022213F0 *param0)
 {
-    ov13_022240E0(param0);
+    DisplayBattleMessageBox(param0);
     param0->unk_2075 = 16;
     return 17;
 }
@@ -854,7 +854,7 @@ static u8 ov13_02220848(UnkStruct_ov13_022213F0 *param0)
 
 static u8 ov13_02220864(UnkStruct_ov13_022213F0 *param0)
 {
-    if ((gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B)) || (TouchScreen_Tapped() == 1)) {
+    if ((gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B)) || (TouchScreen_Tapped() == TRUE)) {
         return param0->unk_2075;
     }
 
@@ -916,7 +916,7 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
         break;
     case 3:
         ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
-        ov13_022240E0(param0);
+        DisplayBattleMessageBox(param0);
         param0->unk_2075 = 25;
         return 17;
     case 4:
@@ -977,7 +977,7 @@ static u8 ov13_02220A4C(UnkStruct_ov13_022213F0 *param0)
         break;
     case 2:
         ov13_02221A54(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
-        ov13_022240E0(param0);
+        DisplayBattleMessageBox(param0);
         param0->unk_2075 = 25;
         return 17;
     }
@@ -1505,7 +1505,7 @@ static void ov13_02221630(UnkStruct_ov13_022213F0 *param0)
 {
     u16 v0;
 
-    for (v0 = 0; v0 < 6; v0++) {
+    for (v0 = 0; v0 < MAX_PARTY_SIZE; v0++) {
         ov13_02221590(param0, 0x125, v0);
     }
 }
@@ -1596,7 +1596,7 @@ static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0)
 
     v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
 
-    if (ov13_022219AC(param0, param0->unk_00->selectedPartyIndex) == 1) {
+    if (CheckIfSwitchingWithPartnersPokemon(param0, param0->unk_00->selectedPartyIndex) == TRUE) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 80);
         {
             int v2;
@@ -1606,30 +1606,34 @@ static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0)
         }
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
         Strbuf_Free(v1);
-        return 0;
+        return FALSE;
     }
 
+    // Select pokemon with no health
     if (v0->currentHP == 0) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 77);
         StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
         Strbuf_Free(v1);
-        return 0;
+        return FALSE;
     }
 
+    // Select already active pokemon
     if ((param0->unk_00->unk_2C[param0->unk_00->selectedPartyIndex] == param0->unk_00->unk_14) || (param0->unk_00->unk_2C[param0->unk_00->selectedPartyIndex] == param0->unk_00->unk_15)) {
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 76);
         StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
         Strbuf_Free(v1);
-        return 0;
+        return FALSE;
     }
 
-    if (ov13_0222194C(param0) == TRUE) {
+    // Pokemon is egg
+    if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
         MessageLoader_GetStrbuf(param0->unk_1FA4, 79, param0->unk_1FAC);
-        return 0;
+        return FALSE;
     }
 
+    // Has already been selected
     if ((param0->unk_00->unk_12 != 6) && (param0->unk_00->unk_2C[param0->unk_00->selectedPartyIndex] == param0->unk_00->unk_12)) {
         v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 93);
@@ -1637,23 +1641,24 @@ static u8 ov13_022217A4(UnkStruct_ov13_022213F0 *param0)
         StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
         Strbuf_Free(v1);
-        return 0;
+        return FALSE;
     }
 
-    if (param0->unk_00->unk_24 != 0) {
+    // Can't be switched out as needs to learn move
+    if (param0->unk_00->unk_24 != MOVE_NONE) {
         v0 = &param0->unk_04[param0->unk_2072];
         v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, 78);
 
         StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0->pokemon));
         StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v1);
         Strbuf_Free(v1);
-        return 0;
+        return FALSE;
     }
 
-    return 1;
+    return TRUE;
 }
 
-static u8 ov13_0222194C(UnkStruct_ov13_022213F0 *param0)
+static u8 CheckSelectedPokemonIsEgg(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_04[param0->unk_00->selectedPartyIndex].isEgg != FALSE) {
         return TRUE;
@@ -1669,10 +1674,10 @@ u8 ov13_0222196C(UnkStruct_ov13_022213F0 *param0)
     if ((battleType != BATTLE_TYPE_AI_PARTNER)
         && (battleType != (BATTLE_TYPE_TRAINER_DOUBLES | BATTLE_TYPE_2vs2 | BATTLE_TYPE_AI))
         && (battleType & (BATTLE_TYPE_DOUBLES | BATTLE_TYPE_TAG))) {
-        return 1;
+        return TRUE;
     }
 
-    return 0;
+    return FALSE;
 }
 
 u8 ov13_0222198C(UnkStruct_ov13_022213F0 *param0)
@@ -1682,27 +1687,27 @@ u8 ov13_0222198C(UnkStruct_ov13_022213F0 *param0)
     if ((battleType != BATTLE_TYPE_AI_PARTNER)
         && (battleType != (BATTLE_TYPE_TRAINER_DOUBLES | BATTLE_TYPE_2vs2 | BATTLE_TYPE_AI))
         && (battleType & BATTLE_TYPE_2vs2)) {
-        return 1;
+        return TRUE;
     }
 
-    return 0;
+    return FALSE;
 }
 
-u8 ov13_022219AC(UnkStruct_ov13_022213F0 *param0, u8 param1)
+u8 CheckIfSwitchingWithPartnersPokemon(UnkStruct_ov13_022213F0 *param0, u8 partyIndex)
 {
-    if (ov13_0222198C(param0) == 1) {
+    if (ov13_0222198C(param0) == TRUE) {
         if (param0->unk_208B == 2) {
-            if ((param1 & 1) != 0) {
-                return 1;
+            if ((partyIndex & 1) != 0) {
+                return TRUE;
             }
         } else {
-            if ((param1 & 1) == 0) {
-                return 1;
+            if ((partyIndex & 1) == 0) {
+                return TRUE;
             }
         }
     }
 
-    return 0;
+    return FALSE;
 }
 
 static u8 ov13_022219DC(UnkStruct_ov13_022213F0 *param0)
@@ -1720,7 +1725,7 @@ static u8 ov13_022219DC(UnkStruct_ov13_022213F0 *param0)
 
 static void ov13_02221A04(UnkStruct_ov13_022213F0 *param0)
 {
-    ManagedSprite_SetDrawFlag(param0->unk_1FB4[26], 0);
+    ManagedSprite_SetDrawFlag(param0->unk_1FB4[26], FALSE);
     Window_ClearAndScheduleCopyToVRAM(&param0->unk_206C[10]);
     Window_ClearAndScheduleCopyToVRAM(&param0->unk_206C[6]);
     Window_ClearAndScheduleCopyToVRAM(&param0->unk_206C[7]);

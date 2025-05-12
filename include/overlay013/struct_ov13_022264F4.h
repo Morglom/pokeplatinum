@@ -16,8 +16,8 @@ typedef struct {
     s32 unk_10;
     u32 unk_14;
     u32 unk_18;
-    u16 unk_1C;
-    u8 unk_1E;
+    u16 unk_1C; // Item of some kind
+    u8 unk_1E; // Sub menu index
     u8 unk_1F;
     u16 unk_20; // Item?
     u8 unk_22;

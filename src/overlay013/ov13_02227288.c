@@ -345,7 +345,7 @@ static void DrawBagSubMenuScreen(UnkStruct_ov13_02227244 *param0)
     DrawBagSubMenuPageInfo(param0);
 }
 
-static void WriteBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void WriteUseBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     Window *v0;
     Strbuf *v1;
@@ -386,7 +386,7 @@ static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0)
 
     v1 = param0->unk_00->unk_2C[param0->unk_114D] * 6 + param0->unk_00->unk_27[param0->unk_114D];
 
-    WriteBagItemName(param0, v1);
+    WriteUseBagItemName(param0, v1);
     WriteBagItemQuantity(param0, v1, 0, 1, FONT_SYSTEM, 0, TEXT_COLOR(1, 2, 0));
     WriteBagItemDescription(param0, v1);
     WriteTitleText(param0, 3, IN_BATTLE_BAG_TEXT_ID_USE, FONT_SUBSCREEN, 6, TEXT_COLOR(3, 2, 1));

@@ -157,7 +157,7 @@ void ov13_02227E08(UnkStruct_ov13_02227244 *param0)
     SpriteSystem_FreeResourcesAndManager(v0, param0->unk_30C);
 }
 
-static void DrawPartyPokemonSprite(ManagedSprite *sprite, const int x, const int y)
+static void DrawManagedSprite(ManagedSprite *sprite, const int x, const int y)
 {
     ManagedSprite_SetDrawFlag(sprite, TRUE);
     ManagedSprite_SetPositionXY(sprite, x, y);
@@ -191,7 +191,7 @@ static void ov13_02227EAC(UnkStruct_ov13_02227244 *param0)
     if (param0->unk_00->unk_20 != ITEM_NONE) {
         ov13_02227D10(param0, param0->unk_00->unk_20, 46263);
         ov13_02227D48(param0, param0->unk_00->unk_20, 0, 46263);
-        DrawPartyPokemonSprite(param0->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
+        DrawManagedSprite(param0->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
     }
 }
 
@@ -200,8 +200,8 @@ static void ov13_02227EE0(UnkStruct_ov13_02227244 *param0)
     u32 v0;
     u16 item;
 
-    for (v0 = 0; v0 < 6; v0++) {
-        item = GetCurrentlySelectedBagItem(param0, v0);
+    for (v0 = 0; v0 < NUM_BAG_ITEMS_PER_PAGE; v0++) {
+        item = GetBagItemOnPage(param0, v0);
 
         if (item == ITEM_NONE) {
             continue;
@@ -209,17 +209,17 @@ static void ov13_02227EE0(UnkStruct_ov13_02227244 *param0)
 
         ov13_02227D10(param0, item, 46263 + v0);
         ov13_02227D48(param0, item, (u16)v0, 46263 + v0);
-        DrawPartyPokemonSprite(param0->unk_310[v0], Unk_ov13_02229C44[v0][0], Unk_ov13_02229C44[v0][1]);
+        DrawManagedSprite(param0->unk_310[v0], Unk_ov13_02229C44[v0][0], Unk_ov13_02229C44[v0][1]);
     }
 }
 
 static void ov13_02227F38(UnkStruct_ov13_02227244 *param0)
 {
-    u16 item = GetCurrentlySelectedBagItem(param0, param0->unk_00->unk_27[param0->unk_114D]);
+    u16 item = GetBagItemOnPage(param0, param0->unk_00->unk_27[param0->unk_114D]);
 
     ov13_02227D10(param0, item, 46263);
     ov13_02227D48(param0, item, 0, 46263);
-    DrawPartyPokemonSprite(param0->unk_310[0], Unk_ov13_02229BB8[0], Unk_ov13_02229BB8[1]);
+    DrawManagedSprite(param0->unk_310[0], Unk_ov13_02229BB8[0], Unk_ov13_02229BB8[1]);
 }
 
 static void ov13_02227F7C(UnkStruct_ov13_02227244 *param0)
