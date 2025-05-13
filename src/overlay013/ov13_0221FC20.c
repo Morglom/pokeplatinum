@@ -331,7 +331,7 @@ static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0)
 
     if (param0->unk_00->unk_35 == 3) {
         param0->unk_2076 = IN_BATTLE_SCREEN_LEARN_MOVE_1;
-        v0 = 19;
+        v0 = IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE_SCREEN;
     } else {
         param0->unk_2076 = IN_BATTLE_SCREEN_INDEX_PARTY_LIST;
         v0 = 1;
@@ -667,7 +667,7 @@ static u8 LearnMoveScreen(UnkStruct_ov13_022213F0 *param0)
         return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
-    return 19;
+    return IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE_SCREEN;
 }
 
 static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
