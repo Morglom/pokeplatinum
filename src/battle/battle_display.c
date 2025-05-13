@@ -3557,14 +3557,14 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                 v0->unk_04->unk_23 = v0->unk_15;
                 v0->unk_04->unk_24 = v0->unk_16;
                 v0->unk_04->unk_18 = v0->unk_30[v0->unk_0D];
-                ov13_022264F4(v0->unk_04);
+                StartBagTransitions(v0->unk_04);
                 v0->unk_0E = 3;
             }
         }
         break;
     case 2:
         v0->unk_04->unk_25 = v0->unk_10;
-        ov13_022264F4(v0->unk_04);
+        StartBagTransitions(v0->unk_04);
         v0->unk_0E++;
     case 3:
         if (v0->unk_04->unk_26) {
@@ -3629,7 +3629,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
             v0->unk_08->unk_04->unk_18[1] = v0->unk_30[BattleSystem_Partner(v0->unk_00, v0->unk_0D)];
         }
 
-        ov13_0221FC20(v0->unk_08->unk_04);
+        StartPartyTransitions(v0->unk_08->unk_04);
         v0->unk_0E++;
     } break;
     case 5:
@@ -4227,7 +4227,7 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
                     v0->unk_04->unk_15 = 6;
                 }
 
-                ov13_0221FC20(v0->unk_04);
+                StartPartyTransitions(v0->unk_04);
                 v0->unk_0A++;
             }
         }
@@ -5195,7 +5195,7 @@ static void ov16_022633A4(SysTask *param0, void *param1)
             v0->unk_04->unk_28 = v0->unk_09;
             v0->unk_04->unk_32 = 0;
 
-            ov13_0221FC20(v0->unk_04);
+            StartPartyTransitions(v0->unk_04);
             v0->unk_0A++;
         }
         break;

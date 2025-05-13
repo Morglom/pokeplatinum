@@ -458,7 +458,7 @@ void ov13_02228848(UnkStruct_ov13_02227244 *param0)
 void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
 {
     switch (param1) {
-    case 0:
+    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
         ov13_022286B8(param0, 0, 0, param1);
         ov13_022286B8(param0, 1, 0, param1);
         ov13_022286B8(param0, 2, 0, param1);
@@ -472,7 +472,7 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
 
         ov13_022286B8(param0, 5, 0, param1);
         break;
-    case 1: {
+    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU: {
         u32 i;
 
         for (i = 0; i < NUM_BAG_ITEMS_PER_PAGE; i++) {
@@ -494,7 +494,7 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
 
         ov13_022286B8(param0, 14, 0, param1);
         break;
-    case 2:
+    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         ov13_022286B8(param0, 15, 0, param1);
         ov13_022286B8(param0, 16, 0, param1);
     }

@@ -15,7 +15,7 @@
 #include "strbuf.h"
 #include "string_template.h"
 
-enum InBattleBagScreenIndex {
+enum InBattlePartyScreenIndex {
     IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU = 0,
     IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU,
     IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM,
@@ -40,7 +40,7 @@ typedef struct {
     Window *unk_2C; // Windows
     u8 unk_30; // Window num
     u8 unk_31;
-    u8 unk_32;
+    u8 unk_32; // Printer id
     UnkStruct_ov13_02228A50 *unk_34; // Bag
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem unk_3C[5][36]; // Sub menu bag items
@@ -62,8 +62,8 @@ typedef struct {
     u8 unk_1141_0 : 4;
     u8 unk_1141_4 : 4;
     u8 unk_1142[8];
-    u8 unk_114A;
-    u8 unk_114B;
+    u8 unk_114A; // State Index
+    u8 unk_114B; // Queued state Index
     u8 unk_114C; // Screen Index
     u8 unk_114D; // Sub Menu Index
     s8 unk_114E;

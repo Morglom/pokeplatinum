@@ -104,7 +104,7 @@ void ov13_02227288(UnkStruct_ov13_02227244 *param0)
     InitializeInBattleBagScreen(param0, param0->unk_114C);
 }
 
-void InitializeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex screenIndex)
+void InitializeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattlePartyScreenIndex screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
@@ -144,7 +144,7 @@ void ov13_02227334(UnkStruct_ov13_02227244 *param0)
     Window_Remove(&param0->unk_1C);
 }
 
-void DrawInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattleBagScreenIndex screenIndex)
+void DrawInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattlePartyScreenIndex screenIndex)
 {
     switch (screenIndex) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:

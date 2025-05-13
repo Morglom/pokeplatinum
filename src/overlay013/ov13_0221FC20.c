@@ -43,30 +43,30 @@
 #include "unk_0208C098.h"
 #include "unk_02094EDC.h"
 
-enum InBattleBagScreenIndex {
-    IN_BATTLE_BAG_SCREEN_INDEX_INITIALISE = 0,
-    IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_SELECT = 2,
-    IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_DETAILS,
-    IN_BATTLE_BAG_SCREEN_INDEX_MOVE_LIST,
-    IN_BATTLE_BAG_SCREEN_INDEX_MOVE_DETAIL,
-    IN_BATTLE_BAG_SCREEN_INDEX_PARTY_LIST,
-    IN_BATTLE_BAG_SCREEN_INDEX_SELECT_POKEMON,
-    IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_SUMMARY,
-    IN_BATTLE_BAG_SCREEN_INDEX_CHECK_MOVES,
-    IN_BATTLE_BAG_SCREEN_INDEX_MOVE_SUMMARY,
-    IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE = 12,
-    IN_BATTLE_BAG_SCREEN_INDEX_CHECK_WHICH_PP_ITEM = 13,
-    IN_BATTLE_BAG_SCREEN_INDEX_SUMMARY,
-    IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_CANT_SHIFT,
-    IN_BATTLE_BAG_SCREEN_INDEX_ERROR_MESSAGE_BOX,
-    IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE,
-    IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE,
-    IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE_SCREEN,
-    IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP = 21,
-    IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE,
-    IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL = 24,
-    IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT,
-    IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP,
+enum InBattlePartyScreenIndex {
+    IN_BATTLE_PARTY_SCREEN_INDEX_INITIALISE = 0,
+    IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SELECT = 2,
+    IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_DETAILS,
+    IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_LIST,
+    IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_DETAIL,
+    IN_BATTLE_PARTY_SCREEN_INDEX_PARTY_LIST,
+    IN_BATTLE_PARTY_SCREEN_INDEX_SELECT_POKEMON,
+    IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SUMMARY,
+    IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_MOVES,
+    IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_SUMMARY,
+    IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE = 12,
+    IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_WHICH_PP_ITEM = 13,
+    IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY,
+    IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_CANT_SHIFT,
+    IN_BATTLE_PARTY_SCREEN_INDEX_ERROR_MESSAGE_BOX,
+    IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE,
+    IN_BATTLE_PARTY_SCREEN_INDEX_INPUT_QUEUE,
+    IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE_SCREEN,
+    IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP = 21,
+    IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE,
+    IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP_ALL = 24,
+    IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT,
+    IN_BATTLE_PARTY_SCREEN_INDEX_CLEAN_UP,
 };
 
 enum InBattleTextIndex {
@@ -79,7 +79,7 @@ enum InBattleTextIndex {
 
 #define EXP_BAR_MAX_PIXELS 64
 
-static void ov13_0221FCAC(SysTask *param0, void *param1);
+static void DoTransitions(SysTask *param0, void *param1);
 static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0221FF60(UnkStruct_ov13_022213F0 *param0);
 static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0);
@@ -120,7 +120,7 @@ static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0);
 static int CheckTouchRectIsPressed(UnkStruct_ov13_022213F0 *param0, const TouchScreenRect *rect);
-static void ChangeInBattleScreen(UnkStruct_ov13_022213F0 *param0, u8 param1);
+static void ChangeInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static void ov13_02221738(UnkStruct_ov13_022213F0 *param0, u8 param1);
 static u8 CheckPokemonCanBeSwitchedTo(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_02221428(UnkStruct_ov13_022213F0 *param0, s32 param1, s32 param2);
@@ -208,7 +208,7 @@ static const TouchScreenRect Unk_ov13_02228D64[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-void ov13_0221FC20(UnkStruct_ov13_0221FC20 *param0)
+void StartPartyTransitions(UnkStruct_ov13_0221FC20 *param0)
 {
     UnkStruct_ov13_022213F0 *v0;
 
@@ -216,7 +216,7 @@ void ov13_0221FC20(UnkStruct_ov13_0221FC20 *param0)
         param0->selectedPartyIndex = 0;
     }
 
-    v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(ov13_0221FCAC, sizeof(UnkStruct_ov13_022213F0), 0, param0->heapID));
+    v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(DoTransitions, sizeof(UnkStruct_ov13_022213F0), 0, param0->heapID));
     memset(v0, 0, sizeof(UnkStruct_ov13_022213F0));
 
     v0->unk_00 = param0;
@@ -228,91 +228,91 @@ void ov13_0221FC20(UnkStruct_ov13_0221FC20 *param0)
     v0->unk_208B = BattleSystem_BattlerSlot(param0->unk_08, param0->unk_28);
 }
 
-static void ov13_0221FCAC(SysTask *param0, void *param1)
+static void DoTransitions(SysTask *param0, void *param1)
 {
     UnkStruct_ov13_022213F0 *v0 = (UnkStruct_ov13_022213F0 *)param1;
 
     switch (v0->unk_2074) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_INITIALISE:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_INITIALISE:
         v0->unk_2074 = IntialiseTransitions(v0);
         break;
     case 1:
         v0->unk_2074 = ov13_0221FF60(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_SELECT:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SELECT:
         v0->unk_2074 = SelectPokemonScreen(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_DETAILS:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_DETAILS:
         v0->unk_2074 = PokemonDetailsScreen(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_MOVE_LIST:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_LIST:
         v0->unk_2074 = MoveListScreen(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_MOVE_DETAIL:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_DETAIL:
         v0->unk_2074 = MoveDetailScreen(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_PARTY_LIST:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_PARTY_LIST:
         v0->unk_2074 = PartyList(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_SELECT_POKEMON:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_SELECT_POKEMON:
         v0->unk_2074 = SelectPokemon(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_SUMMARY:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SUMMARY:
         v0->unk_2074 = PokemonSummaryDisplay(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_CHECK_MOVES:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_MOVES:
         v0->unk_2074 = CheckMoves(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_MOVE_SUMMARY:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_SUMMARY:
         v0->unk_2074 = MoveSummary(v0);
         break;
     case 11:
         v0->unk_2074 = ov13_02220768(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE:
         v0->unk_2074 = LearnMove(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_CHECK_WHICH_PP_ITEM:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_WHICH_PP_ITEM:
         v0->unk_2074 = CheckWhichPPItem(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_SUMMARY:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY:
         v0->unk_2074 = SummaryScreen(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_CANT_SHIFT:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_CANT_SHIFT:
         v0->unk_2074 = PokemonCantShift(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_ERROR_MESSAGE_BOX:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_ERROR_MESSAGE_BOX:
         v0->unk_2074 = DisplayErrorMessageBox(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE:
         v0->unk_2074 = TextQueue(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_INPUT_QUEUE:
         v0->unk_2074 = InputQueue(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE_SCREEN:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE_SCREEN:
         v0->unk_2074 = LearnMoveScreen(v0);
         break;
     case 20:
         v0->unk_2074 = ov13_0222050C(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP:
         v0->unk_2074 = UsePPRestoreItem(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE:
         v0->unk_2074 = SomeTypeOfQueue(v0);
         break;
     case 23:
         v0->unk_2074 = ov13_022208A4(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP_ALL:
         v0->unk_2074 = UsePPAllRestoreItem(v0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT:
         v0->unk_2074 = StartFadeOut(v0);
         break;
 
-    case IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP:
+    case IN_BATTLE_PARTY_SCREEN_INDEX_CLEAN_UP:
         if (CleanupScreen(param0, v0) == TRUE) {
             return;
         }
@@ -331,7 +331,7 @@ static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0)
 
     if (param0->unk_00->unk_35 == 3) {
         param0->unk_2076 = IN_BATTLE_SCREEN_LEARN_MOVE_1;
-        v0 = IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE_SCREEN;
+        v0 = IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE_SCREEN;
     } else {
         param0->unk_2076 = IN_BATTLE_SCREEN_INDEX_PARTY_LIST;
         v0 = 1;
@@ -381,7 +381,7 @@ static u8 ov13_0221FF60(UnkStruct_ov13_022213F0 *param0)
             if (param0->unk_00->unk_35 != 1) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 ov13_02225FCC(param0, 6);
-                return IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+                return IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
             }
         } else {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
@@ -390,10 +390,10 @@ static u8 ov13_0221FF60(UnkStruct_ov13_022213F0 *param0)
             if (param0->unk_00->unk_35 == 2) {
                 return ov13_0221FFDC(param0);
             } else {
-                param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SELECT_POKEMON;
+                param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SELECT_POKEMON;
             }
 
-            return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+            return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
         }
     }
 
@@ -408,18 +408,18 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
         OnEmbargoBlockingItem(param0);
         DisplayBattleMessageBox(param0);
         param0->unk_00->selectedPartyIndex = 6;
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
-        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
     }
 
     if ((Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE, v0->heapID) != FALSE) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) == FALSE) && (param0->unk_04[v0->selectedPartyIndex].isEgg == FALSE)) {
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_CHECK_WHICH_PP_ITEM;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_WHICH_PP_ITEM;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], 0, v0->unk_22) == TRUE) {
         if (Item_LoadParam(v0->unk_22, ITEM_PARAM_PP_RESTORE_ALL, v0->heapID) != 0) {
-            param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_CHECK_WHICH_PP_ITEM;
+            param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_WHICH_PP_ITEM;
         } else {
             if ((ov13_022213F0(param0, v0->selectedPartyIndex) == 1) && (Item_LoadParam(v0->unk_22, ITEM_PARAM_REVIVE, v0->heapID) == 0)) {
                 UseBagBattleItem(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
@@ -433,16 +433,16 @@ static u8 ov13_0221FFDC(UnkStruct_ov13_022213F0 *param0)
         }
 
         param0->unk_2078 = 0;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     } else {
         MessageLoader_GetStrbuf(param0->unk_1FA4, 81, param0->unk_1FAC);
         DisplayBattleMessageBox(param0);
         param0->unk_00->selectedPartyIndex = 6;
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
-        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
 }
 
 static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0)
@@ -455,11 +455,11 @@ static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0)
         ov13_02225FCC(param0, 7);
 
         if (CheckPokemonCanBeSwitchedTo(param0) == TRUE) {
-            return IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+            return IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
         }
 
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_CANT_SHIFT;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_CANT_SHIFT;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1:
         if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
             break;
@@ -467,8 +467,8 @@ static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0)
 
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 8);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 2:
         if (CheckSelectedPokemonIsEgg(param0) == TRUE) {
             break;
@@ -476,13 +476,13 @@ static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0)
 
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 10);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_CHECK_MOVES;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_MOVES;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 3:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_PARTY_LIST;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_PARTY_LIST;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 2;
@@ -504,8 +504,8 @@ static u8 PokemonDetailsScreen(UnkStruct_ov13_022213F0 *param0)
     }
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 12);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1: {
         u8 v2 = ov13_02221428(param0, param0->unk_00->selectedPartyIndex, 1);
 
@@ -517,22 +517,22 @@ static u8 PokemonDetailsScreen(UnkStruct_ov13_022213F0 *param0)
     }
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 13);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 2:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 11);
         param0->unk_2075 = 9;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 3:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2088 = 1;
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SELECT_POKEMON;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SELECT_POKEMON;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_DETAILS;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_DETAILS;
 }
 
 static u8 MoveListScreen(UnkStruct_ov13_022213F0 *param0)
@@ -551,8 +551,8 @@ static u8 MoveListScreen(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 14 + v0);
         param0->unk_00->unk_34 = v0;
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_MOVE_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 4: {
         u8 v1 = ov13_02221428(param0, param0->unk_00->selectedPartyIndex, -1);
 
@@ -564,8 +564,8 @@ static u8 MoveListScreen(UnkStruct_ov13_022213F0 *param0)
     }
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 12);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
 
     case 5: {
         u8 v2 = ov13_02221428(param0, param0->unk_00->selectedPartyIndex, 1);
@@ -578,22 +578,22 @@ static u8 MoveListScreen(UnkStruct_ov13_022213F0 *param0)
     }
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 13);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 6:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 9);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_SUMMARY;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 7:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2088 = 2;
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_SELECT_POKEMON;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_SELECT_POKEMON;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_LIST;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_LIST;
 }
 
 static u8 MoveDetailScreen(UnkStruct_ov13_022213F0 *param0)
@@ -611,15 +611,15 @@ static u8 MoveDetailScreen(UnkStruct_ov13_022213F0 *param0)
 
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         param0->unk_00->unk_34 = v0;
-        return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_SUMMARY;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_SUMMARY;
     case 4:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_CHECK_MOVES;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_CHECK_MOVES;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_DETAIL;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_DETAIL;
 }
 
 static u8 LearnMoveScreen(UnkStruct_ov13_022213F0 *param0)
@@ -647,7 +647,7 @@ static u8 LearnMoveScreen(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 23 + v0);
         param0->unk_2075 = 12;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 5:
         if (param0->unk_2073_4 == 0) {
             break;
@@ -658,16 +658,16 @@ static u8 LearnMoveScreen(UnkStruct_ov13_022213F0 *param0)
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 18);
         param0->unk_2075 = 11;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 6:
         param0->unk_00->unk_34 = 4;
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE_SCREEN;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE_SCREEN;
 }
 
 static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
@@ -705,10 +705,10 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
 
             param0->unk_2075 = 20;
         } else {
-            param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
+            param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
         }
 
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 1:
         if (param0->unk_2073_4 == 0) {
             break;
@@ -718,14 +718,14 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
         ov13_02225FCC(param0, 18);
         param0->unk_2073_0 ^= 1;
         param0->unk_208A = (u8)v0;
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_LEARN_MOVE;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     case 2:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_208A = 0;
         param0->unk_2075 = 11;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 20;
@@ -765,20 +765,20 @@ static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0)
         if (BattleSystem_UseBagItem(v0->unk_08, v0->unk_28, v0->unk_2C[v0->selectedPartyIndex], v1, v0->unk_22) == TRUE) {
             param0->unk_2078 = 0;
             param0->unk_2075 = 23;
-            return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+            return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
         } else {
             MessageLoader_GetStrbuf(param0->unk_1FA4, 81, param0->unk_1FAC);
             DisplayBattleMessageBox(param0);
             param0->unk_00->selectedPartyIndex = 6;
-            param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
-            return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+            param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
+            return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
         }
         break;
     case 4:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(param0, 6);
         param0->unk_2075 = 6;
-        return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
     }
 
     return 21;
@@ -786,40 +786,40 @@ static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0)
 
 static u8 PartyList(UnkStruct_ov13_022213F0 *param0)
 {
-    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_PARTY_LIST);
+    ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_INDEX_PARTY_LIST);
     return 1;
 }
 
 static u8 SelectPokemon(UnkStruct_ov13_022213F0 *param0)
 {
-    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON);
+    ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON);
     return 2;
 }
 
 static u8 PokemonSummaryDisplay(UnkStruct_ov13_022213F0 *param0)
 {
-    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY);
+    ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY);
     return 3;
 }
 
 static u8 CheckMoves(UnkStruct_ov13_022213F0 *param0)
 {
-    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_CHECK_MOVES);
-    return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_LIST;
+    ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_INDEX_CHECK_MOVES);
+    return IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_LIST;
 }
 
 static u8 MoveSummary(UnkStruct_ov13_022213F0 *param0)
 {
-    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY);
-    return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_DETAIL;
+    ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY);
+    return IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_DETAIL;
 }
 
 static u8 ov13_02220768(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_2073_0 == 0) {
-        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_1);
+        ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_1);
     } else {
-        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_2);
+        ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_2);
     }
 
     return 19;
@@ -830,9 +830,9 @@ static u8 LearnMove(UnkStruct_ov13_022213F0 *param0)
     ov13_022252E8(param0);
 
     if (param0->unk_2073_0 == 0) {
-        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM);
+        ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM);
     } else {
-        ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST);
+        ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST);
     }
 
     return 20;
@@ -840,13 +840,13 @@ static u8 LearnMove(UnkStruct_ov13_022213F0 *param0)
 
 static u8 CheckWhichPPItem(UnkStruct_ov13_022213F0 *param0)
 {
-    ChangeInBattleScreen(param0, IN_BATTLE_SCREEN_INDEX_RESTORE_PP);
+    ChangeInBattlePartyScreen(param0, IN_BATTLE_SCREEN_INDEX_RESTORE_PP);
 
     if (Item_LoadParam(param0->unk_00->unk_22, ITEM_PARAM_PP_RESTORE_ALL, param0->unk_00->heapID) != FALSE) {
-        return IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP_ALL;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP;
 }
 
 static u8 SummaryScreen(UnkStruct_ov13_022213F0 *param0)
@@ -857,17 +857,17 @@ static u8 SummaryScreen(UnkStruct_ov13_022213F0 *param0)
     SetupEXPBar(param0, param0->unk_2076);
 
     if (param0->unk_2076 == IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY) {
-        return IN_BATTLE_BAG_SCREEN_INDEX_POKEMON_DETAILS;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_DETAILS;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_MOVE_LIST;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_MOVE_LIST;
 }
 
 static u8 PokemonCantShift(UnkStruct_ov13_022213F0 *param0)
 {
     DisplayBattleMessageBox(param0);
-    param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_ERROR_MESSAGE_BOX;
-    return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+    param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_ERROR_MESSAGE_BOX;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
 }
 
 static u8 DisplayErrorMessageBox(UnkStruct_ov13_022213F0 *param0)
@@ -879,10 +879,10 @@ static u8 DisplayErrorMessageBox(UnkStruct_ov13_022213F0 *param0)
 static u8 TextQueue(UnkStruct_ov13_022213F0 *param0)
 {
     if (Text_IsPrinterActive(param0->unk_2077) == FALSE) {
-        return IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_INPUT_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
 }
 
 static u8 InputQueue(UnkStruct_ov13_022213F0 *param0)
@@ -891,7 +891,7 @@ static u8 InputQueue(UnkStruct_ov13_022213F0 *param0)
         return param0->unk_2075;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_INPUT_QUEUE;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_INPUT_QUEUE;
 }
 
 static u8 SomeTypeOfQueue(UnkStruct_ov13_022213F0 *param0)
@@ -900,7 +900,7 @@ static u8 SomeTypeOfQueue(UnkStruct_ov13_022213F0 *param0)
         return param0->unk_2075;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_SOME_TYPE_OF_QUEUE;
 }
 
 static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
@@ -950,8 +950,8 @@ static u8 ov13_022208A4(UnkStruct_ov13_022213F0 *param0)
     case 3:
         UseBagBattleItem(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
         DisplayBattleMessageBox(param0);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
-        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
     case 4:
         if (param0->unk_04[v0->selectedPartyIndex].currentHP != param0->unk_207A) {
             param0->unk_04[v0->selectedPartyIndex].currentHP++;
@@ -1011,17 +1011,17 @@ static u8 UsePPAllRestoreItem(UnkStruct_ov13_022213F0 *param0)
     case 2:
         UseBagBattleItem(v0->unk_08, v0->unk_22, v0->unk_33, v0->heapID);
         DisplayBattleMessageBox(param0);
-        param0->unk_2075 = IN_BATTLE_BAG_SCREEN_INDEX_FADE_OUT;
-        return IN_BATTLE_BAG_SCREEN_INDEX_TEXT_QUEUE;
+        param0->unk_2075 = IN_BATTLE_PARTY_SCREEN_INDEX_FADE_OUT;
+        return IN_BATTLE_PARTY_SCREEN_INDEX_TEXT_QUEUE;
     }
 
-    return IN_BATTLE_BAG_SCREEN_INDEX_RESTORE_PP_ALL;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_RESTORE_PP_ALL;
 }
 
 static u8 StartFadeOut(UnkStruct_ov13_022213F0 *param0)
 {
     PaletteData_StartFade(param0->unk_1E4, (0x2 | 0x8), 0xffff, -8, 0, 16, 0);
-    return IN_BATTLE_BAG_SCREEN_INDEX_CLEAN_UP;
+    return IN_BATTLE_PARTY_SCREEN_INDEX_CLEAN_UP;
 }
 
 static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_022213F0 *param1)
@@ -1574,7 +1574,7 @@ static void SetupMoveContestInfo(UnkStruct_ov13_022213F0 *param0, u8 param1)
     Bg_ScheduleTilemapTransfer(param0->unk_1E0, 7);
 }
 
-static void ChangeInBattleScreen(UnkStruct_ov13_022213F0 *param0, u8 param1)
+static void ChangeInBattlePartyScreen(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
     ov13_02221738(param0, param1);
 

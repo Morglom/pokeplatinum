@@ -42,22 +42,38 @@
 #include "unk_0200679C.h"
 #include "unk_0200C440.h"
 
-static void ov13_02226590(SysTask *param0, void *param1);
-static u8 ov13_0222668C(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226760(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226838(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_022269C0(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226C48(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226C54(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226C60(UnkStruct_ov13_02227244 *param0);
+enum InBattleBagTransitionIndex {
+    IN_BATTLE_BAG_TRANSITION_INDEX_INITIALISE = 0,
+    IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_MENU,
+    IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU,
+    IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM,
+    IN_BATTLE_BAG_TRANSITION_INDEX_BAG_MENU,
+    IN_BATTLE_BAG_TRANSITION_INDEX_BAG_SUB_MENU,
+    IN_BATTLE_BAG_TRANSITION_INDEX_USE_BAG_ITEM,
+    IN_BATTLE_BAG_TRANSITION_INDEX_ERROR_MESSAGE_BOX = 8,
+    IN_BATTLE_BAG_TRANSITION_INDEX_TEXT_QUEUE,
+    IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE,
+    IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE,
+    IN_BATTLE_BAG_TRANSITION_INDEX_FADE_OUT = 13,
+    IN_BATTLE_BAG_TRANSITION_INDEX_CLEAN_UP,
+};
+
+static void DoTransitions(SysTask *param0, void *param1);
+static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0);
+static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0);
+static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0);
+static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0);
+static u8 BagMenu(UnkStruct_ov13_02227244 *param0);
+static u8 BagSubMenu(UnkStruct_ov13_02227244 *param0);
+static u8 UseBagItem(UnkStruct_ov13_02227244 *param0);
 static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226C6C(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226C7C(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226C94(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226CBC(UnkStruct_ov13_02227244 *param0);
+static u8 DisplayErrorMessageBox(UnkStruct_ov13_02227244 *param0);
+static u8 TextQueue(UnkStruct_ov13_02227244 *param0);
+static u8 InputQueue(UnkStruct_ov13_02227244 *param0);
+static u8 SomeTypeOfQueue(UnkStruct_ov13_02227244 *param0);
 static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226CD4(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226CFC(SysTask *param0, UnkStruct_ov13_02227244 *param1);
+static u8 StartFadeOut(UnkStruct_ov13_02227244 *param0);
+static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1);
 static void ov13_02226ED0(UnkStruct_ov13_02227244 *param0);
 static void ov13_02226F9C(BgConfig *param0);
 static void ov13_02226FC4(UnkStruct_ov13_02227244 *param0);
@@ -65,8 +81,8 @@ static void ov13_022270B8(UnkStruct_ov13_02227244 *param0);
 static void ov13_022270F8(UnkStruct_ov13_02227244 *param0);
 static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0);
 static void ov13_02227118(UnkStruct_ov13_02227244 *param0, u8 param1);
-static void ov13_022271D0(UnkStruct_ov13_02227244 *param0, u8 param1);
-static int ov13_02227238(UnkStruct_ov13_02227244 *param0, const TouchScreenRect *rect);
+static void ChangeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, u8 param1);
+static int CheckTouchRectIsPressed(UnkStruct_ov13_02227244 *param0, const TouchScreenRect *rect);
 static void ov13_02227260(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
 
 static const TouchScreenRect Unk_ov13_02229A1C[] = {
@@ -98,9 +114,9 @@ static const TouchScreenRect Unk_ov13_022299AC[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-void ov13_022264F4(UnkStruct_ov13_022264F4 *param0)
+void StartBagTransitions(UnkStruct_ov13_022264F4 *param0)
 {
-    UnkStruct_ov13_02227244 *v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(ov13_02226590, sizeof(UnkStruct_ov13_02227244), 100, param0->heapID));
+    UnkStruct_ov13_02227244 *v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(DoTransitions, sizeof(UnkStruct_ov13_02227244), 100, param0->heapID));
     memset(v0, 0, sizeof(UnkStruct_ov13_02227244));
 
     v0->unk_00 = param0;
@@ -129,55 +145,55 @@ void ov13_022264F4(UnkStruct_ov13_022264F4 *param0)
     }
 }
 
-static void ov13_02226590(SysTask *param0, void *param1)
+static void DoTransitions(SysTask *param0, void *param1)
 {
     UnkStruct_ov13_02227244 *v0 = (UnkStruct_ov13_02227244 *)param1;
 
     switch (v0->unk_114A) {
-    case 0:
-        v0->unk_114A = ov13_0222668C(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_INITIALISE:
+        v0->unk_114A = InitialiseTransitions(v0);
         break;
-    case 1:
-        v0->unk_114A = ov13_02226760(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_MENU:
+        v0->unk_114A = DisplayBagMenu(v0);
         break;
-    case 2:
-        v0->unk_114A = ov13_02226838(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU:
+        v0->unk_114A = DisplayBagSubMenu(v0);
         break;
-    case 3:
-        v0->unk_114A = ov13_022269C0(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM:
+        v0->unk_114A = DisplayBagUseItem(v0);
         break;
-    case 4:
-        v0->unk_114A = ov13_02226C48(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_BAG_MENU:
+        v0->unk_114A = BagMenu(v0);
         break;
-    case 5:
-        v0->unk_114A = ov13_02226C54(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_BAG_SUB_MENU:
+        v0->unk_114A = BagSubMenu(v0);
         break;
-    case 6:
-        v0->unk_114A = ov13_02226C60(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_USE_BAG_ITEM:
+        v0->unk_114A = UseBagItem(v0);
         break;
     case 7:
         v0->unk_114A = ov13_02226948(v0);
         break;
-    case 8:
-        v0->unk_114A = ov13_02226C6C(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_ERROR_MESSAGE_BOX:
+        v0->unk_114A = DisplayErrorMessageBox(v0);
         break;
-    case 9:
-        v0->unk_114A = ov13_02226C7C(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_TEXT_QUEUE:
+        v0->unk_114A = TextQueue(v0);
         break;
-    case 10:
-        v0->unk_114A = ov13_02226C94(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE:
+        v0->unk_114A = InputQueue(v0);
         break;
-    case 11:
-        v0->unk_114A = ov13_02226CBC(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE:
+        v0->unk_114A = SomeTypeOfQueue(v0);
         break;
     case 12:
         v0->unk_114A = ov13_02226D94(v0);
         break;
-    case 13:
-        v0->unk_114A = ov13_02226CD4(v0);
+    case IN_BATTLE_BAG_TRANSITION_INDEX_FADE_OUT:
+        v0->unk_114A = StartFadeOut(v0);
         break;
-    case 14:
-        if (ov13_02226CFC(param0, v0) == 1) {
+    case IN_BATTLE_BAG_TRANSITION_INDEX_CLEAN_UP:
+        if (CleanupScreen(param0, v0) == TRUE) {
             return;
         }
     }
@@ -186,7 +202,7 @@ static void ov13_02226590(SysTask *param0, void *param1)
     SpriteSystem_DrawSprites(v0->unk_30C);
 }
 
-static u8 ov13_0222668C(UnkStruct_ov13_02227244 *param0)
+static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0)
 {
     G2S_BlendNone();
 
@@ -221,14 +237,14 @@ static u8 ov13_0222668C(UnkStruct_ov13_02227244 *param0)
     return 1;
 }
 
-static u8 ov13_02226760(UnkStruct_ov13_02227244 *param0)
+static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0)
 {
     if (PaletteData_GetSelectedBuffersMask(param0->unk_08) != 0) {
         return 1;
     }
 
     {
-        int v0 = ov13_02227238(param0, Unk_ov13_02229A1C);
+        int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02229A1C);
 
         if (v0 == 0xffffffff) {
             v0 = ov13_02228B64(param0->unk_34);
@@ -272,10 +288,10 @@ static u8 ov13_02226760(UnkStruct_ov13_02227244 *param0)
     return 1;
 }
 
-static u8 ov13_02226838(UnkStruct_ov13_02227244 *param0)
+static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
 {
     {
-        int v0 = ov13_02227238(param0, Unk_ov13_02229A38);
+        int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02229A38);
 
         if (v0 == 0xffffffff) {
             v0 = ov13_02228B64(param0->unk_34);
@@ -351,13 +367,13 @@ static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
     ov13_02227E68(param0, param0->unk_114C);
     ov13_02228924(param0, param0->unk_114C);
 
-    return 2;
+    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU;
 }
 
-static u8 ov13_022269C0(UnkStruct_ov13_02227244 *param0)
+static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0)
 {
     {
-        int v0 = ov13_02227238(param0, Unk_ov13_022299AC);
+        int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_022299AC);
 
         if (v0 == 0xffffffff) {
             v0 = ov13_02228B64(param0->unk_34);
@@ -478,64 +494,64 @@ static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
     return 13;
 }
 
-static u8 ov13_02226C48(UnkStruct_ov13_02227244 *param0)
+static u8 BagMenu(UnkStruct_ov13_02227244 *param0)
 {
-    ov13_022271D0(param0, 0);
-    return 1;
+    ChangeInBattleBagScreen(param0, IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU);
+    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_MENU;
 }
 
-static u8 ov13_02226C54(UnkStruct_ov13_02227244 *param0)
+static u8 BagSubMenu(UnkStruct_ov13_02227244 *param0)
 {
-    ov13_022271D0(param0, 1);
-    return 2;
+    ChangeInBattleBagScreen(param0, IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU);
+    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU;
 }
 
-static u8 ov13_02226C60(UnkStruct_ov13_02227244 *param0)
+static u8 UseBagItem(UnkStruct_ov13_02227244 *param0)
 {
-    ov13_022271D0(param0, 2);
-    return 3;
+    ChangeInBattleBagScreen(param0, IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM);
+    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM;
 }
 
-static u8 ov13_02226C6C(UnkStruct_ov13_02227244 *param0)
+static u8 DisplayErrorMessageBox(UnkStruct_ov13_02227244 *param0)
 {
     Window_EraseMessageBox(&param0->unk_1C, 0);
-    return 3;
+    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM;
 }
 
-static u8 ov13_02226C7C(UnkStruct_ov13_02227244 *param0)
+static u8 TextQueue(UnkStruct_ov13_02227244 *param0)
 {
-    if (Text_IsPrinterActive(param0->unk_32) == 0) {
-        return 10;
+    if (Text_IsPrinterActive(param0->unk_32) == FALSE) {
+        return IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE;
     }
 
-    return 9;
+    return IN_BATTLE_BAG_TRANSITION_INDEX_TEXT_QUEUE;
 }
 
-static u8 ov13_02226C94(UnkStruct_ov13_02227244 *param0)
+static u8 InputQueue(UnkStruct_ov13_02227244 *param0)
 {
     if ((gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B)) || (TouchScreen_Tapped() == 1)) {
         return param0->unk_114B;
     }
 
-    return 10;
+    return IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE;
 }
 
-static u8 ov13_02226CBC(UnkStruct_ov13_02227244 *param0)
+static u8 SomeTypeOfQueue(UnkStruct_ov13_02227244 *param0)
 {
     if (param0->unk_113E == 2) {
         return param0->unk_114B;
     }
 
-    return 11;
+    return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
 }
 
-static u8 ov13_02226CD4(UnkStruct_ov13_02227244 *param0)
+static u8 StartFadeOut(UnkStruct_ov13_02227244 *param0)
 {
     PaletteData_StartFade(param0->unk_08, (0x2 | 0x8), 0xffff, -8, 0, 16, 0);
-    return 14;
+    return IN_BATTLE_BAG_TRANSITION_INDEX_CLEAN_UP;
 }
 
-static u8 ov13_02226CFC(SysTask *param0, UnkStruct_ov13_02227244 *param1)
+static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
 {
     if (PaletteData_GetSelectedBuffersMask(param1->unk_08) != 0) {
         return 0;
@@ -586,13 +602,13 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
             ov13_0222880C(param0, 2, 0);
             param0->unk_115A = 0;
             param0->unk_1159++;
-            return 11;
+            return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
         } else {
             param0->unk_115A++;
         }
         break;
     case 1:
-        ov13_02226C54(param0);
+        BagSubMenu(param0);
         param0->unk_1159++;
         break;
     case 2:
@@ -603,13 +619,13 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
             ov13_0222880C(param0, 6, 0);
             param0->unk_115A = 0;
             param0->unk_1159++;
-            return 11;
+            return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
         } else {
             param0->unk_115A++;
         }
         break;
     case 3:
-        ov13_02226C60(param0);
+        UseBagItem(param0);
         param0->unk_1159++;
         break;
     case 4:
@@ -792,7 +808,7 @@ static void ov13_0222717C(UnkStruct_ov13_02227244 *param0, u8 param1)
     Bg_ChangeTilemapRectPalette(param0->unk_04, 6, 2, 40, 28, 8, 8 + param0->unk_114D);
 }
 
-static void ov13_022271D0(UnkStruct_ov13_02227244 *param0, u8 param1)
+static void ChangeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, u8 param1)
 {
     ov13_0222717C(param0, param1);
     ov13_02227118(param0, param1);
@@ -812,10 +828,10 @@ static void ov13_022271D0(UnkStruct_ov13_02227244 *param0, u8 param1)
     ov13_02227E68(param0, param0->unk_114C);
 }
 
-static int ov13_02227238(UnkStruct_ov13_02227244 *param0, const TouchScreenRect *rect)
+static int CheckTouchRectIsPressed(UnkStruct_ov13_02227244 *param0, const TouchScreenRect *rect)
 {
-    int v0 = TouchScreen_CheckRectanglePressed(rect);
-    return v0;
+    int isPressed = TouchScreen_CheckRectanglePressed(rect);
+    return isPressed;
 }
 
 int ov13_02227244(UnkStruct_ov13_02227244 *param0)
