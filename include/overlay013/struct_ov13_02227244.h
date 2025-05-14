@@ -4,8 +4,8 @@
 #include "struct_decls/struct_0200C440_decl.h"
 
 #include "battle/struct_ov16_0226DEEC_decl.h"
+#include "overlay013/ov13_02228A38.h"
 #include "overlay013/struct_ov13_022264F4.h"
-#include "overlay013/struct_ov13_02228A50_decl.h"
 
 #include "bag.h"
 #include "bg_window.h"
@@ -41,7 +41,7 @@ typedef struct {
     u8 unk_30; // Window num
     u8 unk_31;
     u8 unk_32; // Printer id
-    UnkStruct_ov13_02228A50 *unk_34; // Bag
+    UnkStruct_ov13_02228A50_t *unk_34; // Bag
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem unk_3C[5][36]; // Sub menu bag items
     SpriteManager *unk_30C;

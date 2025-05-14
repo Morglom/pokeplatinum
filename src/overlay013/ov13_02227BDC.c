@@ -231,12 +231,12 @@ static void ov13_02227F7C(UnkStruct_ov13_02227244 *param0)
     ov16_0226DB7C(v0, param0->unk_30C, param0->unk_08, param0->unk_00->heapID, 46270, 46270, 46265, 46265);
     v1 = ov16_0226DC24(v0, param0->unk_30C, param0->unk_00->heapID, 46270, 46270, 46265, 46265, 0, 1);
 
-    ov13_02228A64(param0->unk_34, v1);
+    SetInBattleCursorSprites(param0->unk_34, v1);
 }
 
 static void ov13_02227FDC(UnkStruct_ov13_02227244 *param0)
 {
-    ov16_0226DCA8(ov13_02228A58(param0->unk_34));
+    ov16_0226DCA8(GetInBattleCursorSprites(param0->unk_34));
     ov16_0226DBFC(param0->unk_30C, 46270, 46270, 46265, 46265);
 }
 
@@ -290,9 +290,9 @@ void ov13_02228008(UnkStruct_ov13_02227244 *param0, u8 param1)
 
 void ov13_02228050(UnkStruct_ov13_02227244 *param0)
 {
-    ov13_02228A60(param0->unk_34, 0);
+    SetIsInBattleCursorEnabled(param0->unk_34, 0);
     ov13_02228A90(param0->unk_34);
-    ov16_0226DDE8(ov13_02228A58(param0->unk_34));
+    ov16_0226DDE8(GetInBattleCursorSprites(param0->unk_34));
 }
 
 static void ov13_02228070(UnkStruct_ov13_02227244 *param0)

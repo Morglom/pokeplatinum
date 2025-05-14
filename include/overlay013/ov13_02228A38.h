@@ -2,20 +2,29 @@
 #define POKEPLATINUM_OV13_02228A38_H
 
 #include "battle/struct_ov16_0226DC24_decl.h"
-#include "overlay013/struct_ov13_02228A50_decl.h"
+#include "overlay013/ov13_02228A38.h"
 
 #include "byte_flag_set.h"
 
-UnkStruct_ov13_02228A50 *ov13_02228A38(u32 heapID);
-void ov13_02228A50(UnkStruct_ov13_02228A50 *param0);
-UnkStruct_ov16_0226DC24 *ov13_02228A58(UnkStruct_ov13_02228A50 *param0);
-u8 ov13_02228A5C(UnkStruct_ov13_02228A50 *param0);
-void ov13_02228A60(UnkStruct_ov13_02228A50 *param0, u8 param1);
-void ov13_02228A64(UnkStruct_ov13_02228A50 *param0, UnkStruct_ov16_0226DC24 *param1);
-void ov13_02228A68(UnkStruct_ov13_02228A50 *param0, u8 param1);
-void ov13_02228A90(UnkStruct_ov13_02228A50 *param0);
-void ov13_02228A9C(UnkStruct_ov13_02228A50 *param0, const ByteFlagSet *param1);
-void ov13_02228AC8(UnkStruct_ov13_02228A50 *param0, u32 param1);
-u32 ov13_02228B64(UnkStruct_ov13_02228A50 *param0);
+typedef struct UnkStruct_ov13_02228A50_t {
+    UnkStruct_ov16_0226DC24 *unk_00; // Sprites
+    const ByteFlagSet *unk_04; // Cursor buttons
+    u8 enabled;
+    u8 setIndex; // Set Index
+    u8 unk_0A; // Some sort of index
+    u32 size; // Size I think
+} UnkStruct_ov13_02228A50_t;
+
+UnkStruct_ov13_02228A50_t *InitialiseInBattleCursor(u32 heapID);
+void ClearInBattleCursor(UnkStruct_ov13_02228A50_t *param0);
+UnkStruct_ov16_0226DC24 *GetInBattleCursorSprites(UnkStruct_ov13_02228A50_t *param0);
+u8 GetIsInBattleCursorEnabled(UnkStruct_ov13_02228A50_t *param0);
+void SetIsInBattleCursorEnabled(UnkStruct_ov13_02228A50_t *param0, u8 param1);
+void SetInBattleCursorSprites(UnkStruct_ov13_02228A50_t *param0, UnkStruct_ov16_0226DC24 *param1);
+void ov13_02228A68(UnkStruct_ov13_02228A50_t *param0, u8 param1);
+void ov13_02228A90(UnkStruct_ov13_02228A50_t *param0);
+void ov13_02228A9C(UnkStruct_ov13_02228A50_t *param0, const ByteFlagSet *param1);
+void ov13_02228AC8(UnkStruct_ov13_02228A50_t *param0, u32 param1);
+u32 CheckInBattleCursorNavigation(UnkStruct_ov13_02228A50_t *param0);
 
 #endif // POKEPLATINUM_OV13_02228A38_H

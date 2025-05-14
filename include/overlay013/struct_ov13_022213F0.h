@@ -3,9 +3,9 @@
 
 #include "struct_decls/struct_0200C440_decl.h"
 
+#include "overlay013/ov13_02228A38.h"
 #include "overlay013/struct_ov13_0221FC20.h"
 #include "overlay013/struct_ov13_02221ED0.h"
-#include "overlay013/struct_ov13_02228A50_decl.h"
 
 #include "bg_window.h"
 #include "message.h"
@@ -71,9 +71,9 @@ typedef struct {
     u8 unk_2079;
     u16 unk_207A;
     u16 unk_207C[4]; // Moves
-    UnkStruct_ov13_02228A50 *unk_2084; // Bag
+    UnkStruct_ov13_02228A50_t *unk_2084; // In Battle Cursor
     u8 unk_2088;
-    u8 unk_2089;
+    u8 unk_2089; // Navigation
     u8 unk_208A;
     u8 unk_208B;
 } UnkStruct_ov13_022213F0;
