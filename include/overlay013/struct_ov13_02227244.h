@@ -45,7 +45,7 @@ typedef struct {
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem unk_3C[5][36]; // Sub menu bag items
     SpriteManager *unk_30C;
-    ManagedSprite *unk_310[6]; // Party pokemon sprites
+    ManagedSprite *unk_310[6]; // Page item sprites
     u16 unk_328[3][144];
     u16 unk_688[4][130];
     u16 unk_A98[3][25];

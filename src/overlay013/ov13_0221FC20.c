@@ -633,7 +633,7 @@ static u8 LearnMoveScreen(UnkStruct_ov13_022213F0 *param0)
             v0 = 6;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     switch (v0) {
@@ -681,7 +681,7 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
             v0 = 2;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     switch (v0) {
@@ -746,7 +746,7 @@ static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0)
             v1 = 4;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     switch (v1) {
@@ -872,8 +872,8 @@ static u8 PokemonCantShift(UnkStruct_ov13_022213F0 *param0)
 
 static u8 DisplayErrorMessageBox(UnkStruct_ov13_022213F0 *param0)
 {
-    Window_EraseMessageBox(&param0->unk_204C[1], 0);
-    return 2;
+    Window_EraseMessageBox(&param0->unk_204C[1], FALSE);
+    return IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_SELECT;
 }
 
 static u8 TextQueue(UnkStruct_ov13_022213F0 *param0)
@@ -1316,7 +1316,7 @@ static u8 ov13_0222124C(UnkStruct_ov13_022213F0 *param0)
         if ((v0 == 6) || (ov13_022213F0(param0, v0) != 0)) {
             param0->unk_00->selectedPartyIndex = (u8)v0;
 
-            ov13_022256E8(param0);
+            SomeKindOfReset(param0);
             return 1;
         }
     }
@@ -1337,7 +1337,7 @@ static u8 ov13_022212C4(UnkStruct_ov13_022213F0 *param0)
             return 0xff;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     return (u8)v0;
@@ -1356,7 +1356,7 @@ static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0)
             return 0xff;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     return (u8)v0;
@@ -1375,7 +1375,7 @@ static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0)
             return 0xff;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     return (u8)v0;
@@ -1394,7 +1394,7 @@ static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0)
             return 0xff;
         }
     } else {
-        ov13_022256E8(param0);
+        SomeKindOfReset(param0);
     }
 
     return (u8)v0;

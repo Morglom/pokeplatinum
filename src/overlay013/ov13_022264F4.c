@@ -514,7 +514,7 @@ static u8 UseBagItem(UnkStruct_ov13_02227244 *param0)
 
 static u8 DisplayErrorMessageBox(UnkStruct_ov13_02227244 *param0)
 {
-    Window_EraseMessageBox(&param0->unk_1C, 0);
+    Window_EraseMessageBox(&param0->unk_1C, FALSE);
     return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM;
 }
 

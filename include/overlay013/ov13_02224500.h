@@ -9,6 +9,6 @@ void ov13_02224B7C(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex scr
 void ov13_022252E8(UnkStruct_ov13_022213F0 *param0);
 void ov13_0222537C(UnkStruct_ov13_022213F0 *param0);
 void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1);
-void ov13_022256E8(UnkStruct_ov13_022213F0 *param0);
+void SomeKindOfReset(UnkStruct_ov13_022213F0 *param0);
 
 #endif // POKEPLATINUM_OV13_02224500_H
