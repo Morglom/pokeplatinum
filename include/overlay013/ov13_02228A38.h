@@ -2,7 +2,6 @@
 #define POKEPLATINUM_OV13_02228A38_H
 
 #include "battle/struct_ov16_0226DC24_decl.h"
-#include "overlay013/ov13_02228A38.h"
 
 #include "byte_flag_set.h"
 
