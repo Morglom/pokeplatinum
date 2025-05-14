@@ -789,12 +789,12 @@ static void ov13_0222554C(UnkStruct_ov13_022213F0 *param0)
     ov16_0226DB7C(v0, param0->unk_1FB0, param0->unk_1E4, param0->unk_00->heapID, 45080, 45068, 45068, 45068);
     v1 = ov16_0226DC24(v0, param0->unk_1FB0, param0->unk_00->heapID, 45080, 45068, 45068, 45068, 0, 1);
 
-    SetBattlePartyBagCursorSprites(param0->unk_2084, v1);
+    SetBattleSubMenuCursorSprites(param0->unk_2084, v1);
 }
 
 static void ov13_022255B8(UnkStruct_ov13_022213F0 *param0)
 {
-    ov16_0226DCA8(GetBattlePartyBagCursorSprites(param0->unk_2084));
+    ov16_0226DCA8(GetBattleSubMenuCursorSprites(param0->unk_2084));
     ov16_0226DBFC(param0->unk_1FB0, 45080, 45068, 45068, 45068);
 }
 
@@ -881,48 +881,48 @@ static const ByteFlagSet *const Unk_ov13_0222938C[] = {
 static void ov13_022255EC(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_2073_4 == 0) {
-        ov13_02228AC8(param0->unk_2084, 0x5f);
+        SetEnabledPositionsMask(param0->unk_2084, 0x5f);
     } else {
-        ov13_02228AC8(param0->unk_2084, 0x7f);
+        SetEnabledPositionsMask(param0->unk_2084, 0x7f);
     }
 }
 
 static void ov13_02225614(UnkStruct_ov13_022213F0 *param0)
 {
     if (param0->unk_2073_4 == 0) {
-        ov13_02228AC8(param0->unk_2084, 5);
+        SetEnabledPositionsMask(param0->unk_2084, 5);
     } else {
-        ov13_02228AC8(param0->unk_2084, 7);
+        SetEnabledPositionsMask(param0->unk_2084, 7);
     }
 }
 
 void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1)
 {
-    SetBattlePartyBagCursorPositions(param0->unk_2084, Unk_ov13_0222938C[param1]);
+    SetBattleSubMenuCursorPositions(param0->unk_2084, Unk_ov13_0222938C[param1]);
 
     switch (param1) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
-        SetBattlePartyBagCursorPosition(param0->unk_2084, param0->unk_00->selectedPartyIndex);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_00->selectedPartyIndex);
         param0->unk_2088 = 0;
         param0->unk_00->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
-        SetBattlePartyBagCursorPosition(param0->unk_2084, param0->unk_2088);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_2088);
         param0->unk_00->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
     case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
-        SetBattlePartyBagCursorPosition(param0->unk_2084, param0->unk_00->unk_34);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_00->unk_34);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_1:
     case IN_BATTLE_SCREEN_LEARN_MOVE_2:
         ov13_022255EC(param0);
-        SetBattlePartyBagCursorPosition(param0->unk_2084, param0->unk_2089);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_2089);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
         ov13_02225614(param0);
-        SetBattlePartyBagCursorPosition(param0->unk_2084, param0->unk_208A);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_208A);
         break;
     }
 }
@@ -930,6 +930,6 @@ void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1)
 void SomeKindOfReset(UnkStruct_ov13_022213F0 *param0)
 {
     SetBattlePartyBagCursorVisiblity(param0->unk_2084, FALSE);
-    ResetPartyBagCursorPosition(param0->unk_2084);
-    ov16_0226DDE8(GetBattlePartyBagCursorSprites(param0->unk_2084));
+    ResetBattleSubMenuCursorPosition(param0->unk_2084);
+    ov16_0226DDE8(GetBattleSubMenuCursorSprites(param0->unk_2084));
 }

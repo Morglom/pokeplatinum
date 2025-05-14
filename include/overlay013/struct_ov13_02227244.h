@@ -41,7 +41,7 @@ typedef struct {
     u8 unk_30; // Window num
     u8 unk_31;
     u8 unk_32; // Printer id
-    BattlePartyBagCursor *unk_34; // Bag
+    BattleSubMenuCursor *unk_34; // Bag
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem unk_3C[5][36]; // Sub menu bag items
     SpriteManager *unk_30C;

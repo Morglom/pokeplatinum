@@ -206,7 +206,7 @@ static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0)
 {
     G2S_BlendNone();
 
-    param0->unk_34 = MakeBattlePartyBagCursor(param0->unk_00->heapID);
+    param0->unk_34 = MakeBattleSubMenuCursor(param0->unk_00->heapID);
 
     ov13_02226ED0(param0);
     ov13_02226FC4(param0);
@@ -246,10 +246,10 @@ static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0)
     {
         int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02229A1C);
 
-        if (v0 == 0xffffffff) {
-            v0 = CheckBattlePartyBagCursorInputs(param0->unk_34);
+        if (v0 == TOUCHSCREEN_INPUT_NONE) {
+            v0 = CheckBattleSubMenuCursorInputs(param0->unk_34);
 
-            if (v0 == 0xfffffffe) {
+            if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
                 v0 = 5;
             }
         } else {
@@ -293,10 +293,10 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
     {
         int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02229A38);
 
-        if (v0 == 0xffffffff) {
-            v0 = CheckBattlePartyBagCursorInputs(param0->unk_34);
+        if (v0 == TOUCHSCREEN_INPUT_NONE) {
+            v0 = CheckBattleSubMenuCursorInputs(param0->unk_34);
 
-            if (v0 == 0xfffffffe) {
+            if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
                 v0 = 8;
             }
         } else {
@@ -375,10 +375,10 @@ static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0)
     {
         int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_022299AC);
 
-        if (v0 == 0xffffffff) {
-            v0 = CheckBattlePartyBagCursorInputs(param0->unk_34);
+        if (v0 == TOUCHSCREEN_INPUT_NONE) {
+            v0 = CheckBattleSubMenuCursorInputs(param0->unk_34);
 
-            if (v0 == 0xfffffffe) {
+            if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
                 v0 = 1;
             }
         } else {
@@ -562,9 +562,9 @@ static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
     ov13_022270F8(param1);
     ov13_02226F9C(param1->unk_04);
 
-    param1->unk_00->unk_25 = IsBattlePartyBagCursorVisible(param1->unk_34);
+    param1->unk_00->unk_25 = IsBattleSubMenuCursorVisible(param1->unk_34);
 
-    DeleteBattlePartyCursor(param1->unk_34);
+    DeleteBattleSubMenuCursor(param1->unk_34);
     Font_Free(FONT_SUBSCREEN);
 
     if (param1->unk_00->unk_1C != 0) {

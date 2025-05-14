@@ -12,71 +12,76 @@
 #include "sound_playback.h"
 #include "system.h"
 
-BattlePartyBagCursor *MakeBattlePartyBagCursor(u32 heapID)
+#define CURSOR_STARTING_INDEX              0
+#define NULL_POSITION_INDEX                0xff
+#define GO_TO_PREVIOUS_POSITION_INDEX_MASK 0x80
+#define ALL_POSITIONS_ENABLED_MASK         0xffffffff
+
+BattleSubMenuCursor *MakeBattleSubMenuCursor(u32 heapID)
 {
-    BattlePartyBagCursor *cursor = Heap_AllocFromHeap(heapID, sizeof(BattlePartyBagCursor));
-    memset(cursor, 0, sizeof(BattlePartyBagCursor));
+    BattleSubMenuCursor *cursor = Heap_AllocFromHeap(heapID, sizeof(BattleSubMenuCursor));
+    memset(cursor, 0, sizeof(BattleSubMenuCursor));
     return cursor;
 }
 
-void DeleteBattlePartyCursor(BattlePartyBagCursor *cursor)
+void DeleteBattleSubMenuCursor(BattleSubMenuCursor *cursor)
 {
     Heap_FreeToHeap(cursor);
 }
 
-UnkStruct_ov16_0226DC24 *GetBattlePartyBagCursorSprites(BattlePartyBagCursor *cursor)
+UnkStruct_ov16_0226DC24 *GetBattleSubMenuCursorSprites(BattleSubMenuCursor *cursor)
 {
-    return cursor->unk_00;
+    return cursor->sprites;
 }
 
-u8 IsBattlePartyBagCursorVisible(BattlePartyBagCursor *cursor)
+u8 IsBattleSubMenuCursorVisible(BattleSubMenuCursor *cursor)
 {
     return cursor->isVisible;
 }
 
-void SetBattlePartyBagCursorVisiblity(BattlePartyBagCursor *cursor, u8 isVisible)
+void SetBattlePartyBagCursorVisiblity(BattleSubMenuCursor *cursor, u8 isVisible)
 {
     cursor->isVisible = isVisible;
 }
 
-void SetBattlePartyBagCursorSprites(BattlePartyBagCursor *cursor, UnkStruct_ov16_0226DC24 *sprites)
+void SetBattleSubMenuCursorSprites(BattleSubMenuCursor *cursor, UnkStruct_ov16_0226DC24 *sprites)
 {
-    cursor->unk_00 = sprites;
+    cursor->sprites = sprites;
 }
 
-void SetBattlePartyBagCursorPosition(BattlePartyBagCursor *cursor, u8 positionIndex)
+void SetBattleSubMenuCursorPosition(BattleSubMenuCursor *cursor, u8 positionIndex)
 {
-    cursor->positionIndex = positionIndex;
+    cursor->currentPositionIndex = positionIndex;
 
     if (cursor->isVisible == TRUE) {
-        ov16_0226DD7C(cursor->unk_00, cursor->unk_04[cursor->positionIndex].flagA, cursor->unk_04[cursor->positionIndex].flagC, cursor->unk_04[cursor->positionIndex].flagB, cursor->unk_04[cursor->positionIndex].flagD);
+        ov16_0226DD7C(cursor->sprites, cursor->positions[cursor->currentPositionIndex].flagA, cursor->positions[cursor->currentPositionIndex].flagC, cursor->positions[cursor->currentPositionIndex].flagB, cursor->positions[cursor->currentPositionIndex].flagD);
     }
 }
 
-void ResetPartyBagCursorPosition(BattlePartyBagCursor *cursor)
+void ResetBattleSubMenuCursorPosition(BattleSubMenuCursor *cursor)
 {
-    cursor->positionIndex = 0;
-    cursor->unk_0A = 0xff;
+    cursor->currentPositionIndex = CURSOR_STARTING_INDEX;
+    cursor->previousPositionIndex = NULL_POSITION_INDEX;
 }
 
-void SetBattlePartyBagCursorPositions(BattlePartyBagCursor *param0, const ByteFlagSet *param1)
+void SetBattleSubMenuCursorPositions(BattleSubMenuCursor *cursor, const ByteFlagSet *positions)
 {
-    ResetPartyBagCursorPosition(param0);
+    ResetBattleSubMenuCursorPosition(cursor);
 
-    param0->unk_04 = param1;
-    param0->numPositions = 0xffffffff;
+    cursor->positions = positions;
+    cursor->enabledPositionsMask = ALL_POSITIONS_ENABLED_MASK;
 
-    if (param0->isVisible == TRUE) {
-        ov16_0226DD7C(param0->unk_00, param0->unk_04[0].flagA, param0->unk_04[0].flagC, param0->unk_04[0].flagB, param0->unk_04[0].flagD);
+    if (cursor->isVisible == TRUE) {
+        ov16_0226DD7C(cursor->sprites, cursor->positions[CURSOR_STARTING_INDEX].flagA, cursor->positions[CURSOR_STARTING_INDEX].flagC, cursor->positions[CURSOR_STARTING_INDEX].flagB, cursor->positions[CURSOR_STARTING_INDEX].flagD);
     }
 }
 
-void ov13_02228AC8(BattlePartyBagCursor *param0, u32 param1)
+void SetEnabledPositionsMask(BattleSubMenuCursor *cursor, u32 mask)
 {
-    param0->numPositions = param1;
+    cursor->enabledPositionsMask = mask;
 }
 
-static u8 IsCursorVisible(BattlePartyBagCursor *cursor)
+static u8 IsCursorVisible(BattleSubMenuCursor *cursor)
 {
     if (cursor->isVisible == TRUE) {
         return TRUE;
@@ -85,33 +90,33 @@ static u8 IsCursorVisible(BattlePartyBagCursor *cursor)
     if (gSystem.pressedKeys & (PAD_KEY | PAD_BUTTON_B | PAD_BUTTON_A)) {
         cursor->isVisible = TRUE;
 
-        ov16_0226DD7C(cursor->unk_00, cursor->unk_04[cursor->positionIndex].flagA, cursor->unk_04[cursor->positionIndex].flagC, cursor->unk_04[cursor->positionIndex].flagB, cursor->unk_04[cursor->positionIndex].flagD);
+        ov16_0226DD7C(cursor->sprites, cursor->positions[cursor->currentPositionIndex].flagA, cursor->positions[cursor->currentPositionIndex].flagC, cursor->positions[cursor->currentPositionIndex].flagB, cursor->positions[cursor->currentPositionIndex].flagD);
         Sound_PlayEffect(SEQ_SE_CONFIRM);
     }
 
     return FALSE;
 }
 
-static BOOL CheckPositionHasNeightbour(const ByteFlagSet *position, u8 direction)
+static BOOL CheckShouldStorePreviousPosition(const ByteFlagSet *newPosition, u8 incomingDirection)
 {
-    switch (direction) {
+    switch (incomingDirection) {
     case BYTE_FLAG_SET_DIRECTION_UP:
-        if (position->downIndex & 0x80) {
+        if (newPosition->downIndex & GO_TO_PREVIOUS_POSITION_INDEX_MASK) {
             return TRUE;
         }
         break;
     case BYTE_FLAG_SET_DIRECTION_DOWN:
-        if (position->upIndex & 0x80) {
+        if (newPosition->upIndex & GO_TO_PREVIOUS_POSITION_INDEX_MASK) {
             return TRUE;
         }
         break;
     case BYTE_FLAG_SET_DIRECTION_LEFT:
-        if (position->rightIndex & 0x80) {
+        if (newPosition->rightIndex & GO_TO_PREVIOUS_POSITION_INDEX_MASK) {
             return TRUE;
         }
         break;
     case BYTE_FLAG_SET_DIRECTION_RIGHT:
-        if (position->leftIndex & 0x80) {
+        if (newPosition->leftIndex & GO_TO_PREVIOUS_POSITION_INDEX_MASK) {
             return TRUE;
         }
         break;
@@ -120,88 +125,89 @@ static BOOL CheckPositionHasNeightbour(const ByteFlagSet *position, u8 direction
     return FALSE;
 }
 
-u32 CheckBattlePartyBagCursorInputs(BattlePartyBagCursor *param0)
+u32 CheckBattleSubMenuCursorInputs(BattleSubMenuCursor *cursor)
 {
-    u8 v0, v1, v2, v3;
-    u8 nextIndex;
+    u8 nextPositionIndex;
     u8 pressedDirection;
 
-    if (IsCursorVisible(param0) == FALSE) {
-        return 0xffffffff;
+    if (IsCursorVisible(cursor) == FALSE) {
+        return BATTLE_SUB_MENU_CURSOR_NO_MOVEMENT_INDEX;
     }
 
     if (gSystem.pressedKeys & PAD_KEY_UP) {
-        nextIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->positionIndex, BYTE_FLAG_SET_DIRECTION_UP);
+        nextPositionIndex = ReadByteFlags(cursor->positions, NULL, NULL, NULL, NULL, cursor->currentPositionIndex, BYTE_FLAG_SET_DIRECTION_UP);
         pressedDirection = BYTE_FLAG_SET_DIRECTION_UP;
     } else if (gSystem.pressedKeys & PAD_KEY_DOWN) {
-        nextIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->positionIndex, BYTE_FLAG_SET_DIRECTION_DOWN);
+        nextPositionIndex = ReadByteFlags(cursor->positions, NULL, NULL, NULL, NULL, cursor->currentPositionIndex, BYTE_FLAG_SET_DIRECTION_DOWN);
         pressedDirection = BYTE_FLAG_SET_DIRECTION_DOWN;
     } else if (gSystem.pressedKeys & PAD_KEY_LEFT) {
-        nextIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->positionIndex, BYTE_FLAG_SET_DIRECTION_LEFT);
+        nextPositionIndex = ReadByteFlags(cursor->positions, NULL, NULL, NULL, NULL, cursor->currentPositionIndex, BYTE_FLAG_SET_DIRECTION_LEFT);
         pressedDirection = BYTE_FLAG_SET_DIRECTION_LEFT;
     } else if (gSystem.pressedKeys & PAD_KEY_RIGHT) {
-        nextIndex = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, param0->positionIndex, BYTE_FLAG_SET_DIRECTION_RIGHT);
+        nextPositionIndex = ReadByteFlags(cursor->positions, NULL, NULL, NULL, NULL, cursor->currentPositionIndex, BYTE_FLAG_SET_DIRECTION_RIGHT);
         pressedDirection = BYTE_FLAG_SET_DIRECTION_RIGHT;
     } else {
-        nextIndex = 0xff;
+        nextPositionIndex = NULL_POSITION_INDEX;
     }
 
-    if (nextIndex != 0xff) {
-        u8 v6 = 1;
+    if (nextPositionIndex != NULL_POSITION_INDEX) {
+        u8 nextPositionIsEnabled = TRUE;
 
-        if (nextIndex & 0x80) {
-            if (param0->unk_0A != 0xff) {
-                nextIndex = param0->unk_0A;
+        if (nextPositionIndex & GO_TO_PREVIOUS_POSITION_INDEX_MASK) {
+            if (cursor->previousPositionIndex != NULL_POSITION_INDEX) {
+                nextPositionIndex = cursor->previousPositionIndex;
             } else {
-                nextIndex ^= 0x80;
+                nextPositionIndex ^= GO_TO_PREVIOUS_POSITION_INDEX_MASK;
             }
         }
 
         while (TRUE) {
-            u8 v7;
+            u8 replacementPositionIndex;
 
-            if (param0->numPositions & (1 << nextIndex)) {
+            if (cursor->enabledPositionsMask & (1 << nextPositionIndex)) {
                 break;
             }
 
-            v6 = 0;
-            v7 = ReadByteFlags(param0->unk_04, NULL, NULL, NULL, NULL, nextIndex, pressedDirection) & (0xff ^ 0x80);
+            nextPositionIsEnabled = FALSE;
+            replacementPositionIndex = ReadByteFlags(cursor->positions, NULL, NULL, NULL, NULL, nextPositionIndex, pressedDirection) & (NULL_POSITION_INDEX ^ GO_TO_PREVIOUS_POSITION_INDEX_MASK);
 
-            if ((v7 == nextIndex) || (v7 == param0->positionIndex)) {
-                nextIndex = param0->positionIndex;
+            if ((replacementPositionIndex == nextPositionIndex) || (replacementPositionIndex == cursor->currentPositionIndex)) {
+                nextPositionIndex = cursor->currentPositionIndex;
                 break;
             }
 
-            nextIndex = v7;
+            nextPositionIndex = replacementPositionIndex;
         }
 
-        if (param0->positionIndex != nextIndex) {
-            ReadABByteFlags(&param0->unk_04[nextIndex], &v0, &v1);
-            ReadCDByteFlags(&param0->unk_04[nextIndex], &v2, &v3);
+        if (cursor->currentPositionIndex != nextPositionIndex) {
+            u8 x1, y1, x2, y2;
 
-            if ((CheckPositionHasNeightbour(&param0->unk_04[nextIndex], pressedDirection) == TRUE) && (v6 != 0)) {
-                param0->unk_0A = param0->positionIndex;
+            ReadABByteFlags(&cursor->positions[nextPositionIndex], &x1, &y1);
+            ReadCDByteFlags(&cursor->positions[nextPositionIndex], &x2, &y2);
+
+            if ((CheckShouldStorePreviousPosition(&cursor->positions[nextPositionIndex], pressedDirection) == TRUE) && (nextPositionIsEnabled != FALSE)) {
+                cursor->previousPositionIndex = cursor->currentPositionIndex;
             } else {
-                param0->unk_0A = 0xff;
+                cursor->previousPositionIndex = NULL_POSITION_INDEX;
             }
 
-            param0->positionIndex = nextIndex;
+            cursor->currentPositionIndex = nextPositionIndex;
 
-            ov16_0226DD7C(param0->unk_00, v0, v2, v1, v3);
+            ov16_0226DD7C(cursor->sprites, x1, x2, y1, y2);
             Sound_PlayEffect(SEQ_SE_CONFIRM);
         }
 
-        return 0xffffffff;
+        return BATTLE_SUB_MENU_CURSOR_NO_MOVEMENT_INDEX;
     }
 
     if (gSystem.pressedKeys & PAD_BUTTON_A) {
-        return param0->positionIndex;
+        return cursor->currentPositionIndex;
     }
 
     if (gSystem.pressedKeys & PAD_BUTTON_B) {
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-        return 0xfffffffe;
+        return BATTLE_SUB_MENU_CURSOR_BACK_INDEX;
     }
 
-    return 0xffffffff;
+    return BATTLE_SUB_MENU_CURSOR_NO_MOVEMENT_INDEX;
 }
