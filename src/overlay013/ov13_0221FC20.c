@@ -337,7 +337,7 @@ static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0)
         v0 = 1;
     }
 
-    param0->unk_2084 = InitialiseInBattleCursor(param0->unk_00->heapID);
+    param0->unk_2084 = MakeBattlePartyBagCursor(param0->unk_00->heapID);
 
     InitialisePartyPokemon(param0);
     ov13_02220C0C(param0);
@@ -355,7 +355,7 @@ static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0)
     DrawInBattlePartyScreen(param0, param0->unk_2076);
 
     if (param0->unk_00->unk_32 != 0) {
-        SetIsInBattleCursorEnabled(param0->unk_2084, 1);
+        SetBattlePartyBagCursorVisiblity(param0->unk_2084, 1);
     }
 
     if ((param0->unk_2076 == 0) && (CheckIfSwitchingWithPartnersPokemon(param0, 0) == TRUE)) {
@@ -627,7 +627,7 @@ static u8 LearnMoveScreen(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228E0C);
 
     if (v0 == 0xffffffff) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 6;
@@ -675,7 +675,7 @@ static u8 ov13_0222050C(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D14);
 
     if (v0 == 0xffffffff) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 2;
@@ -740,7 +740,7 @@ static u8 UsePPRestoreItem(UnkStruct_ov13_022213F0 *param0)
     v1 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D64);
 
     if (v1 == 0xffffffff) {
-        v1 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v1 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v1 == 0xfffffffe) {
             v1 = 4;
@@ -1035,9 +1035,9 @@ static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_022213F0 *param1)
     ov13_02221BC8(param1);
     ov13_02220D1C(param1->unk_1E0);
 
-    param1->unk_00->unk_32 = GetIsInBattleCursorEnabled(param1->unk_2084);
+    param1->unk_00->unk_32 = IsBattlePartyBagCursorVisible(param1->unk_2084);
 
-    ClearInBattleCursor(param1->unk_2084);
+    DeleteBattlePartyCursor(param1->unk_2084);
     Font_Free(FONT_SUBSCREEN);
 
     param1->unk_00->unk_36 = 1;
@@ -1300,7 +1300,7 @@ static u8 ov13_0222124C(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228DEC);
 
     if (v0 == 0xffffffff) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 6;
@@ -1329,7 +1329,7 @@ static u8 ov13_022212C4(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D24);
 
     if (v0 == 0xffffffff) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 3;
@@ -1348,7 +1348,7 @@ static u8 ov13_0222130C(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D38);
 
     if (v0 == 0xffffffff) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 3;
@@ -1367,7 +1367,7 @@ static u8 ov13_02221354(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228E2C);
 
     if (v0 == 0xffffffff) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 7;
@@ -1386,7 +1386,7 @@ static u8 ov13_0222139C(UnkStruct_ov13_022213F0 *param0)
     int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02228D4C);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
-        v0 = CheckInBattleCursorNavigation(param0->unk_2084);
+        v0 = CheckBattlePartyBagCursorInputs(param0->unk_2084);
 
         if (v0 == 0xfffffffe) {
             v0 = 4;

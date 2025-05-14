@@ -231,12 +231,12 @@ static void ov13_02227F7C(UnkStruct_ov13_02227244 *param0)
     ov16_0226DB7C(v0, param0->unk_30C, param0->unk_08, param0->unk_00->heapID, 46270, 46270, 46265, 46265);
     v1 = ov16_0226DC24(v0, param0->unk_30C, param0->unk_00->heapID, 46270, 46270, 46265, 46265, 0, 1);
 
-    SetInBattleCursorSprites(param0->unk_34, v1);
+    SetBattlePartyBagCursorSprites(param0->unk_34, v1);
 }
 
 static void ov13_02227FDC(UnkStruct_ov13_02227244 *param0)
 {
-    ov16_0226DCA8(GetInBattleCursorSprites(param0->unk_34));
+    ov16_0226DCA8(GetBattlePartyBagCursorSprites(param0->unk_34));
     ov16_0226DBFC(param0->unk_30C, 46270, 46270, 46265, 46265);
 }
 
@@ -274,14 +274,14 @@ static const ByteFlagSet *const Unk_ov13_02229BC8[] = {
 
 void ov13_02228008(UnkStruct_ov13_02227244 *param0, u8 param1)
 {
-    ov13_02228A9C(param0->unk_34, Unk_ov13_02229BC8[param1]);
+    SetBattlePartyBagCursorPositions(param0->unk_34, Unk_ov13_02229BC8[param1]);
 
     switch (param1) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
-        ov13_02228A68(param0->unk_34, param0->unk_114D);
+        SetBattlePartyBagCursorPosition(param0->unk_34, param0->unk_114D);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
-        ov13_02228A68(param0->unk_34, param0->unk_00->unk_27[param0->unk_114D]);
+        SetBattlePartyBagCursorPosition(param0->unk_34, param0->unk_00->unk_27[param0->unk_114D]);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         break;
@@ -290,9 +290,9 @@ void ov13_02228008(UnkStruct_ov13_02227244 *param0, u8 param1)
 
 void ov13_02228050(UnkStruct_ov13_02227244 *param0)
 {
-    SetIsInBattleCursorEnabled(param0->unk_34, 0);
-    ov13_02228A90(param0->unk_34);
-    ov16_0226DDE8(GetInBattleCursorSprites(param0->unk_34));
+    SetBattlePartyBagCursorVisiblity(param0->unk_34, 0);
+    ResetPartyBagCursorPosition(param0->unk_34);
+    ov16_0226DDE8(GetBattlePartyBagCursorSprites(param0->unk_34));
 }
 
 static void ov13_02228070(UnkStruct_ov13_02227244 *param0)

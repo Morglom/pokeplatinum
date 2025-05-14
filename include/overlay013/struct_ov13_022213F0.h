@@ -71,7 +71,7 @@ typedef struct {
     u8 unk_2079;
     u16 unk_207A;
     u16 unk_207C[4]; // Moves
-    UnkStruct_ov13_02228A50_t *unk_2084; // In Battle Cursor
+    BattlePartyBagCursor *unk_2084; // In Battle Cursor
     u8 unk_2088;
     u8 unk_2089; // Navigation
     u8 unk_208A;
