@@ -26,7 +26,7 @@ BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
 
     if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->lastUsedItem, 1, param0->unk_00->heapID) == FALSE) {
         param0->unk_00->lastUsedItem = ITEM_NONE;
-        param0->unk_00->unk_1F = 0;
+        param0->unk_00->lastUsedItemPocket = 0;
         return FALSE;
     }
 

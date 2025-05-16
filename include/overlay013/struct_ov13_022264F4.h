@@ -18,7 +18,7 @@ typedef struct {
     u32 unk_18;
     u16 unk_1C; // Item of some kind
     u8 unk_1E; // Sub menu index
-    u8 unk_1F; // Last used item category
+    u8 lastUsedItemPocket; // Last used item category
     u16 lastUsedItem;
     u8 unk_22;
     u8 unk_23;
