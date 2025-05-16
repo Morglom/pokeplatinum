@@ -25,7 +25,7 @@ typedef struct {
     u8 unk_24;
     u8 unk_25;
     u8 unk_26;
-    u8 unk_27[5]; // Sub menu current index on page
+    u8 pocketCurrentPage[5]; // Sub menu current index on page
     u8 unk_2C[5]; // Sub menu current pages
 } UnkStruct_ov13_022264F4;
 
