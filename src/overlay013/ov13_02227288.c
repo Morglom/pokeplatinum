@@ -384,7 +384,7 @@ static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0)
         Window_FillTilemap(&param0->unk_2C[v0], 0);
     }
 
-    v1 = param0->unk_00->unk_2C[param0->unk_114D] * 6 + param0->unk_00->pocketCurrentPage[param0->unk_114D];
+    v1 = param0->unk_00->unk_2C[param0->unk_114D] * 6 + param0->unk_00->pocketCurrentPages[param0->unk_114D];
 
     WriteUseBagItemName(param0, v1);
     WriteBagItemQuantity(param0, v1, 0, 1, FONT_SYSTEM, 0, TEXT_COLOR(1, 2, 0));

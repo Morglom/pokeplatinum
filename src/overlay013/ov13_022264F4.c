@@ -131,7 +131,7 @@ void StartBagTransitions(UnkStruct_ov13_022264F4 *param0)
         v1 = BattleSystem_BagCursor(param0->unk_00);
 
         for (v2 = 0; v2 < 5; v2++) {
-            BagCursor_GetBattleCategoryPosition(v1, v2, &v0->unk_00->pocketCurrentPage[v2], &v0->unk_00->unk_2C[v2]);
+            BagCursor_GetBattleCategoryPosition(v1, v2, &v0->unk_00->pocketCurrentPages[v2], &v0->unk_00->unk_2C[v2]);
         }
 
         v0->unk_00->lastUsedItem = BagCursor_GetLastUsedBattleItem(v1);
@@ -312,7 +312,7 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
         case 5:
             if (GetBagItemOnPage(param0, v0) != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-                param0->unk_00->pocketCurrentPage[param0->unk_114D] = (u8)v0;
+                param0->unk_00->pocketCurrentPages[param0->unk_114D] = (u8)v0;
                 param0->unk_114B = 6;
                 ov13_0222880C(param0, 6 + v0, 0);
                 return 11;
@@ -351,7 +351,7 @@ static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
 {
     s8 v0 = param0->unk_00->unk_2C[param0->unk_114D];
 
-    param0->unk_00->pocketCurrentPage[param0->unk_114D] = 0;
+    param0->unk_00->pocketCurrentPages[param0->unk_114D] = 0;
     v0 += param0->unk_114E;
 
     if (v0 > param0->unk_1154[param0->unk_114D]) {
@@ -388,7 +388,7 @@ static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0)
         switch (v0) {
         case 0:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPage[param0->unk_114D]);
+            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPages[param0->unk_114D]);
             param0->unk_00->unk_1E = param0->unk_114D;
             ov13_0222880C(param0, 15, 0);
             return ov13_02226A5C(param0);
@@ -574,7 +574,7 @@ static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
         v0 = BattleSystem_BagCursor(param1->unk_00->unk_00);
 
         for (v1 = 0; v1 < 5; v1++) {
-            BagCursor_SetBattleCategoryPosition(v0, v1, param1->unk_00->pocketCurrentPage[v1], param1->unk_00->unk_2C[v1]);
+            BagCursor_SetBattleCategoryPosition(v0, v1, param1->unk_00->pocketCurrentPages[v1], param1->unk_00->unk_2C[v1]);
         }
 
         BagCursor_SetBattleCurrentCategory(v0, param1->unk_114D);
@@ -614,7 +614,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
     case 2:
         if (ov16_0226DFD4(param0->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->pocketCurrentPage[param0->unk_114D] = 0;
+            param0->unk_00->pocketCurrentPages[param0->unk_114D] = 0;
             param0->unk_114B = 12;
             ov13_0222880C(param0, 6, 0);
             param0->unk_115A = 0;
@@ -631,7 +631,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
     case 4:
         if (ov16_0226DFD4(param0->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPage[param0->unk_114D]);
+            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPages[param0->unk_114D]);
             param0->unk_00->unk_1E = param0->unk_114D;
             ov13_0222880C(param0, 15, 0);
             return ov13_02226A5C(param0);
