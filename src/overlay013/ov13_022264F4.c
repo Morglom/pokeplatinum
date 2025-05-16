@@ -138,7 +138,7 @@ void StartBagTransitions(UnkStruct_ov13_022264F4 *param0)
         v0->unk_00->unk_1F = BagCursor_GetLastUsedBattleItemCategory(v1);
     }
 
-    ov13_02227A4C(v0);
+    IsLastUsedItemUsable(v0);
 
     if (BattleSystem_BattleType(v0->unk_00->unk_00) & BATTLE_TYPE_CATCH_TUTORIAL) {
         v0->unk_00->unk_14 = 1;
@@ -264,14 +264,14 @@ static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0)
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
             param0->unk_114D = (u8)v0;
             param0->unk_114B = 5;
-            ov13_0222880C(param0, 0 + v0 - 0, 0);
+            ov13_0222880C(param0, v0, 0);
             return 11;
         case 4:
-            if (param0->unk_00->unk_20 != 0) {
+            if (param0->unk_00->unk_20 != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 param0->unk_114D = param0->unk_00->unk_1F;
                 param0->unk_114B = 6;
-                ov13_02227A7C(param0);
+                SetNavigationForLastUsedItem(param0);
                 ov13_0222880C(param0, 4, 0);
                 return 11;
             }

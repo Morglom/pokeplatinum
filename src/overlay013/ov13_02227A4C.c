@@ -8,10 +8,17 @@
 #include "bag.h"
 #include "item.h"
 
-#define BAG_POCKETS_NUM        8
-#define BAG_SUB_MENU_MAX_ITEMS 36
+enum BattleBagItemPocket {
+    BATTLE_BAG_ITEM_POCKET_HP_PP = 0,
+    BATTLE_BAG_ITEM_POCKET_STATUS,
+    BATTLE_BAG_ITEM_POCKET_POKEBALL,
+    BATTLE_BAG_ITEM_POCKET_BATTLE,
+};
 
-BOOL ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
+#define BAG_SUB_MENU_MAX_ITEMS 36
+#define BATTLE_BAG_POCKET_NUM  5
+
+BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
 {
     if (param0->unk_00->unk_20 == ITEM_NONE) {
         return FALSE;
@@ -26,7 +33,7 @@ BOOL ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
     return TRUE;
 }
 
-void ov13_02227A7C(UnkStruct_ov13_02227244 *param0)
+void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
 {
     u32 i;
 
@@ -49,29 +56,29 @@ static const u8 Unk_ov13_02229BB0[] = {
 
 void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
 {
-    BagItem *v0;
+    BagItem *bagItem;
     u32 i, slotIndex, v3;
-    s32 v4;
+    s32 bagItemBattlePocketMask;
 
-    for (i = 0; i < BAG_POCKETS_NUM; i++) {
+    for (i = 0; i < POCKET_MAX; i++) {
         slotIndex = 0;
 
         while (TRUE) {
-            v0 = Bag_GetItemSlot(param0->unk_00->unk_08, i, slotIndex);
+            bagItem = Bag_GetItemSlot(param0->unk_00->unk_08, i, slotIndex);
 
-            if (v0 == NULL) {
+            if (bagItem == NULL) {
                 break;
             }
 
-            if (!((v0->item == ITEM_NONE) || (v0->quantity == 0))) {
-                v4 = Item_LoadParam(v0->item, ITEM_PARAM_BATTLE_POCKET, param0->unk_00->heapID);
+            if (!((bagItem->item == ITEM_NONE) || (bagItem->quantity == 0))) {
+                bagItemBattlePocketMask = Item_LoadParam(bagItem->item, ITEM_PARAM_BATTLE_POCKET, param0->unk_00->heapID);
 
-                for (v3 = 0; v3 < 5; v3++) {
-                    if ((v4 & (1 << v3)) == FALSE) {
+                for (v3 = 0; v3 < BATTLE_BAG_POCKET_NUM; v3++) {
+                    if ((bagItemBattlePocketMask & (1 << v3)) == FALSE) {
                         continue;
                     }
 
-                    param0->unk_3C[Unk_ov13_02229BB0[v3]][param0->unk_114F[Unk_ov13_02229BB0[v3]]] = *v0;
+                    param0->unk_3C[Unk_ov13_02229BB0[v3]][param0->unk_114F[Unk_ov13_02229BB0[v3]]] = *bagItem;
                     param0->unk_114F[Unk_ov13_02229BB0[v3]]++;
                 }
             }
@@ -80,7 +87,7 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
         }
     }
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < BATTLE_BAG_POCKET_NUM; i++) {
         if (param0->unk_114F[i] == 0) {
             param0->unk_1154[i] = 0;
         } else {
