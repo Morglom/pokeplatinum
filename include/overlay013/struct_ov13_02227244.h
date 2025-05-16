@@ -43,7 +43,7 @@ typedef struct {
     u8 unk_32; // Printer id
     BattleSubMenuCursor *unk_34; // Cursor
     UnkStruct_ov16_0226DEEC *unk_38;
-    BagItem unk_3C[5][36]; // Sub menu bag items
+    BagItem battleBagItems[5][36];
     SpriteManager *unk_30C;
     ManagedSprite *unk_310[6]; // Page item sprites
     u16 unk_328[3][144];

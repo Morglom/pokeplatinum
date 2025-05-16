@@ -25,8 +25,8 @@ typedef struct {
     u8 unk_24;
     u8 unk_25;
     u8 unk_26;
-    u8 pocketCurrentPagePositions[5]; // Sub menu current index on page
-    u8 unk_2C[5]; // Sub menu current pages
+    u8 pocketCurrentPagePositions[5]; // Current position on the page for each pocket
+    u8 pocketCurrentPages[5]; // Current page for each pocket
 } UnkStruct_ov13_022264F4;
 
 #endif // POKEPLATINUM_STRUCT_OV13_022264F4_H

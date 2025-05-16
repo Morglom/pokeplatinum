@@ -131,7 +131,7 @@ void StartBagTransitions(UnkStruct_ov13_022264F4 *param0)
         v1 = BattleSystem_BagCursor(param0->unk_00);
 
         for (v2 = 0; v2 < 5; v2++) {
-            BagCursor_GetBattleCategoryPosition(v1, v2, &v0->unk_00->pocketCurrentPagePositions[v2], &v0->unk_00->unk_2C[v2]);
+            BagCursor_GetBattleCategoryPosition(v1, v2, &v0->unk_00->pocketCurrentPagePositions[v2], &v0->unk_00->pocketCurrentPages[v2]);
         }
 
         v0->unk_00->lastUsedItem = BagCursor_GetLastUsedBattleItem(v1);
@@ -349,17 +349,17 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
 
 static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
 {
-    s8 v0 = param0->unk_00->unk_2C[param0->unk_114D];
+    s8 v0 = param0->unk_00->pocketCurrentPages[param0->unk_114D];
 
     param0->unk_00->pocketCurrentPagePositions[param0->unk_114D] = 0;
     v0 += param0->unk_114E;
 
     if (v0 > param0->unk_1154[param0->unk_114D]) {
-        param0->unk_00->unk_2C[param0->unk_114D] = 0;
+        param0->unk_00->pocketCurrentPages[param0->unk_114D] = 0;
     } else if (v0 < 0) {
-        param0->unk_00->unk_2C[param0->unk_114D] = param0->unk_1154[param0->unk_114D];
+        param0->unk_00->pocketCurrentPages[param0->unk_114D] = param0->unk_1154[param0->unk_114D];
     } else {
-        param0->unk_00->unk_2C[param0->unk_114D] = v0;
+        param0->unk_00->pocketCurrentPages[param0->unk_114D] = v0;
     }
 
     DrawBagSubMenuPage(param0);
@@ -574,7 +574,7 @@ static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
         v0 = BattleSystem_BagCursor(param1->unk_00->unk_00);
 
         for (v1 = 0; v1 < 5; v1++) {
-            BagCursor_SetBattleCategoryPosition(v0, v1, param1->unk_00->pocketCurrentPagePositions[v1], param1->unk_00->unk_2C[v1]);
+            BagCursor_SetBattleCategoryPosition(v0, v1, param1->unk_00->pocketCurrentPagePositions[v1], param1->unk_00->pocketCurrentPages[v1]);
         }
 
         BagCursor_SetBattleCurrentCategory(v0, param1->unk_114D);
