@@ -464,7 +464,7 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
         ov13_022286B8(param0, 2, 0, param1);
         ov13_022286B8(param0, 3, 0, param1);
 
-        if (param0->unk_00->unk_20 == 0) {
+        if (param0->unk_00->lastUsedItem == ITEM_NONE) {
             ov13_022286B8(param0, 4, 3, param1);
         } else {
             ov13_022286B8(param0, 4, 0, param1);

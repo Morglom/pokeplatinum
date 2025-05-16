@@ -20,12 +20,12 @@ enum BattleBagItemPocket {
 
 BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
 {
-    if (param0->unk_00->unk_20 == ITEM_NONE) {
+    if (param0->unk_00->lastUsedItem == ITEM_NONE) {
         return FALSE;
     }
 
-    if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->unk_20, 1, param0->unk_00->heapID) == FALSE) {
-        param0->unk_00->unk_20 = ITEM_NONE;
+    if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->lastUsedItem, 1, param0->unk_00->heapID) == FALSE) {
+        param0->unk_00->lastUsedItem = ITEM_NONE;
         param0->unk_00->unk_1F = 0;
         return FALSE;
     }
@@ -38,7 +38,7 @@ void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
     u32 i;
 
     for (i = 0; i < BAG_SUB_MENU_MAX_ITEMS; i++) {
-        if (param0->unk_00->unk_20 == param0->unk_3C[param0->unk_114D][i].item) {
+        if (param0->unk_00->lastUsedItem == param0->unk_3C[param0->unk_114D][i].item) {
             param0->unk_00->unk_27[param0->unk_114D] = i % NUM_BAG_ITEMS_PER_PAGE;
             param0->unk_00->unk_2C[param0->unk_114D] = i / NUM_BAG_ITEMS_PER_PAGE;
             break;

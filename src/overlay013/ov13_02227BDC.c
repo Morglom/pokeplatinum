@@ -188,9 +188,9 @@ static void RenderLastUsedItemSprite(UnkStruct_ov13_02227244 *param0)
 {
     u16 v0;
 
-    if (param0->unk_00->unk_20 != ITEM_NONE) {
-        ov13_02227D10(param0, param0->unk_00->unk_20, 46263);
-        ov13_02227D48(param0, param0->unk_00->unk_20, 0, 46263);
+    if (param0->unk_00->lastUsedItem != ITEM_NONE) {
+        ov13_02227D10(param0, param0->unk_00->lastUsedItem, 46263);
+        ov13_02227D48(param0, param0->unk_00->lastUsedItem, 0, 46263);
         DrawManagedSprite(param0->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
     }
 }

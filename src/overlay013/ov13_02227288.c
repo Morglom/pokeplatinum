@@ -191,7 +191,7 @@ static void DrawBagMenuScreen(UnkStruct_ov13_02227244 *param0)
     WriteTitleText(param0, 2, IN_BATTLE_BAG_TEXT_ID_POKE_BALLS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
     WriteTitleText(param0, 3, IN_BATTLE_BAG_TEXT_ID_BATTLE_ITEMS, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
 
-    if (param0->unk_00->unk_20 != ITEM_NONE) {
+    if (param0->unk_00->lastUsedItem != ITEM_NONE) {
         Strbuf *v1 = MessageLoader_GetNewStrbuf(param0->unk_10, IN_BATTLE_BAG_TEXT_ID_LAST_USED_ITEM);
 
         Text_AddPrinterWithParamsAndColor(&param0->unk_2C[4], FONT_SUBSCREEN, v1, 0, 6, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(3, 2, 1), NULL);
