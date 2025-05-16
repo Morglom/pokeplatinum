@@ -475,7 +475,7 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU: {
         u32 i;
 
-        for (i = 0; i < NUM_BAG_ITEMS_PER_PAGE; i++) {
+        for (i = 0; i < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; i++) {
             if (GetBagItemOnPage(param0, i) == ITEM_NONE) {
                 ov13_022286B8(param0, 6 + i, 3, param1);
             } else {

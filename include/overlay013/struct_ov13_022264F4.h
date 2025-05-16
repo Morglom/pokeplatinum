@@ -6,7 +6,7 @@
 #include "bag.h"
 #include "trainer_info.h"
 
-#define NUM_BAG_ITEMS_PER_PAGE 6
+#define BATTLE_BAG_ITEMS_PER_POCKET_PAGE 6
 
 typedef struct {
     BattleSystem *unk_00;
@@ -18,7 +18,7 @@ typedef struct {
     u32 unk_18;
     u16 unk_1C; // Item of some kind
     u8 unk_1E; // Sub menu index
-    u8 lastUsedItemPocket; // Last used item category
+    u8 lastUsedItemPocket;
     u16 lastUsedItem;
     u8 unk_22;
     u8 unk_23;

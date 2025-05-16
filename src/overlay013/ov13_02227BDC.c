@@ -89,7 +89,7 @@ static void ov13_02227C54(UnkStruct_ov13_02227244 *param0)
     NARC *v2 = NARC_ctor(NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, param0->unk_00->heapID);
     v0 = ov16_0223E010(param0->unk_00->unk_00);
 
-    for (v1 = 0; v1 < NUM_BAG_ITEMS_PER_PAGE; v1++) {
+    for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
         SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
         SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->unk_08, PLTTBUF_SUB_OBJ, v0, param0->unk_30C, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
     }
@@ -136,7 +136,7 @@ static void ov13_02227DE8(UnkStruct_ov13_02227244 *param0)
 {
     u32 v0;
 
-    for (v0 = 0; v0 < NUM_BAG_ITEMS_PER_PAGE; v0++) {
+    for (v0 = 0; v0 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v0++) {
         param0->unk_310[v0] = ov13_02227D78(param0, v0);
     }
 }
@@ -148,7 +148,7 @@ void ov13_02227E08(UnkStruct_ov13_02227244 *param0)
 
     v0 = ov16_0223E010(param0->unk_00->unk_00);
 
-    for (v1 = 0; v1 < NUM_BAG_ITEMS_PER_PAGE; v1++) {
+    for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
         Sprite_DeleteAndFreeResources(param0->unk_310[v1]);
     }
 
@@ -167,7 +167,7 @@ void ov13_02227E68(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     u32 v0;
 
-    for (v0 = 0; v0 < NUM_BAG_ITEMS_PER_PAGE; v0++) {
+    for (v0 = 0; v0 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v0++) {
         ManagedSprite_SetDrawFlag(param0->unk_310[v0], FALSE);
     }
 
@@ -200,7 +200,7 @@ static void RenderSubMenuItemSprites(UnkStruct_ov13_02227244 *param0)
     u32 v0;
     u16 item;
 
-    for (v0 = 0; v0 < NUM_BAG_ITEMS_PER_PAGE; v0++) {
+    for (v0 = 0; v0 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v0++) {
         item = GetBagItemOnPage(param0, v0);
 
         if (item == ITEM_NONE) {
