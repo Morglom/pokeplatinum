@@ -40,7 +40,7 @@ void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
 
     for (i = 0; i < BATTLE_BAG_POCKET_SIZE; i++) {
         if (param0->unk_00->lastUsedItem == param0->unk_3C[param0->unk_114D][i].item) {
-            param0->unk_00->pocketCurrentPages[param0->unk_114D] = i % BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
+            param0->unk_00->pocketCurrentPagePositions[param0->unk_114D] = i % BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
             param0->unk_00->unk_2C[param0->unk_114D] = i / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
             break;
         }
