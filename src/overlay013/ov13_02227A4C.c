@@ -8,14 +8,15 @@
 #include "bag.h"
 #include "item.h"
 
-enum BattleBagItemPocket {
-    BATTLE_BAG_ITEM_POCKET_HP_PP = 0,
-    BATTLE_BAG_ITEM_POCKET_STATUS,
-    BATTLE_BAG_ITEM_POCKET_POKEBALL,
-    BATTLE_BAG_ITEM_POCKET_BATTLE,
+enum BattleBagPocketMask {
+    BATTLE_BAG_POCKET_MASK_POKE_BALLS = 0x0,
+    BATTLE_BAG_POCKET_MASK_BATTLE_ITEMS,
+    BATTLE_BAG_POCKET_MASK_RECOVER_HP,
+    BATTLE_BAG_POCKET_MASK_RECOVER_STATUS,
+    BATTLE_BAG_POCKET_MASK_UNUSUED = 0x0,
 };
 
-#define BAG_SUB_MENU_MAX_ITEMS 36
+#define BATTLE_BAG_POCKET_SIZE 36
 #define BATTLE_BAG_POCKET_NUM  5
 
 BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
@@ -26,7 +27,7 @@ BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
 
     if (Bag_CanRemoveItem(param0->unk_00->bag, param0->unk_00->lastUsedItem, 1, param0->unk_00->heapID) == FALSE) {
         param0->unk_00->lastUsedItem = ITEM_NONE;
-        param0->unk_00->lastUsedItemPocket = 0;
+        param0->unk_00->lastUsedItemPocket = ITEM_BATTLE_CATEGORY_RECOVER_HP;
         return FALSE;
     }
 
@@ -37,7 +38,7 @@ void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
 {
     u32 i;
 
-    for (i = 0; i < BAG_SUB_MENU_MAX_ITEMS; i++) {
+    for (i = 0; i < BATTLE_BAG_POCKET_SIZE; i++) {
         if (param0->unk_00->lastUsedItem == param0->unk_3C[param0->unk_114D][i].item) {
             param0->unk_00->unk_27[param0->unk_114D] = i % NUM_BAG_ITEMS_PER_PAGE;
             param0->unk_00->unk_2C[param0->unk_114D] = i / NUM_BAG_ITEMS_PER_PAGE;
@@ -46,12 +47,12 @@ void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-static const u8 Unk_ov13_02229BB0[] = {
-    0x2,
-    0x3,
-    0x0,
-    0x1,
-    0x0
+static const u8 battleBagPocketMasks[] = {
+    BATTLE_BAG_POCKET_MASK_RECOVER_HP,
+    BATTLE_BAG_POCKET_MASK_RECOVER_STATUS,
+    BATTLE_BAG_POCKET_MASK_POKE_BALLS,
+    BATTLE_BAG_POCKET_MASK_BATTLE_ITEMS,
+    BATTLE_BAG_POCKET_MASK_UNUSUED
 };
 
 void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
@@ -78,8 +79,8 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
                         continue;
                     }
 
-                    param0->unk_3C[Unk_ov13_02229BB0[v3]][param0->unk_114F[Unk_ov13_02229BB0[v3]]] = *bagItem;
-                    param0->unk_114F[Unk_ov13_02229BB0[v3]]++;
+                    param0->unk_3C[battleBagPocketMasks[v3]][param0->unk_114F[battleBagPocketMasks[v3]]] = *bagItem;
+                    param0->unk_114F[battleBagPocketMasks[v3]]++;
                 }
             }
 
