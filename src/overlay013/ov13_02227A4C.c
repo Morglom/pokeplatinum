@@ -24,7 +24,7 @@ BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
         return FALSE;
     }
 
-    if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->lastUsedItem, 1, param0->unk_00->heapID) == FALSE) {
+    if (Bag_CanRemoveItem(param0->unk_00->bag, param0->unk_00->lastUsedItem, 1, param0->unk_00->heapID) == FALSE) {
         param0->unk_00->lastUsedItem = ITEM_NONE;
         param0->unk_00->lastUsedItemPocket = 0;
         return FALSE;
@@ -64,7 +64,7 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
         slotIndex = 0;
 
         while (TRUE) {
-            bagItem = Bag_GetItemSlot(param0->unk_00->unk_08, i, slotIndex);
+            bagItem = Bag_GetItemSlot(param0->unk_00->bag, i, slotIndex);
 
             if (bagItem == NULL) {
                 break;
