@@ -319,7 +319,7 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
             }
             break;
         case 6:
-            if (param0->unk_1154[param0->currentBattleBagPocket] != 0) {
+            if (param0->numBattleBagPocketPages[param0->currentBattleBagPocket] != 0) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 param0->unk_114B = 7;
                 param0->unk_114E = -1;
@@ -328,7 +328,7 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
             }
             break;
         case 7:
-            if (param0->unk_1154[param0->currentBattleBagPocket] != 0) {
+            if (param0->numBattleBagPocketPages[param0->currentBattleBagPocket] != 0) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 param0->unk_114B = 7;
                 param0->unk_114E = 1;
@@ -354,10 +354,10 @@ static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
     param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = 0;
     v0 += param0->unk_114E;
 
-    if (v0 > param0->unk_1154[param0->currentBattleBagPocket]) {
+    if (v0 > param0->numBattleBagPocketPages[param0->currentBattleBagPocket]) {
         param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = 0;
     } else if (v0 < 0) {
-        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = param0->unk_1154[param0->currentBattleBagPocket];
+        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = param0->numBattleBagPocketPages[param0->currentBattleBagPocket];
     } else {
         param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = v0;
     }

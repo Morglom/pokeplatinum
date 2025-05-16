@@ -79,8 +79,8 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
                         continue;
                     }
 
-                    param0->battleBagItems[battleBagPocketMasks[l]][param0->unk_114F[battleBagPocketMasks[l]]] = *bagItem;
-                    param0->unk_114F[battleBagPocketMasks[l]]++;
+                    param0->battleBagItems[battleBagPocketMasks[l]][param0->numBattleBagPocketItems[battleBagPocketMasks[l]]] = *bagItem;
+                    param0->numBattleBagPocketItems[battleBagPocketMasks[l]]++;
                 }
             }
 
@@ -89,22 +89,22 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
     }
 
     for (i = 0; i < BATTLE_BAG_POCKET_NUM; i++) {
-        if (param0->unk_114F[i] == 0) {
-            param0->unk_1154[i] = 0;
+        if (param0->numBattleBagPocketItems[i] == 0) {
+            param0->numBattleBagPocketPages[i] = 0;
         } else {
-            param0->unk_1154[i] = (param0->unk_114F[i] - 1) / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
+            param0->numBattleBagPocketPages[i] = (param0->numBattleBagPocketItems[i] - 1) / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
         }
 
-        if (param0->unk_1154[i] < param0->unk_00->pocketCurrentPages[i]) {
-            param0->unk_00->pocketCurrentPages[i] = param0->unk_1154[i];
+        if (param0->numBattleBagPocketPages[i] < param0->unk_00->pocketCurrentPages[i]) {
+            param0->unk_00->pocketCurrentPages[i] = param0->numBattleBagPocketPages[i];
         }
     }
 }
 
-u16 GetBagItemOnPage(UnkStruct_ov13_02227244 *param0, u32 indexOnPage)
+u16 GetBagItemOnPage(UnkStruct_ov13_02227244 *param0, u32 positionOnPage)
 {
-    if ((param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].quantity != 0)) {
-        return param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].item;
+    if ((param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].quantity != 0)) {
+        return param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item;
     }
 
     return ITEM_NONE;

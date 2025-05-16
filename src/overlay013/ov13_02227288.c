@@ -301,7 +301,7 @@ void DrawBagSubMenuPageInfo(UnkStruct_ov13_02227244 *param0)
     Strbuf_Free(v1);
 
     v1 = MessageLoader_GetNewStrbuf(param0->unk_10, IN_BATTLE_BAG_TEXT_ID_CURRENT_PAGE_TEXT);
-    StringTemplate_SetNumber(param0->unk_14, 0, param0->unk_1154[param0->currentBattleBagPocket] + 1, 2, 0, 1);
+    StringTemplate_SetNumber(param0->unk_14, 0, param0->numBattleBagPocketPages[param0->currentBattleBagPocket] + 1, 2, 0, 1);
     StringTemplate_Format(param0->unk_14, param0->unk_18, v1);
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, param0->unk_18, v3 + v2, 4, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);

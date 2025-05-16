@@ -484,7 +484,7 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
         }
     }
 
-        if (param0->unk_1154[param0->currentBattleBagPocket] == 0) {
+        if (param0->numBattleBagPocketPages[param0->currentBattleBagPocket] == 0) {
             ov13_022286B8(param0, 12, 3, param1);
             ov13_022286B8(param0, 13, 3, param1);
         } else {
