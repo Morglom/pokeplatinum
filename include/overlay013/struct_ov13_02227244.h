@@ -65,7 +65,7 @@ typedef struct {
     u8 unk_114A; // State Index
     u8 unk_114B; // Queued state Index
     u8 unk_114C; // Screen Index
-    u8 unk_114D; // Sub Menu Index
+    u8 currentBattleBagPocket;
     s8 unk_114E;
     u8 unk_114F[5]; // Num bag items in sub menu
     u8 unk_1154[5]; // Pages in sub menu

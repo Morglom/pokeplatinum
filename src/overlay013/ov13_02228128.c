@@ -283,10 +283,10 @@ static u16 ov13_02228558(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2, 
     case 9:
     case 10:
     case 11:
-        return 8 + param0->unk_114D;
+        return 8 + param0->currentBattleBagPocket;
     case 15:
         if (param3 == 2) {
-            return 8 + param0->unk_114D;
+            return 8 + param0->currentBattleBagPocket;
         } else {
             return 1;
         }
@@ -484,7 +484,7 @@ void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
         }
     }
 
-        if (param0->unk_1154[param0->unk_114D] == 0) {
+        if (param0->unk_1154[param0->currentBattleBagPocket] == 0) {
             ov13_022286B8(param0, 12, 3, param1);
             ov13_022286B8(param0, 13, 3, param1);
         } else {

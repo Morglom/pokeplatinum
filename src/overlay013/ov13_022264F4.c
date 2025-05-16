@@ -213,7 +213,7 @@ static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0)
     ov13_022270B8(param0);
     Font_InitManager(FONT_SUBSCREEN, param0->unk_00->heapID);
 
-    param0->unk_114D = (u8)BagCursor_GetBattleCurrentCategory(BattleSystem_BagCursor(param0->unk_00->unk_00));
+    param0->currentBattleBagPocket = (u8)BagCursor_GetBattleCurrentCategory(BattleSystem_BagCursor(param0->unk_00->unk_00));
 
     RefreshBagSubMenus(param0);
     ov13_02228924(param0, param0->unk_114C);
@@ -262,14 +262,14 @@ static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0)
         case 2:
         case 3:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_114D = (u8)v0;
+            param0->currentBattleBagPocket = (u8)v0;
             param0->unk_114B = 5;
             ov13_0222880C(param0, v0, 0);
             return 11;
         case 4:
             if (param0->unk_00->lastUsedItem != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-                param0->unk_114D = param0->unk_00->lastUsedItemPocket;
+                param0->currentBattleBagPocket = param0->unk_00->lastUsedItemPocket;
                 param0->unk_114B = 6;
                 SetNavigationForLastUsedItem(param0);
                 ov13_0222880C(param0, 4, 0);
@@ -312,14 +312,14 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
         case 5:
             if (GetBagItemOnPage(param0, v0) != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-                param0->unk_00->pocketCurrentPagePositions[param0->unk_114D] = (u8)v0;
+                param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = (u8)v0;
                 param0->unk_114B = 6;
                 ov13_0222880C(param0, 6 + v0, 0);
                 return 11;
             }
             break;
         case 6:
-            if (param0->unk_1154[param0->unk_114D] != 0) {
+            if (param0->unk_1154[param0->currentBattleBagPocket] != 0) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 param0->unk_114B = 7;
                 param0->unk_114E = -1;
@@ -328,7 +328,7 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
             }
             break;
         case 7:
-            if (param0->unk_1154[param0->unk_114D] != 0) {
+            if (param0->unk_1154[param0->currentBattleBagPocket] != 0) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 param0->unk_114B = 7;
                 param0->unk_114E = 1;
@@ -349,17 +349,17 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
 
 static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
 {
-    s8 v0 = param0->unk_00->pocketCurrentPages[param0->unk_114D];
+    s8 v0 = param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket];
 
-    param0->unk_00->pocketCurrentPagePositions[param0->unk_114D] = 0;
+    param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = 0;
     v0 += param0->unk_114E;
 
-    if (v0 > param0->unk_1154[param0->unk_114D]) {
-        param0->unk_00->pocketCurrentPages[param0->unk_114D] = 0;
+    if (v0 > param0->unk_1154[param0->currentBattleBagPocket]) {
+        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = 0;
     } else if (v0 < 0) {
-        param0->unk_00->pocketCurrentPages[param0->unk_114D] = param0->unk_1154[param0->unk_114D];
+        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = param0->unk_1154[param0->currentBattleBagPocket];
     } else {
-        param0->unk_00->pocketCurrentPages[param0->unk_114D] = v0;
+        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = v0;
     }
 
     DrawBagSubMenuPage(param0);
@@ -388,8 +388,8 @@ static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0)
         switch (v0) {
         case 0:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPagePositions[param0->unk_114D]);
-            param0->unk_00->unk_1E = param0->unk_114D;
+            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket]);
+            param0->unk_00->unk_1E = param0->currentBattleBagPocket;
             ov13_0222880C(param0, 15, 0);
             return ov13_02226A5C(param0);
         case 1:
@@ -407,7 +407,7 @@ static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
 {
     UnkStruct_ov13_022264F4 *v0 = param0->unk_00;
 
-    if (param0->unk_114D == 3) {
+    if (param0->currentBattleBagPocket == ITEM_BATTLE_CATEGORY_BATTLE_ITEMS) {
         int v1 = ov13_02227244(param0);
         u32 v2 = Item_LoadParam(v0->unk_1C, 7, v0->heapID);
 
@@ -430,11 +430,11 @@ static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
         }
 
         if (BattleSystem_UseBagItem(v0->unk_00, v0->unk_10, v1, 0, v0->unk_1C) == 1) {
-            ov13_02227260(v0->unk_00, v0->unk_1C, param0->unk_114D, v0->heapID);
+            ov13_02227260(v0->unk_00, v0->unk_1C, param0->currentBattleBagPocket, v0->heapID);
             return 13;
         } else if (v2 == 3) {
             if (!(BattleSystem_BattleType(v0->unk_00) & BATTLE_TYPE_TRAINER)) {
-                ov13_02227260(v0->unk_00, v0->unk_1C, param0->unk_114D, v0->heapID);
+                ov13_02227260(v0->unk_00, v0->unk_1C, param0->currentBattleBagPocket, v0->heapID);
                 return 13;
             } else {
                 MessageLoader *v5;
@@ -456,7 +456,7 @@ static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
             param0->unk_114B = 8;
             return 9;
         }
-    } else if (param0->unk_114D == 2) {
+    } else if (param0->currentBattleBagPocket == ITEM_BATTLE_CATEGORY_POKE_BALLS) {
         if (v0->unk_22 == 1) {
             MessageLoader_GetStrbuf(param0->unk_10, 44, param0->unk_18);
             ov13_022279F4(param0);
@@ -577,7 +577,7 @@ static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
             BagCursor_SetBattleCategoryPosition(v0, v1, param1->unk_00->pocketCurrentPagePositions[v1], param1->unk_00->pocketCurrentPages[v1]);
         }
 
-        BagCursor_SetBattleCurrentCategory(v0, param1->unk_114D);
+        BagCursor_SetBattleCurrentCategory(v0, param1->currentBattleBagPocket);
     }
 
     param1->unk_00->unk_26 = 1;
@@ -597,7 +597,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
 
         if (ov16_0226DFD4(param0->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_114D = 2;
+            param0->currentBattleBagPocket = ITEM_BATTLE_CATEGORY_POKE_BALLS;
             param0->unk_114B = 12;
             ov13_0222880C(param0, 2, 0);
             param0->unk_115A = 0;
@@ -614,7 +614,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
     case 2:
         if (ov16_0226DFD4(param0->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->pocketCurrentPagePositions[param0->unk_114D] = 0;
+            param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = 0;
             param0->unk_114B = 12;
             ov13_0222880C(param0, 6, 0);
             param0->unk_115A = 0;
@@ -631,8 +631,8 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
     case 4:
         if (ov16_0226DFD4(param0->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPagePositions[param0->unk_114D]);
-            param0->unk_00->unk_1E = param0->unk_114D;
+            param0->unk_00->unk_1C = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket]);
+            param0->unk_00->unk_1E = param0->currentBattleBagPocket;
             ov13_0222880C(param0, 15, 0);
             return ov13_02226A5C(param0);
         } else {
@@ -804,8 +804,8 @@ static void ov13_0222717C(UnkStruct_ov13_02227244 *param0, u8 param1)
         return;
     }
 
-    Bg_ChangeTilemapRectPalette(param0->unk_04, 6, 2, 35, 28, 4, 8 + param0->unk_114D);
-    Bg_ChangeTilemapRectPalette(param0->unk_04, 6, 2, 40, 28, 8, 8 + param0->unk_114D);
+    Bg_ChangeTilemapRectPalette(param0->unk_04, 6, 2, 35, 28, 4, 8 + param0->currentBattleBagPocket);
+    Bg_ChangeTilemapRectPalette(param0->unk_04, 6, 2, 40, 28, 8, 8 + param0->currentBattleBagPocket);
 }
 
 static void ChangeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, u8 param1)

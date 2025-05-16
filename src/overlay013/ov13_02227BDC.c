@@ -215,7 +215,7 @@ static void RenderSubMenuItemSprites(UnkStruct_ov13_02227244 *param0)
 
 static void RenderSelectedItemSprite(UnkStruct_ov13_02227244 *param0)
 {
-    u16 item = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPagePositions[param0->unk_114D]);
+    u16 item = GetBagItemOnPage(param0, param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket]);
 
     ov13_02227D10(param0, item, 46263);
     ov13_02227D48(param0, item, 0, 46263);
@@ -278,10 +278,10 @@ void ov13_02228008(UnkStruct_ov13_02227244 *param0, u8 param1)
 
     switch (param1) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
-        SetBattleSubMenuCursorPosition(param0->unk_34, param0->unk_114D);
+        SetBattleSubMenuCursorPosition(param0->unk_34, param0->currentBattleBagPocket);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
-        SetBattleSubMenuCursorPosition(param0->unk_34, param0->unk_00->pocketCurrentPagePositions[param0->unk_114D]);
+        SetBattleSubMenuCursorPosition(param0->unk_34, param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket]);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         break;

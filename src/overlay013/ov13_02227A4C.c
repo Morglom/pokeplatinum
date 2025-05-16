@@ -39,9 +39,9 @@ void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
     u32 i;
 
     for (i = 0; i < BATTLE_BAG_POCKET_SIZE; i++) {
-        if (param0->unk_00->lastUsedItem == param0->battleBagItems[param0->unk_114D][i].item) {
-            param0->unk_00->pocketCurrentPagePositions[param0->unk_114D] = i % BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
-            param0->unk_00->pocketCurrentPages[param0->unk_114D] = i / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
+        if (param0->unk_00->lastUsedItem == param0->battleBagItems[param0->currentBattleBagPocket][i].item) {
+            param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = i % BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
+            param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = i / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
             break;
         }
     }
@@ -103,8 +103,8 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
 
 u16 GetBagItemOnPage(UnkStruct_ov13_02227244 *param0, u32 indexOnPage)
 {
-    if ((param0->battleBagItems[param0->unk_114D][param0->unk_00->pocketCurrentPages[param0->unk_114D] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->unk_114D][param0->unk_00->pocketCurrentPages[param0->unk_114D] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].quantity != 0)) {
-        return param0->battleBagItems[param0->unk_114D][param0->unk_00->pocketCurrentPages[param0->unk_114D] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].item;
+    if ((param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].quantity != 0)) {
+        return param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + indexOnPage].item;
     }
 
     return ITEM_NONE;
