@@ -69,7 +69,7 @@ typedef struct {
     s8 unk_114E;
     u8 numBattleBagPocketItems[5];
     u8 numBattleBagPocketPages[5]; // Actually the number of pages after the first
-    u8 unk_1159;
+    u8 catchTutorialState;
     u8 unk_115A;
 } BattleBagTask;
 
