@@ -62,8 +62,8 @@ typedef struct {
     u8 unk_1141_0 : 4;
     u8 unk_1141_4 : 4;
     u8 unk_1142[8];
-    u8 currentState; // State Index
-    u8 unk_114B; // Queued state Index
+    u8 currentState;
+    u8 queuedState;
     u8 unk_114C; // Screen Index
     u8 currentBattleBagPocket;
     s8 unk_114E;

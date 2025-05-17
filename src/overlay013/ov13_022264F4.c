@@ -54,9 +54,9 @@ enum BattleBagTaskState {
     BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE,
     BATTLE_BAG_TASK_AWAITING_TEXT_FINISH,
     BATTLE_BAG_TASK_STATE_AWAITING_INPUT,
-    IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE,
+    BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION,
     BATTLE_BAG_TASK_STATE_CATCH_TUTORIAL,
-    BATTLE_BAG_TASK_STATE_EXIT_FADE_OUT,
+    BATTLE_BAG_TASK_STATE_EXIT,
     BATTLE_BAG_TASK_STATE_FINISH_TASK,
 };
 
@@ -85,9 +85,9 @@ static enum BattleBagTaskState BattleBagTask_ScrollPocketPage(BattleBagTask *bat
 static enum BattleBagTaskState BattleBagTask_ClearErrorMessage(BattleBagTask *battleBagTask);
 static enum BattleBagTaskState BattleBagTask_AwaitingTextFinish(BattleBagTask *battleBagTask);
 static enum BattleBagTaskState BattleBagTask_AwaitingInput(BattleBagTask *battleBagTask);
-static enum BattleBagTaskState SomeTypeOfQueue(BattleBagTask *battleBagTask);
+static enum BattleBagTaskState BattleBagTask_ScreenTransition(BattleBagTask *battleBagTask);
 static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *battleBagTask);
-static enum BattleBagTaskState BattleBagTask_ExitFadeOut(BattleBagTask *battleBagTask);
+static enum BattleBagTaskState BattleBagTask_Exit(BattleBagTask *battleBagTask);
 static enum BattleBagTaskState BattleBagTask_FinishTask(SysTask *task, BattleBagTask *battleBagTask);
 static void ov13_02226ED0(BattleBagTask *battleBagTask);
 static void ov13_02226F9C(BgConfig *param0);
@@ -198,14 +198,14 @@ static void BattleBagTask_Tick(SysTask *task, void *taskParam)
     case BATTLE_BAG_TASK_STATE_AWAITING_INPUT:
         battleBagTask->currentState = BattleBagTask_AwaitingInput(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE:
-        battleBagTask->currentState = SomeTypeOfQueue(battleBagTask);
+    case BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION:
+        battleBagTask->currentState = BattleBagTask_ScreenTransition(battleBagTask);
         break;
     case BATTLE_BAG_TASK_STATE_CATCH_TUTORIAL:
         battleBagTask->currentState = BattleBagTask_CatchTutorial(battleBagTask);
         break;
-    case BATTLE_BAG_TASK_STATE_EXIT_FADE_OUT:
-        battleBagTask->currentState = BattleBagTask_ExitFadeOut(battleBagTask);
+    case BATTLE_BAG_TASK_STATE_EXIT:
+        battleBagTask->currentState = BattleBagTask_Exit(battleBagTask);
         break;
     case BATTLE_BAG_TASK_STATE_FINISH_TASK:
         if (BattleBagTask_FinishTask(task, battleBagTask) == TRUE) {
@@ -259,36 +259,36 @@ static enum BattleBagTaskState BattleBagTask_MenuScreen(BattleBagTask *battleBag
     }
 
     {
-        enum BattleBagMenuScreenButton v0 = CheckTouchRectIsPressed(battleBagTask, menuScreenTouchRects);
+        enum BattleBagMenuScreenButton bagMenuButtonPressed = CheckTouchRectIsPressed(battleBagTask, menuScreenTouchRects);
 
-        if (v0 == TOUCHSCREEN_INPUT_NONE) {
-            v0 = CheckBattleSubMenuCursorInputs(battleBagTask->unk_34);
+        if (bagMenuButtonPressed == TOUCHSCREEN_INPUT_NONE) {
+            bagMenuButtonPressed = CheckBattleSubMenuCursorInputs(battleBagTask->unk_34);
 
-            if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
-                v0 = BATTLE_BAG_MENU_SCREEN_BUTTON_CANCEL;
+            if (bagMenuButtonPressed == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
+                bagMenuButtonPressed = BATTLE_BAG_MENU_SCREEN_BUTTON_CANCEL;
             }
         } else {
             ov13_02228050(battleBagTask);
         }
 
-        switch (v0) {
+        switch (bagMenuButtonPressed) {
         case BATTLE_BAG_MENU_SCREEN_BUTTON_RECOVER_HP_POCKET:
         case BATTLE_BAG_MENU_SCREEN_BUTTON_RECOVER_STATUS_POCKET:
         case BATTLE_BAG_MENU_SCREEN_BUTTON_RECOVER_POKE_BALLS_POCKET:
         case BATTLE_BAG_MENU_SCREEN_BUTTON_BATTLE_ITEMS_POCKET:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            battleBagTask->currentBattleBagPocket = (enum ItemBattleCategory)v0;
-            battleBagTask->unk_114B = BATTLE_BAG_TASK_STATE_SETUP_POCKET_MENU_SCREEN;
-            ov13_0222880C(battleBagTask, v0, 0);
-            return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
+            battleBagTask->currentBattleBagPocket = bagMenuButtonPressed;
+            battleBagTask->queuedState = BATTLE_BAG_TASK_STATE_SETUP_POCKET_MENU_SCREEN;
+            ov13_0222880C(battleBagTask, bagMenuButtonPressed, 0);
+            return BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION;
         case BATTLE_BAG_MENU_SCREEN_BUTTON_LAST_USED_ITEM:
             if (battleBagTask->unk_00->lastUsedItem != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 battleBagTask->currentBattleBagPocket = battleBagTask->unk_00->lastUsedItemPocket;
-                battleBagTask->unk_114B = BATTLE_BAG_TASK_STATE_SETUP_USE_ITEM_SCREEN;
+                battleBagTask->queuedState = BATTLE_BAG_TASK_STATE_SETUP_USE_ITEM_SCREEN;
                 SetNavigationForLastUsedItem(battleBagTask);
                 ov13_0222880C(battleBagTask, 4, 0);
-                return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
+                return BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION;
             }
             break;
         case BATTLE_BAG_MENU_SCREEN_BUTTON_CANCEL:
@@ -296,7 +296,7 @@ static enum BattleBagTaskState BattleBagTask_MenuScreen(BattleBagTask *battleBag
             battleBagTask->unk_00->unk_1C = 0;
             battleBagTask->unk_00->unk_1E = 4;
             ov13_0222880C(battleBagTask, 5, 0);
-            return BATTLE_BAG_TASK_STATE_EXIT_FADE_OUT;
+            return BATTLE_BAG_TASK_STATE_EXIT;
         }
     }
 
@@ -312,7 +312,7 @@ static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *bat
             v0 = CheckBattleSubMenuCursorInputs(battleBagTask->unk_34);
 
             if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
-                v0 = 8;
+                v0 = BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE;
             }
         } else {
             ov13_02228050(battleBagTask);
@@ -328,7 +328,7 @@ static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *bat
             if (GetBagItemOnPage(battleBagTask, v0) != ITEM_NONE) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
                 battleBagTask->unk_00->pocketCurrentPagePositions[battleBagTask->currentBattleBagPocket] = (u8)v0;
-                battleBagTask->unk_114B = 6;
+                battleBagTask->queuedState = 6;
                 ov13_0222880C(battleBagTask, 6 + v0, 0);
                 return 11;
             }
@@ -336,7 +336,7 @@ static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *bat
         case 6:
             if (battleBagTask->numBattleBagPocketPages[battleBagTask->currentBattleBagPocket] != 0) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-                battleBagTask->unk_114B = 7;
+                battleBagTask->queuedState = 7;
                 battleBagTask->unk_114E = -1;
                 ov13_0222880C(battleBagTask, 12, 0);
                 return 11;
@@ -345,7 +345,7 @@ static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *bat
         case 7:
             if (battleBagTask->numBattleBagPocketPages[battleBagTask->currentBattleBagPocket] != 0) {
                 Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-                battleBagTask->unk_114B = 7;
+                battleBagTask->queuedState = 7;
                 battleBagTask->unk_114E = 1;
                 ov13_0222880C(battleBagTask, 13, 0);
                 return 11;
@@ -353,7 +353,7 @@ static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *bat
             break;
         case 8:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            battleBagTask->unk_114B = 4;
+            battleBagTask->queuedState = 4;
             ov13_0222880C(battleBagTask, 14, 0);
             return 11;
         }
@@ -409,7 +409,7 @@ static enum BattleBagTaskState BattleBagTask_UseItemScreen(BattleBagTask *battle
             return ov13_02226A5C(battleBagTask);
         case 1:
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
-            battleBagTask->unk_114B = 5;
+            battleBagTask->queuedState = 5;
             ov13_0222880C(battleBagTask, 16, 0);
             return 11;
         }
@@ -439,7 +439,7 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
             Strbuf_Free(v4);
 
             ov13_022279F4(battleBagTask);
-            battleBagTask->unk_114B = 8;
+            battleBagTask->queuedState = 8;
 
             return 9;
         }
@@ -462,34 +462,34 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
                 Strbuf_Free(v6);
                 MessageLoader_Free(v5);
                 ov13_022279F4(battleBagTask);
-                battleBagTask->unk_114B = 8;
+                battleBagTask->queuedState = 8;
                 return 9;
             }
         } else {
             MessageLoader_GetStrbuf(battleBagTask->unk_10, 34, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
-            battleBagTask->unk_114B = 8;
+            battleBagTask->queuedState = 8;
             return 9;
         }
     } else if (battleBagTask->currentBattleBagPocket == ITEM_BATTLE_CATEGORY_POKE_BALLS) {
         if (v0->unk_22 == 1) {
             MessageLoader_GetStrbuf(battleBagTask->unk_10, 44, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
-            battleBagTask->unk_114B = 8;
+            battleBagTask->queuedState = 8;
             return 9;
         }
 
         if (v0->unk_23 == 1) {
             MessageLoader_GetStrbuf(battleBagTask->unk_10, 47, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
-            battleBagTask->unk_114B = 8;
+            battleBagTask->queuedState = 8;
             return 9;
         }
 
         if (v0->unk_24 == 1) {
             MessageLoader_GetStrbuf(battleBagTask->unk_10, 48, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
-            battleBagTask->unk_114B = 8;
+            battleBagTask->queuedState = 8;
             return 9;
         }
 
@@ -500,7 +500,7 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
             if ((Party_GetCurrentCount(v7) == 6) && (PCBoxes_FirstEmptyBox(v8) == 18)) {
                 MessageLoader_GetStrbuf(battleBagTask->unk_10, 45, battleBagTask->unk_18);
                 ov13_022279F4(battleBagTask);
-                battleBagTask->unk_114B = 8;
+                battleBagTask->queuedState = 8;
                 return 9;
             }
         }
@@ -545,22 +545,22 @@ static enum BattleBagTaskState BattleBagTask_AwaitingTextFinish(BattleBagTask *b
 static enum BattleBagTaskState BattleBagTask_AwaitingInput(BattleBagTask *battleBagTask)
 {
     if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || TouchScreen_Tapped() == TRUE) {
-        return battleBagTask->unk_114B;
+        return battleBagTask->queuedState;
     }
 
     return BATTLE_BAG_TASK_STATE_AWAITING_INPUT;
 }
 
-static enum BattleBagTaskState SomeTypeOfQueue(BattleBagTask *battleBagTask)
+static enum BattleBagTaskState BattleBagTask_ScreenTransition(BattleBagTask *battleBagTask)
 {
     if (battleBagTask->unk_113E == 2) {
-        return battleBagTask->unk_114B;
+        return battleBagTask->queuedState;
     }
 
-    return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
+    return BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION;
 }
 
-static enum BattleBagTaskState BattleBagTask_ExitFadeOut(BattleBagTask *battleBagTask)
+static enum BattleBagTaskState BattleBagTask_Exit(BattleBagTask *battleBagTask)
 {
     PaletteData_StartFade(battleBagTask->unk_08, (0x2 | 0x8), 0xffff, -8, 0, 16, 0);
     return BATTLE_BAG_TASK_STATE_FINISH_TASK;
@@ -613,11 +613,11 @@ static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *battle
         if (ov16_0226DFD4(battleBagTask->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
             battleBagTask->currentBattleBagPocket = ITEM_BATTLE_CATEGORY_POKE_BALLS;
-            battleBagTask->unk_114B = 12;
+            battleBagTask->queuedState = 12;
             ov13_0222880C(battleBagTask, 2, 0);
             battleBagTask->unk_115A = 0;
             battleBagTask->catchTutorialState++;
-            return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
+            return BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION;
         } else {
             battleBagTask->unk_115A++;
         }
@@ -630,11 +630,11 @@ static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *battle
         if (ov16_0226DFD4(battleBagTask->unk_38) == 1) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
             battleBagTask->unk_00->pocketCurrentPagePositions[battleBagTask->currentBattleBagPocket] = 0;
-            battleBagTask->unk_114B = 12;
+            battleBagTask->queuedState = 12;
             ov13_0222880C(battleBagTask, 6, 0);
             battleBagTask->unk_115A = 0;
             battleBagTask->catchTutorialState++;
-            return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
+            return BATTLE_BAG_TASK_STATE_SCREEN_TRANSITION;
         } else {
             battleBagTask->unk_115A++;
         }
