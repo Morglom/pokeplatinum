@@ -62,7 +62,7 @@ typedef struct {
     u8 unk_1141_0 : 4;
     u8 unk_1141_4 : 4;
     u8 unk_1142[8];
-    u8 unk_114A; // State Index
+    u8 currentState; // State Index
     u8 unk_114B; // Queued state Index
     u8 unk_114C; // Screen Index
     u8 currentBattleBagPocket;
@@ -71,6 +71,6 @@ typedef struct {
     u8 numBattleBagPocketPages[5]; // Actually the number of pages after the first
     u8 unk_1159;
     u8 unk_115A;
-} UnkStruct_ov13_02227244;
+} BattleBagTask;
 
 #endif // POKEPLATINUM_STRUCT_OV13_02227244_H

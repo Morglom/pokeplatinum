@@ -3550,21 +3550,21 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                 v0->unk_04->unk_04 = BattleSystem_TrainerInfo(v0->unk_00, v0->unk_0D);
                 v0->unk_04->heapID = HEAP_ID_BATTLE;
                 v0->unk_04->unk_26 = 0;
-                v0->unk_04->unk_08 = BattleSystem_Bag(v0->unk_00);
+                v0->unk_04->bag = BattleSystem_Bag(v0->unk_00);
                 v0->unk_04->unk_10 = v0->unk_0D;
                 v0->unk_04->unk_25 = v0->unk_10;
                 v0->unk_04->unk_22 = v0->unk_14;
                 v0->unk_04->unk_23 = v0->unk_15;
                 v0->unk_04->unk_24 = v0->unk_16;
                 v0->unk_04->unk_18 = v0->unk_30[v0->unk_0D];
-                StartBagTransitions(v0->unk_04);
+                BattleBagTask_Start(v0->unk_04);
                 v0->unk_0E = 3;
             }
         }
         break;
     case 2:
         v0->unk_04->unk_25 = v0->unk_10;
-        StartBagTransitions(v0->unk_04);
+        BattleBagTask_Start(v0->unk_04);
         v0->unk_0E++;
     case 3:
         if (v0->unk_04->unk_26) {

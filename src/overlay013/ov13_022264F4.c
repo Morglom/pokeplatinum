@@ -42,47 +42,49 @@
 #include "unk_0200679C.h"
 #include "unk_0200C440.h"
 
-enum InBattleBagTransitionIndex {
-    IN_BATTLE_BAG_TRANSITION_INDEX_INITIALISE = 0,
-    IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_MENU,
-    IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU,
-    IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM,
-    IN_BATTLE_BAG_TRANSITION_INDEX_BAG_MENU,
-    IN_BATTLE_BAG_TRANSITION_INDEX_BAG_SUB_MENU,
-    IN_BATTLE_BAG_TRANSITION_INDEX_USE_BAG_ITEM,
-    IN_BATTLE_BAG_TRANSITION_INDEX_ERROR_MESSAGE_BOX = 8,
+enum BattleBagTaskState {
+    BATTLE_BAG_TASK_STATE_INITIALIZE = 0,
+    BATTLE_BAG_TASK_STATE_MENU_SCREEN,
+    BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN,
+    BATTLE_BAG_TASK_STATE_USE_ITEM_SCREEN,
+    BATTLE_BAG_TASK_STATE_SETUP_MENU_SCREEN,
+    BATTLE_BAG_TASK_STATE_SETUP_POCKET_MENU_SCREEN,
+    BATTLE_BAG_TASK_STATE_SETUP_USE_ITEM_SCREEN,
+    BATTLE_BAG_TASK_STATE_SCROLL_POCKET_PAGE,
+    BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE,
     IN_BATTLE_BAG_TRANSITION_INDEX_TEXT_QUEUE,
-    IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE,
+    BATTLE_BAG_TASK_STATE_AWAITING_INPUT,
     IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE,
-    IN_BATTLE_BAG_TRANSITION_INDEX_FADE_OUT = 13,
-    IN_BATTLE_BAG_TRANSITION_INDEX_CLEAN_UP,
+    BATTLE_BAG_TASK_STATE_CATCH_TUTORIAL,
+    BATTLE_BAG_TASK_STATE_EXIT_FADE_OUT,
+    BATTLE_BAG_TASK_STATE_FINISH_TASK,
 };
 
-static void DoTransitions(SysTask *param0, void *param1);
-static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0);
-static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0);
-static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0);
-static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0);
-static u8 BagMenu(UnkStruct_ov13_02227244 *param0);
-static u8 BagSubMenu(UnkStruct_ov13_02227244 *param0);
-static u8 UseBagItem(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0);
-static u8 DisplayErrorMessageBox(UnkStruct_ov13_02227244 *param0);
-static u8 TextQueue(UnkStruct_ov13_02227244 *param0);
-static u8 InputQueue(UnkStruct_ov13_02227244 *param0);
-static u8 SomeTypeOfQueue(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0);
-static u8 StartFadeOut(UnkStruct_ov13_02227244 *param0);
-static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1);
-static void ov13_02226ED0(UnkStruct_ov13_02227244 *param0);
+static void BattleBagTask_Tick(SysTask *param0, void *param1);
+static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_MenuScreen(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_UseItemScreen(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_SetupMenuScreen(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_SetupPocketMenuScreen(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_SetupUseItemScreen(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_ScrollPocketPage(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_ClearErrorMessage(BattleBagTask *param0);
+static enum BattleBagTaskState TextQueue(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_AwaitingInput(BattleBagTask *param0);
+static enum BattleBagTaskState SomeTypeOfQueue(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_ExitFadeOut(BattleBagTask *param0);
+static enum BattleBagTaskState BattleBagTask_FinishTask(SysTask *param0, BattleBagTask *param1);
+static void ov13_02226ED0(BattleBagTask *param0);
 static void ov13_02226F9C(BgConfig *param0);
-static void ov13_02226FC4(UnkStruct_ov13_02227244 *param0);
-static void ov13_022270B8(UnkStruct_ov13_02227244 *param0);
-static void ov13_022270F8(UnkStruct_ov13_02227244 *param0);
-static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0);
-static void ov13_02227118(UnkStruct_ov13_02227244 *param0, u8 param1);
-static void ChangeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, u8 param1);
-static int CheckTouchRectIsPressed(UnkStruct_ov13_02227244 *param0, const TouchScreenRect *rect);
+static void ov13_02226FC4(BattleBagTask *param0);
+static void ov13_022270B8(BattleBagTask *param0);
+static void ov13_022270F8(BattleBagTask *param0);
+static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *param0);
+static void ov13_02227118(BattleBagTask *param0, u8 param1);
+static void ChangeInBattleBagScreen(BattleBagTask *param0, u8 param1);
+static int CheckTouchRectIsPressed(BattleBagTask *param0, const TouchScreenRect *rect);
 static void ov13_02227260(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
 
 static const TouchScreenRect Unk_ov13_02229A1C[] = {
@@ -114,95 +116,95 @@ static const TouchScreenRect Unk_ov13_022299AC[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-void StartBagTransitions(UnkStruct_ov13_022264F4 *param0)
+void BattleBagTask_Start(UnkStruct_ov13_022264F4 *param0)
 {
-    UnkStruct_ov13_02227244 *v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(DoTransitions, sizeof(UnkStruct_ov13_02227244), 100, param0->heapID));
-    memset(v0, 0, sizeof(UnkStruct_ov13_02227244));
+    BattleBagTask *battleBagTask = SysTask_GetParam(SysTask_StartAndAllocateParam(BattleBagTask_Tick, sizeof(BattleBagTask), 100, param0->heapID));
+    memset(battleBagTask, 0, sizeof(BattleBagTask));
 
-    v0->unk_00 = param0;
-    v0->unk_04 = BattleSystem_BGL(param0->unk_00);
-    v0->unk_08 = BattleSystem_PaletteSys(param0->unk_00);
-    v0->unk_114A = 0;
+    battleBagTask->unk_00 = param0;
+    battleBagTask->unk_04 = BattleSystem_BGL(param0->unk_00);
+    battleBagTask->unk_08 = BattleSystem_PaletteSys(param0->unk_00);
+    battleBagTask->currentState = BATTLE_BAG_TASK_STATE_INITIALIZE;
 
     {
-        BagCursor *v1;
-        u8 v2;
+        BagCursor *bagCursor;
+        u8 i;
 
-        v1 = BattleSystem_BagCursor(param0->unk_00);
+        bagCursor = BattleSystem_BagCursor(param0->unk_00);
 
-        for (v2 = 0; v2 < 5; v2++) {
-            BagCursor_GetBattleCategoryPosition(v1, v2, &v0->unk_00->pocketCurrentPagePositions[v2], &v0->unk_00->pocketCurrentPages[v2]);
+        for (i = 0; i < BATTLE_BAG_POCKET_NUM; i++) {
+            BagCursor_GetBattleCategoryPosition(bagCursor, i, &battleBagTask->unk_00->pocketCurrentPagePositions[i], &battleBagTask->unk_00->pocketCurrentPages[i]);
         }
 
-        v0->unk_00->lastUsedItem = BagCursor_GetLastUsedBattleItem(v1);
-        v0->unk_00->lastUsedItemPocket = BagCursor_GetLastUsedBattleItemCategory(v1);
+        battleBagTask->unk_00->lastUsedItem = BagCursor_GetLastUsedBattleItem(bagCursor);
+        battleBagTask->unk_00->lastUsedItemPocket = BagCursor_GetLastUsedBattleItemCategory(bagCursor);
     }
 
-    IsLastUsedItemUsable(v0);
+    IsLastUsedItemUsable(battleBagTask);
 
-    if (BattleSystem_BattleType(v0->unk_00->unk_00) & BATTLE_TYPE_CATCH_TUTORIAL) {
-        v0->unk_00->unk_14 = 1;
+    if (BattleSystem_BattleType(battleBagTask->unk_00->unk_00) & BATTLE_TYPE_CATCH_TUTORIAL) {
+        battleBagTask->unk_00->isCatchTutorial = TRUE;
     }
 }
 
-static void DoTransitions(SysTask *param0, void *param1)
+static void BattleBagTask_Tick(SysTask *task, void *taskParam)
 {
-    UnkStruct_ov13_02227244 *v0 = (UnkStruct_ov13_02227244 *)param1;
+    BattleBagTask *battleBagTask = (BattleBagTask *)taskParam;
 
-    switch (v0->unk_114A) {
-    case IN_BATTLE_BAG_TRANSITION_INDEX_INITIALISE:
-        v0->unk_114A = InitialiseTransitions(v0);
+    switch (battleBagTask->currentState) {
+    case BATTLE_BAG_TASK_STATE_INITIALIZE:
+        battleBagTask->currentState = BattleBagTask_Initialize(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_MENU:
-        v0->unk_114A = DisplayBagMenu(v0);
+    case BATTLE_BAG_TASK_STATE_MENU_SCREEN:
+        battleBagTask->currentState = BattleBagTask_MenuScreen(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU:
-        v0->unk_114A = DisplayBagSubMenu(v0);
+    case BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN:
+        battleBagTask->currentState = BattleBagTask_PocketMenuScreen(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM:
-        v0->unk_114A = DisplayBagUseItem(v0);
+    case BATTLE_BAG_TASK_STATE_USE_ITEM_SCREEN:
+        battleBagTask->currentState = BattleBagTask_UseItemScreen(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_BAG_MENU:
-        v0->unk_114A = BagMenu(v0);
+    case BATTLE_BAG_TASK_STATE_SETUP_MENU_SCREEN:
+        battleBagTask->currentState = BattleBagTask_SetupMenuScreen(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_BAG_SUB_MENU:
-        v0->unk_114A = BagSubMenu(v0);
+    case BATTLE_BAG_TASK_STATE_SETUP_POCKET_MENU_SCREEN:
+        battleBagTask->currentState = BattleBagTask_SetupPocketMenuScreen(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_USE_BAG_ITEM:
-        v0->unk_114A = UseBagItem(v0);
+    case BATTLE_BAG_TASK_STATE_SETUP_USE_ITEM_SCREEN:
+        battleBagTask->currentState = BattleBagTask_SetupUseItemScreen(battleBagTask);
         break;
-    case 7:
-        v0->unk_114A = ov13_02226948(v0);
+    case BATTLE_BAG_TASK_STATE_SCROLL_POCKET_PAGE:
+        battleBagTask->currentState = BattleBagTask_ScrollPocketPage(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_ERROR_MESSAGE_BOX:
-        v0->unk_114A = DisplayErrorMessageBox(v0);
+    case BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE:
+        battleBagTask->currentState = BattleBagTask_ClearErrorMessage(battleBagTask);
         break;
     case IN_BATTLE_BAG_TRANSITION_INDEX_TEXT_QUEUE:
-        v0->unk_114A = TextQueue(v0);
+        battleBagTask->currentState = TextQueue(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE:
-        v0->unk_114A = InputQueue(v0);
+    case BATTLE_BAG_TASK_STATE_AWAITING_INPUT:
+        battleBagTask->currentState = BattleBagTask_AwaitingInput(battleBagTask);
         break;
     case IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE:
-        v0->unk_114A = SomeTypeOfQueue(v0);
+        battleBagTask->currentState = SomeTypeOfQueue(battleBagTask);
         break;
-    case 12:
-        v0->unk_114A = ov13_02226D94(v0);
+    case BATTLE_BAG_TASK_STATE_CATCH_TUTORIAL:
+        battleBagTask->currentState = BattleBagTask_CatchTutorial(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_FADE_OUT:
-        v0->unk_114A = StartFadeOut(v0);
+    case BATTLE_BAG_TASK_STATE_EXIT_FADE_OUT:
+        battleBagTask->currentState = BattleBagTask_ExitFadeOut(battleBagTask);
         break;
-    case IN_BATTLE_BAG_TRANSITION_INDEX_CLEAN_UP:
-        if (CleanupScreen(param0, v0) == TRUE) {
+    case BATTLE_BAG_TASK_STATE_FINISH_TASK:
+        if (BattleBagTask_FinishTask(task, battleBagTask) == TRUE) {
             return;
         }
     }
 
-    ov13_02228848(v0);
-    SpriteSystem_DrawSprites(v0->unk_30C);
+    ov13_02228848(battleBagTask);
+    SpriteSystem_DrawSprites(battleBagTask->unk_30C);
 }
 
-static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *param0)
 {
     G2S_BlendNone();
 
@@ -230,14 +232,14 @@ static u8 InitialiseTransitions(UnkStruct_ov13_02227244 *param0)
     ov13_022280F0(param0, param0->unk_114C);
     PaletteData_StartFade(param0->unk_08, (0x2 | 0x8), 0xffff, -8, 16, 0, 0);
 
-    if (param0->unk_00->unk_14 == 1) {
+    if (param0->unk_00->isCatchTutorial == TRUE) {
         return 12;
     }
 
     return 1;
 }
 
-static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_MenuScreen(BattleBagTask *param0)
 {
     if (PaletteData_GetSelectedBuffersMask(param0->unk_08) != 0) {
         return 1;
@@ -288,7 +290,7 @@ static u8 DisplayBagMenu(UnkStruct_ov13_02227244 *param0)
     return 1;
 }
 
-static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *param0)
 {
     {
         int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_02229A38);
@@ -347,19 +349,19 @@ static u8 DisplayBagSubMenu(UnkStruct_ov13_02227244 *param0)
     return 2;
 }
 
-static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_ScrollPocketPage(BattleBagTask *param0)
 {
-    s8 v0 = param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket];
+    s8 currentPage = param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket];
 
     param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = 0;
-    v0 += param0->unk_114E;
+    currentPage += param0->unk_114E;
 
-    if (v0 > param0->numBattleBagPocketPages[param0->currentBattleBagPocket]) {
+    if (currentPage > param0->numBattleBagPocketPages[param0->currentBattleBagPocket]) {
         param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = 0;
-    } else if (v0 < 0) {
+    } else if (currentPage < 0) {
         param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = param0->numBattleBagPocketPages[param0->currentBattleBagPocket];
     } else {
-        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = v0;
+        param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = currentPage;
     }
 
     DrawBagSubMenuPage(param0);
@@ -367,10 +369,10 @@ static u8 ov13_02226948(UnkStruct_ov13_02227244 *param0)
     ov13_02227E68(param0, param0->unk_114C);
     ov13_02228924(param0, param0->unk_114C);
 
-    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU;
+    return BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN;
 }
 
-static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_UseItemScreen(BattleBagTask *param0)
 {
     {
         int v0 = CheckTouchRectIsPressed(param0, Unk_ov13_022299AC);
@@ -403,7 +405,7 @@ static u8 DisplayBagUseItem(UnkStruct_ov13_02227244 *param0)
     return 3;
 }
 
-static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *param0)
 {
     UnkStruct_ov13_022264F4 *v0 = param0->unk_00;
 
@@ -429,7 +431,7 @@ static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
             return 9;
         }
 
-        if (BattleSystem_UseBagItem(v0->unk_00, v0->unk_10, v1, 0, v0->unk_1C) == 1) {
+        if (BattleSystem_UseBagItem(v0->unk_00, v0->unk_10, v1, 0, v0->unk_1C) == TRUE) {
             ov13_02227260(v0->unk_00, v0->unk_1C, param0->currentBattleBagPocket, v0->heapID);
             return 13;
         } else if (v2 == 3) {
@@ -494,49 +496,49 @@ static u8 ov13_02226A5C(UnkStruct_ov13_02227244 *param0)
     return 13;
 }
 
-static u8 BagMenu(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_SetupMenuScreen(BattleBagTask *param0)
 {
     ChangeInBattleBagScreen(param0, IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU);
-    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_MENU;
+    return BATTLE_BAG_TASK_STATE_MENU_SCREEN;
 }
 
-static u8 BagSubMenu(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_SetupPocketMenuScreen(BattleBagTask *param0)
 {
     ChangeInBattleBagScreen(param0, IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU);
-    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_BAG_SUB_MENU;
+    return BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN;
 }
 
-static u8 UseBagItem(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_SetupUseItemScreen(BattleBagTask *param0)
 {
     ChangeInBattleBagScreen(param0, IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM);
-    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM;
+    return BATTLE_BAG_TASK_STATE_USE_ITEM_SCREEN;
 }
 
-static u8 DisplayErrorMessageBox(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_ClearErrorMessage(BattleBagTask *param0)
 {
     Window_EraseMessageBox(&param0->unk_1C, FALSE);
-    return IN_BATTLE_BAG_TRANSITION_INDEX_DISPLAY_USE_BAG_ITEM;
+    return BATTLE_BAG_TASK_STATE_USE_ITEM_SCREEN;
 }
 
-static u8 TextQueue(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState TextQueue(BattleBagTask *param0)
 {
     if (Text_IsPrinterActive(param0->unk_32) == FALSE) {
-        return IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE;
+        return BATTLE_BAG_TASK_STATE_AWAITING_INPUT;
     }
 
     return IN_BATTLE_BAG_TRANSITION_INDEX_TEXT_QUEUE;
 }
 
-static u8 InputQueue(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_AwaitingInput(BattleBagTask *param0)
 {
-    if ((gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B)) || (TouchScreen_Tapped() == 1)) {
+    if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || TouchScreen_Tapped() == TRUE) {
         return param0->unk_114B;
     }
 
-    return IN_BATTLE_BAG_TRANSITION_INDEX_INPUT_QUEUE;
+    return BATTLE_BAG_TASK_STATE_AWAITING_INPUT;
 }
 
-static u8 SomeTypeOfQueue(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState SomeTypeOfQueue(BattleBagTask *param0)
 {
     if (param0->unk_113E == 2) {
         return param0->unk_114B;
@@ -545,13 +547,13 @@ static u8 SomeTypeOfQueue(UnkStruct_ov13_02227244 *param0)
     return IN_BATTLE_BAG_TRANSITION_INDEX_SOME_TYPE_OF_QUEUE;
 }
 
-static u8 StartFadeOut(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_ExitFadeOut(BattleBagTask *param0)
 {
     PaletteData_StartFade(param0->unk_08, (0x2 | 0x8), 0xffff, -8, 0, 16, 0);
-    return IN_BATTLE_BAG_TRANSITION_INDEX_CLEAN_UP;
+    return BATTLE_BAG_TASK_STATE_FINISH_TASK;
 }
 
-static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
+static enum BattleBagTaskState BattleBagTask_FinishTask(SysTask *param0, BattleBagTask *param1)
 {
     if (PaletteData_GetSelectedBuffersMask(param1->unk_08) != 0) {
         return 0;
@@ -586,7 +588,7 @@ static u8 CleanupScreen(SysTask *param0, UnkStruct_ov13_02227244 *param1)
     return 1;
 }
 
-static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
+static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *param0)
 {
     if (PaletteData_GetSelectedBuffersMask(param0->unk_08) != 0) {
         return 12;
@@ -608,7 +610,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
         }
         break;
     case 1:
-        BagSubMenu(param0);
+        BattleBagTask_SetupPocketMenuScreen(param0);
         param0->unk_1159++;
         break;
     case 2:
@@ -625,7 +627,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
         }
         break;
     case 3:
-        UseBagItem(param0);
+        BattleBagTask_SetupUseItemScreen(param0);
         param0->unk_1159++;
         break;
     case 4:
@@ -644,7 +646,7 @@ static u8 ov13_02226D94(UnkStruct_ov13_02227244 *param0)
     return 12;
 }
 
-static void ov13_02226ED0(UnkStruct_ov13_02227244 *param0)
+static void ov13_02226ED0(BattleBagTask *param0)
 {
     {
         GraphicsModes v0 = {
@@ -733,7 +735,7 @@ static void ov13_02226F9C(BgConfig *param0)
     Bg_FreeTilemapBuffer(param0, 6);
 }
 
-static void ov13_02226FC4(UnkStruct_ov13_02227244 *param0)
+static void ov13_02226FC4(BattleBagTask *param0)
 {
     NARC *v0 = NARC_ctor(NARC_INDEX_BATTLE__GRAPHIC__B_BAG_GRA, param0->unk_00->heapID);
 
@@ -764,7 +766,7 @@ static void ov13_02226FC4(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-static void ov13_022270B8(UnkStruct_ov13_02227244 *param0)
+static void ov13_022270B8(BattleBagTask *param0)
 {
     param0->unk_10 = MessageLoader_Init(MESSAGE_LOADER_BANK_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_UNK_0002, param0->unk_00->heapID);
     param0->unk_0C = sub_0200C440(15, 14, 0, param0->unk_00->heapID);
@@ -772,7 +774,7 @@ static void ov13_022270B8(UnkStruct_ov13_02227244 *param0)
     param0->unk_18 = Strbuf_Init(512, param0->unk_00->heapID);
 }
 
-static void ov13_022270F8(UnkStruct_ov13_02227244 *param0)
+static void ov13_022270F8(BattleBagTask *param0)
 {
     MessageLoader_Free(param0->unk_10);
     sub_0200C560(param0->unk_0C);
@@ -780,7 +782,7 @@ static void ov13_022270F8(UnkStruct_ov13_02227244 *param0)
     Strbuf_Free(param0->unk_18);
 }
 
-static void ov13_02227118(UnkStruct_ov13_02227244 *param0, u8 param1)
+static void ov13_02227118(BattleBagTask *param0, u8 param1)
 {
     switch (param1) {
     case 0:
@@ -798,7 +800,7 @@ static void ov13_02227118(UnkStruct_ov13_02227244 *param0, u8 param1)
     }
 }
 
-static void ov13_0222717C(UnkStruct_ov13_02227244 *param0, u8 param1)
+static void ov13_0222717C(BattleBagTask *param0, u8 param1)
 {
     if (param1 != 2) {
         return;
@@ -808,7 +810,7 @@ static void ov13_0222717C(UnkStruct_ov13_02227244 *param0, u8 param1)
     Bg_ChangeTilemapRectPalette(param0->unk_04, 6, 2, 40, 28, 8, 8 + param0->currentBattleBagPocket);
 }
 
-static void ChangeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, u8 param1)
+static void ChangeInBattleBagScreen(BattleBagTask *param0, u8 param1)
 {
     ov13_0222717C(param0, param1);
     ov13_02227118(param0, param1);
@@ -828,13 +830,13 @@ static void ChangeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, u8 param1)
     ov13_02227E68(param0, param0->unk_114C);
 }
 
-static int CheckTouchRectIsPressed(UnkStruct_ov13_02227244 *param0, const TouchScreenRect *rect)
+static int CheckTouchRectIsPressed(BattleBagTask *param0, const TouchScreenRect *rect)
 {
     int isPressed = TouchScreen_CheckRectanglePressed(rect);
     return isPressed;
 }
 
-int ov13_02227244(UnkStruct_ov13_02227244 *param0)
+int ov13_02227244(BattleBagTask *param0)
 {
     int v0 = BattleContext_Get(param0->unk_00->unk_00, BattleSystem_Context(param0->unk_00->unk_00), 2, param0->unk_00->unk_10);
     return v0;

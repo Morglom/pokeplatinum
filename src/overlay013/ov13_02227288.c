@@ -40,9 +40,9 @@ enum InBattleBagTextID {
 #define BAG_SUB_MENU_SCREEN_WINDOW_NUM 26
 #define USE_BAG_ITEM_SCREEN_WINDOW_NUM 4
 
-static void DrawBagMenuScreen(UnkStruct_ov13_02227244 *param0);
-static void DrawBagSubMenuScreen(UnkStruct_ov13_02227244 *param0);
-static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0);
+static void DrawBagMenuScreen(BattleBagTask *param0);
+static void DrawBagSubMenuScreen(BattleBagTask *param0);
+static void DrawUseBagItemScreen(BattleBagTask *param0);
 
 static const WindowTemplate bagScreenMessageBoxWindowTemplate = {
     0x4,
@@ -98,13 +98,13 @@ static const WindowTemplate useBagItemScreenWindowTemplates[] = {
     { 0x5, 0xA, 0x14, 0x6, 0x3, 0x0, 0x38F }
 };
 
-void ov13_02227288(UnkStruct_ov13_02227244 *param0)
+void ov13_02227288(BattleBagTask *param0)
 {
     Window_AddFromTemplate(param0->unk_04, &param0->unk_1C, &bagScreenMessageBoxWindowTemplate);
     InitializeInBattleBagScreen(param0, param0->unk_114C);
 }
 
-void InitializeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattlePartyScreenIndex screenIndex)
+void InitializeInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
@@ -131,12 +131,12 @@ void InitializeInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattleP
     }
 }
 
-void ClearInBattleBagScreen(UnkStruct_ov13_02227244 *param0)
+void ClearInBattleBagScreen(BattleBagTask *param0)
 {
     Windows_Delete(param0->unk_2C, param0->unk_30);
 }
 
-void ov13_02227334(UnkStruct_ov13_02227244 *param0)
+void ov13_02227334(BattleBagTask *param0)
 {
     u32 v0;
 
@@ -144,7 +144,7 @@ void ov13_02227334(UnkStruct_ov13_02227244 *param0)
     Window_Remove(&param0->unk_1C);
 }
 
-void DrawInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattlePartyScreenIndex screenIndex)
+void DrawInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex)
 {
     switch (screenIndex) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
@@ -159,7 +159,7 @@ void DrawInBattleBagScreen(UnkStruct_ov13_02227244 *param0, enum InBattlePartySc
     }
 }
 
-static void WriteTitleText(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
+static void WriteTitleText(BattleBagTask *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
 {
     Window *v0;
     Strbuf *v1;
@@ -176,7 +176,7 @@ static void WriteTitleText(UnkStruct_ov13_02227244 *param0, u32 param1, u32 para
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void DrawBagMenuScreen(UnkStruct_ov13_02227244 *param0)
+static void DrawBagMenuScreen(BattleBagTask *param0)
 {
     u32 v0;
 
@@ -209,7 +209,7 @@ static const u32 Unk_ov13_02229AB0[][2] = {
     { 0x13, 0x14 }
 };
 
-static void WriteBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
+static void WriteBagItemName(BattleBagTask *param0, u32 param1, u32 param2, u32 param3, u32 param4, TextColor param5)
 {
     Window *v0;
     Strbuf *v1;
@@ -236,7 +236,7 @@ static void WriteBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1, u32 pa
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void WriteBagItemQuantity(UnkStruct_ov13_02227244 *param0, u32 param1, u32 param2, u32 param3, u32 param4, u32 param5, TextColor param6)
+static void WriteBagItemQuantity(BattleBagTask *param0, u32 param1, u32 param2, u32 param3, u32 param4, u32 param5, TextColor param6)
 {
     Strbuf *v0;
     Window *v1 = &param0->unk_2C[param3];
@@ -255,7 +255,7 @@ static void WriteBagItemQuantity(UnkStruct_ov13_02227244 *param0, u32 param1, u3
     Window_ScheduleCopyToVRAM(v1);
 }
 
-static void DrawBagSubMenuItem(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void DrawBagSubMenuItem(BattleBagTask *param0, u32 param1)
 {
     u32 v0;
     u32 v1 = param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * 6 + param1;
@@ -270,7 +270,7 @@ static void DrawBagSubMenuItem(UnkStruct_ov13_02227244 *param0, u32 param1)
     WriteBagItemQuantity(param0, v1, param1, v0 + 1 + param1 * 2, FONT_SYSTEM, 4, TEXT_COLOR(1, 2, 0));
 }
 
-void DrawBagSubMenuPage(UnkStruct_ov13_02227244 *param0)
+void DrawBagSubMenuPage(BattleBagTask *param0)
 {
     u16 v0;
 
@@ -283,7 +283,7 @@ void DrawBagSubMenuPage(UnkStruct_ov13_02227244 *param0)
     param0->unk_31 ^= 1;
 }
 
-void DrawBagSubMenuPageInfo(UnkStruct_ov13_02227244 *param0)
+void DrawBagSubMenuPageInfo(BattleBagTask *param0)
 {
     Window *v0;
     Strbuf *v1;
@@ -316,7 +316,7 @@ void DrawBagSubMenuPageInfo(UnkStruct_ov13_02227244 *param0)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void DrawBagSubMenuTitle(UnkStruct_ov13_02227244 *param0)
+static void DrawBagSubMenuTitle(BattleBagTask *param0)
 {
     Window_FillTilemap(&param0->unk_2C[24], 0);
 
@@ -338,14 +338,14 @@ static void DrawBagSubMenuTitle(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-static void DrawBagSubMenuScreen(UnkStruct_ov13_02227244 *param0)
+static void DrawBagSubMenuScreen(BattleBagTask *param0)
 {
     DrawBagSubMenuPage(param0);
     DrawBagSubMenuTitle(param0);
     DrawBagSubMenuPageInfo(param0);
 }
 
-static void WriteUseBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void WriteUseBagItemName(BattleBagTask *param0, u32 param1)
 {
     Window *v0;
     Strbuf *v1;
@@ -361,7 +361,7 @@ static void WriteUseBagItemName(UnkStruct_ov13_02227244 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void WriteBagItemDescription(UnkStruct_ov13_02227244 *param0, u32 param1)
+static void WriteBagItemDescription(BattleBagTask *param0, u32 param1)
 {
     Window *v0;
     Strbuf *v1;
@@ -375,7 +375,7 @@ static void WriteBagItemDescription(UnkStruct_ov13_02227244 *param0, u32 param1)
     Window_ScheduleCopyToVRAM(v0);
 }
 
-static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0)
+static void DrawUseBagItemScreen(BattleBagTask *param0)
 {
     u32 v0;
     u32 v1;
@@ -392,14 +392,14 @@ static void DrawUseBagItemScreen(UnkStruct_ov13_02227244 *param0)
     WriteTitleText(param0, 3, IN_BATTLE_BAG_TEXT_ID_USE, FONT_SUBSCREEN, 6, TEXT_COLOR(3, 2, 1));
 }
 
-void ov13_022279F4(UnkStruct_ov13_02227244 *param0)
+void ov13_022279F4(BattleBagTask *param0)
 {
     Window_DrawMessageBoxWithScrollCursor(&param0->unk_1C, 1, 1024 - (18 + 12), 14);
     Window_FillTilemap(&param0->unk_1C, 15);
     ov13_02227A1C(param0);
 }
 
-void ov13_02227A1C(UnkStruct_ov13_02227244 *param0)
+void ov13_02227A1C(BattleBagTask *param0)
 {
     RenderControlFlags_SetCanABSpeedUpPrint(1);
     param0->unk_32 = Text_AddPrinterWithParams(&param0->unk_1C, FONT_MESSAGE, param0->unk_18, 0, 0, BattleSystem_TextSpeed(param0->unk_00->unk_00), NULL);

@@ -79,7 +79,7 @@ enum InBattleTextIndex {
 
 #define EXP_BAR_MAX_PIXELS 64
 
-static void DoTransitions(SysTask *param0, void *param1);
+static void BattleBagTask_Tick(SysTask *param0, void *param1);
 static u8 IntialiseTransitions(UnkStruct_ov13_022213F0 *param0);
 static u8 ov13_0221FF60(UnkStruct_ov13_022213F0 *param0);
 static u8 SelectPokemonScreen(UnkStruct_ov13_022213F0 *param0);
@@ -216,7 +216,7 @@ void StartPartyTransitions(UnkStruct_ov13_0221FC20 *param0)
         param0->selectedPartyIndex = 0;
     }
 
-    v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(DoTransitions, sizeof(UnkStruct_ov13_022213F0), 0, param0->heapID));
+    v0 = SysTask_GetParam(SysTask_StartAndAllocateParam(BattleBagTask_Tick, sizeof(UnkStruct_ov13_022213F0), 0, param0->heapID));
     memset(v0, 0, sizeof(UnkStruct_ov13_022213F0));
 
     v0->unk_00 = param0;
@@ -228,7 +228,7 @@ void StartPartyTransitions(UnkStruct_ov13_0221FC20 *param0)
     v0->unk_208B = BattleSystem_BattlerSlot(param0->unk_08, param0->unk_28);
 }
 
-static void DoTransitions(SysTask *param0, void *param1)
+static void BattleBagTask_Tick(SysTask *param0, void *param1)
 {
     UnkStruct_ov13_022213F0 *v0 = (UnkStruct_ov13_022213F0 *)param1;
 

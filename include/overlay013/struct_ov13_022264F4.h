@@ -14,7 +14,7 @@ typedef struct {
     Bag *bag;
     u32 heapID;
     s32 unk_10;
-    u32 unk_14;
+    BOOL isCatchTutorial;
     u32 unk_18;
     u16 unk_1C; // Item of some kind
     u8 unk_1E; // Sub menu index

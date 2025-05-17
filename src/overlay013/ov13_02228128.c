@@ -167,7 +167,7 @@ static const u8 *const Unk_ov13_02229DC0[] = {
     Unk_ov13_02229D54
 };
 
-void ov13_02228128(UnkStruct_ov13_02227244 *param0, u16 *param1)
+void ov13_02228128(BattleBagTask *param0, u16 *param1)
 {
     ov13_02228460(param0->unk_328[0], param1, 0, 0, 16, 9);
     ov13_02228460(param0->unk_328[1], param1, 0, (0 + 9), 16, 9);
@@ -225,7 +225,7 @@ static void ov13_02228460(u16 *param0, u16 *param1, u8 param2, u8 param3, u8 par
     }
 }
 
-static u16 *ov13_022284B0(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
+static u16 *ov13_022284B0(BattleBagTask *param0, u8 param1, u8 param2)
 {
     switch (param1) {
     case 0:
@@ -257,7 +257,7 @@ static u16 *ov13_022284B0(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
     return NULL;
 }
 
-static u16 ov13_02228558(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2, u8 param3)
+static u16 ov13_02228558(BattleBagTask *param0, u8 param1, u8 param2, u8 param3)
 {
     if (param2 == 3) {
         return 5;
@@ -295,7 +295,7 @@ static u16 ov13_02228558(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2, 
     return 0;
 }
 
-static void ov13_022285C8(UnkStruct_ov13_02227244 *param0, u16 *param1, u8 param2, u8 param3)
+static void ov13_022285C8(BattleBagTask *param0, u16 *param1, u8 param2, u8 param3)
 {
     u16 *v0;
     u16 v1, v2;
@@ -319,7 +319,7 @@ static void ov13_022285C8(UnkStruct_ov13_02227244 *param0, u16 *param1, u8 param
     }
 }
 
-static void ov13_0222863C(UnkStruct_ov13_02227244 *param0, u16 *param1, u8 param2, u8 param3, u8 param4)
+static void ov13_0222863C(BattleBagTask *param0, u16 *param1, u8 param2, u8 param3, u8 param4)
 {
     u16 *v0;
     u16 v1;
@@ -335,7 +335,7 @@ static void ov13_0222863C(UnkStruct_ov13_02227244 *param0, u16 *param1, u8 param
     ov13_022285C8(param0, param1, param2, param3);
 }
 
-static void ov13_022286B8(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2, u8 param3)
+static void ov13_022286B8(BattleBagTask *param0, u8 param1, u8 param2, u8 param3)
 {
     u16 *v0 = Heap_AllocFromHeap(param0->unk_00->heapID, Unk_ov13_02229D7C[param1].width * Unk_ov13_02229D7C[param1].height * 2);
 
@@ -346,7 +346,7 @@ static void ov13_022286B8(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2,
     Heap_FreeToHeap(v0);
 }
 
-static void ov13_0222872C(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
+static void ov13_0222872C(BattleBagTask *param0, u8 param1, u8 param2)
 {
     const u8 *v0;
     u16 v1;
@@ -384,7 +384,7 @@ static void ov13_0222872C(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
     }
 }
 
-static void ov13_022287A4(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
+static void ov13_022287A4(BattleBagTask *param0, u8 param1, u8 param2)
 {
     ManagedSprite *v0;
     u8 v1;
@@ -414,7 +414,7 @@ static void ov13_022287A4(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
     }
 }
 
-void ov13_0222880C(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
+void ov13_0222880C(BattleBagTask *param0, u8 param1, u8 param2)
 {
     param0->unk_113E = 0;
     param0->unk_113F = 0;
@@ -423,7 +423,7 @@ void ov13_0222880C(UnkStruct_ov13_02227244 *param0, u8 param1, u8 param2)
     param0->unk_1141_0 = 1;
 }
 
-void ov13_02228848(UnkStruct_ov13_02227244 *param0)
+void ov13_02228848(BattleBagTask *param0)
 {
     if (param0->unk_1141_0 == 0) {
         return;
@@ -455,7 +455,7 @@ void ov13_02228848(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-void ov13_02228924(UnkStruct_ov13_02227244 *param0, u8 param1)
+void ov13_02228924(BattleBagTask *param0, u8 param1)
 {
     switch (param1) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:

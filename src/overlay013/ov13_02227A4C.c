@@ -17,9 +17,8 @@ enum BattleBagPocketMask {
 };
 
 #define BATTLE_BAG_POCKET_SIZE 36
-#define BATTLE_BAG_POCKET_NUM  5
 
-BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
+BOOL IsLastUsedItemUsable(BattleBagTask *param0)
 {
     if (param0->unk_00->lastUsedItem == ITEM_NONE) {
         return FALSE;
@@ -34,7 +33,7 @@ BOOL IsLastUsedItemUsable(UnkStruct_ov13_02227244 *param0)
     return TRUE;
 }
 
-void SetNavigationForLastUsedItem(UnkStruct_ov13_02227244 *param0)
+void SetNavigationForLastUsedItem(BattleBagTask *param0)
 {
     u32 i;
 
@@ -55,7 +54,7 @@ static const u8 battleBagPocketMasks[] = {
     BATTLE_BAG_POCKET_MASK_UNUSUED
 };
 
-void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
+void RefreshBagSubMenus(BattleBagTask *param0)
 {
     BagItem *bagItem;
     u32 i, l, currentSlot;
@@ -101,7 +100,7 @@ void RefreshBagSubMenus(UnkStruct_ov13_02227244 *param0)
     }
 }
 
-u16 GetBagItemOnPage(UnkStruct_ov13_02227244 *param0, u32 positionOnPage)
+u16 GetBagItemOnPage(BattleBagTask *param0, u32 positionOnPage)
 {
     if ((param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].quantity != 0)) {
         return param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item;
