@@ -221,7 +221,7 @@ static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBag
 {
     G2S_BlendNone();
 
-    battleBagTask->unk_34 = MakeBattleSubMenuCursor(battleBagTask->unk_00->heapID);
+    battleBagTask->cursor = MakeBattleSubMenuCursor(battleBagTask->unk_00->heapID);
 
     ov13_02226ED0(battleBagTask);
     ov13_02226FC4(battleBagTask);
@@ -238,7 +238,7 @@ static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBag
     ov13_02227E68(battleBagTask, battleBagTask->unk_114C);
 
     if (battleBagTask->unk_00->unk_25 != 0) {
-        SetBattlePartyBagCursorVisiblity(battleBagTask->unk_34, 1);
+        SetBattlePartyBagCursorVisiblity(battleBagTask->cursor, TRUE);
     }
 
     ov13_02228008(battleBagTask, battleBagTask->unk_114C);
@@ -262,7 +262,7 @@ static enum BattleBagTaskState BattleBagTask_MenuScreen(BattleBagTask *battleBag
         enum BattleBagMenuScreenButton bagMenuButtonPressed = CheckTouchRectIsPressed(battleBagTask, menuScreenTouchRects);
 
         if (bagMenuButtonPressed == TOUCHSCREEN_INPUT_NONE) {
-            bagMenuButtonPressed = CheckBattleSubMenuCursorInputs(battleBagTask->unk_34);
+            bagMenuButtonPressed = CheckBattleSubMenuCursorInputs(battleBagTask->cursor);
 
             if (bagMenuButtonPressed == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
                 bagMenuButtonPressed = BATTLE_BAG_MENU_SCREEN_BUTTON_CANCEL;
@@ -309,7 +309,7 @@ static enum BattleBagTaskState BattleBagTask_PocketMenuScreen(BattleBagTask *bat
         int v0 = CheckTouchRectIsPressed(battleBagTask, pocketMenuScreenTouchRects);
 
         if (v0 == TOUCHSCREEN_INPUT_NONE) {
-            v0 = CheckBattleSubMenuCursorInputs(battleBagTask->unk_34);
+            v0 = CheckBattleSubMenuCursorInputs(battleBagTask->cursor);
 
             if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
                 v0 = BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE;
@@ -391,7 +391,7 @@ static enum BattleBagTaskState BattleBagTask_UseItemScreen(BattleBagTask *battle
         int v0 = CheckTouchRectIsPressed(battleBagTask, useItemScreenTouchRects);
 
         if (v0 == TOUCHSCREEN_INPUT_NONE) {
-            v0 = CheckBattleSubMenuCursorInputs(battleBagTask->unk_34);
+            v0 = CheckBattleSubMenuCursorInputs(battleBagTask->cursor);
 
             if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
                 v0 = 1;
@@ -577,9 +577,9 @@ static enum BattleBagTaskState BattleBagTask_FinishTask(SysTask *task, BattleBag
     ov13_022270F8(battleBagTask);
     ov13_02226F9C(battleBagTask->unk_04);
 
-    battleBagTask->unk_00->unk_25 = IsBattleSubMenuCursorVisible(battleBagTask->unk_34);
+    battleBagTask->unk_00->unk_25 = IsBattleSubMenuCursorVisible(battleBagTask->cursor);
 
-    DeleteBattleSubMenuCursor(battleBagTask->unk_34);
+    DeleteBattleSubMenuCursor(battleBagTask->cursor);
     Font_Free(FONT_SUBSCREEN);
 
     if (battleBagTask->unk_00->unk_1C != 0) {
@@ -678,7 +678,7 @@ static void ov13_02226ED0(BattleBagTask *battleBagTask)
             0,
             0x2000,
             0,
-            4,
+            BG_SCREEN_SIZE_512x512,
             GX_BG_COLORMODE_16,
             GX_BG_SCRBASE_0xd000,
             GX_BG_CHARBASE_0x00000,
@@ -686,7 +686,7 @@ static void ov13_02226ED0(BattleBagTask *battleBagTask)
             3,
             0,
             0,
-            0
+            FALSE
         };
 
         Bg_InitFromTemplate(battleBagTask->unk_04, 6, &v1, 0);
@@ -698,7 +698,7 @@ static void ov13_02226ED0(BattleBagTask *battleBagTask)
             0,
             0x800,
             0,
-            1,
+            BG_SCREEN_SIZE_256x256,
             GX_BG_COLORMODE_16,
             GX_BG_SCRBASE_0xf800,
             GX_BG_CHARBASE_0x10000,
@@ -706,7 +706,7 @@ static void ov13_02226ED0(BattleBagTask *battleBagTask)
             1,
             0,
             0,
-            0
+            FALSE
         };
 
         Bg_InitFromTemplate(battleBagTask->unk_04, 5, &v2, 0);
@@ -719,7 +719,7 @@ static void ov13_02226ED0(BattleBagTask *battleBagTask)
             0,
             0x800,
             0,
-            1,
+            BG_SCREEN_SIZE_256x256,
             GX_BG_COLORMODE_16,
             GX_BG_SCRBASE_0xf000,
             GX_BG_CHARBASE_0x00000,
@@ -727,7 +727,7 @@ static void ov13_02226ED0(BattleBagTask *battleBagTask)
             0,
             0,
             0,
-            0
+            FALSE
         };
 
         Bg_InitFromTemplate(battleBagTask->unk_04, 4, &v3, 0);
