@@ -402,5 +402,5 @@ void ov13_022279F4(BattleBagTask *param0)
 void ov13_02227A1C(BattleBagTask *param0)
 {
     RenderControlFlags_SetCanABSpeedUpPrint(1);
-    param0->unk_32 = Text_AddPrinterWithParams(&param0->unk_1C, FONT_MESSAGE, param0->unk_18, 0, 0, BattleSystem_TextSpeed(param0->unk_00->unk_00), NULL);
+    param0->textPrinter = Text_AddPrinterWithParams(&param0->unk_1C, FONT_MESSAGE, param0->unk_18, 0, 0, BattleSystem_TextSpeed(param0->unk_00->battleSystem), NULL);
 }

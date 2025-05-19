@@ -9,11 +9,11 @@
 #define BATTLE_BAG_ITEMS_PER_POCKET_PAGE 6
 
 typedef struct {
-    BattleSystem *unk_00;
+    BattleSystem *battleSystem;
     TrainerInfo *unk_04;
     Bag *bag;
     u32 heapID;
-    s32 unk_10;
+    s32 battler;
     BOOL isCatchTutorial;
     u32 unk_18;
     u16 unk_1C; // Item of some kind
@@ -25,8 +25,8 @@ typedef struct {
     u8 unk_24;
     u8 unk_25;
     u8 unk_26;
-    u8 pocketCurrentPagePositions[5]; // Current position on the page for each pocket
-    u8 pocketCurrentPages[5]; // Current page for each pocket
+    u8 pocketCurrentPagePositions[5];
+    u8 pocketCurrentPages[5];
 } UnkStruct_ov13_022264F4;
 
 #endif // POKEPLATINUM_STRUCT_OV13_022264F4_H

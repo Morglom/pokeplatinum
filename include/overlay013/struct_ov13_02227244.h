@@ -40,7 +40,7 @@ typedef struct {
     Window *unk_2C; // Windows
     u8 unk_30; // Window num
     u8 unk_31;
-    u8 unk_32; // Printer id
+    u8 textPrinter;
     BattleSubMenuCursor *cursor;
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem battleBagItems[5][36];
@@ -66,7 +66,7 @@ typedef struct {
     u8 queuedState;
     u8 unk_114C; // Screen Index
     u8 currentBattleBagPocket;
-    s8 unk_114E;
+    s8 queuedPocketPageChange;
     u8 numBattleBagPocketItems[5];
     u8 numBattleBagPocketPages[5]; // Actually the number of pages after the first
     u8 catchTutorialState;

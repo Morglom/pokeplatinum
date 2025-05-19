@@ -74,7 +74,7 @@ void ov13_02227BDC(BattleBagTask *param0)
 static void ov13_02227C08(BattleBagTask *param0)
 {
     SpriteResourceCapacities v0 = { 8, 8, 3, 3, 0, 0 };
-    SpriteSystem *v1 = ov16_0223E010(param0->unk_00->unk_00);
+    SpriteSystem *v1 = ov16_0223E010(param0->unk_00->battleSystem);
 
     param0->unk_30C = SpriteManager_New(v1);
 
@@ -87,7 +87,7 @@ static void ov13_02227C54(BattleBagTask *param0)
     SpriteSystem *v0;
     u32 v1;
     NARC *v2 = NARC_ctor(NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, param0->unk_00->heapID);
-    v0 = ov16_0223E010(param0->unk_00->unk_00);
+    v0 = ov16_0223E010(param0->unk_00->battleSystem);
 
     for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
         SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
@@ -101,7 +101,7 @@ static void ov13_02227C54(BattleBagTask *param0)
 
 static void ov13_02227D10(BattleBagTask *param0, u16 item, u32 param2)
 {
-    SpriteSystem *v0 = ov16_0223E010(param0->unk_00->unk_00);
+    SpriteSystem *v0 = ov16_0223E010(param0->unk_00->battleSystem);
     SpriteSystem_ReplaceCharResObj(v0, param0->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), FALSE, param2);
 }
 
@@ -113,7 +113,7 @@ static void ov13_02227D48(BattleBagTask *param0, u16 item, u16 param2, u32 param
 static ManagedSprite *ov13_02227D78(BattleBagTask *param0, u32 param1)
 {
     SpriteTemplate template;
-    SpriteSystem *spriteSystem = ov16_0223E010(param0->unk_00->unk_00);
+    SpriteSystem *spriteSystem = ov16_0223E010(param0->unk_00->battleSystem);
 
     template.x = 0;
     template.y = 0;
@@ -146,7 +146,7 @@ void ov13_02227E08(BattleBagTask *param0)
     SpriteSystem *v0;
     u32 v1;
 
-    v0 = ov16_0223E010(param0->unk_00->unk_00);
+    v0 = ov16_0223E010(param0->unk_00->battleSystem);
 
     for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
         Sprite_DeleteAndFreeResources(param0->unk_310[v1]);
@@ -227,7 +227,7 @@ static void ov13_02227F7C(BattleBagTask *param0)
     SpriteSystem *v0;
     UnkStruct_ov16_0226DC24 *v1;
 
-    v0 = ov16_0223E010(param0->unk_00->unk_00);
+    v0 = ov16_0223E010(param0->unk_00->battleSystem);
     ov16_0226DB7C(v0, param0->unk_30C, param0->unk_08, param0->unk_00->heapID, 46270, 46270, 46265, 46265);
     v1 = ov16_0226DC24(v0, param0->unk_30C, param0->unk_00->heapID, 46270, 46270, 46265, 46265, 0, 1);
 
@@ -300,7 +300,7 @@ static void ov13_02228070(BattleBagTask *param0)
     SpriteSystem *v0;
     UnkStruct_ov16_0226DEEC *v1;
 
-    v0 = ov16_0223E010(param0->unk_00->unk_00);
+    v0 = ov16_0223E010(param0->unk_00->battleSystem);
 
     ov16_0226DE44(v0, param0->unk_30C, param0->unk_00->heapID, param0->unk_08, 46269, 46269, 46264, 46264);
     param0->unk_38 = ov16_0226DEEC(v0, param0->unk_30C, param0->unk_00->heapID, 46269, 46269, 46264, 46264, 0, 0);
