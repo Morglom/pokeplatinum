@@ -431,21 +431,21 @@ void ov13_02228848(BattleBagTask *param0)
 
     switch (param0->unk_113E) {
     case 0:
-        ov13_022286B8(param0, param0->unk_1140, 1, param0->unk_114C);
+        ov13_022286B8(param0, param0->unk_1140, 1, param0->currentScreen);
         ov13_0222872C(param0, param0->unk_1140, 1);
         ov13_022287A4(param0, param0->unk_1140, 1);
         param0->unk_113F = 0;
         param0->unk_113E = 1;
         break;
     case 1:
-        ov13_022286B8(param0, param0->unk_1140, 2, param0->unk_114C);
+        ov13_022286B8(param0, param0->unk_1140, 2, param0->currentScreen);
         ov13_0222872C(param0, param0->unk_1140, 2);
         ov13_022287A4(param0, param0->unk_1140, 2);
         param0->unk_113F = 0;
         param0->unk_113E = 2;
         break;
     case 2:
-        ov13_022286B8(param0, param0->unk_1140, 0, param0->unk_114C);
+        ov13_022286B8(param0, param0->unk_1140, 0, param0->currentScreen);
         ov13_0222872C(param0, param0->unk_1140, 0);
         ov13_022287A4(param0, param0->unk_1140, 0);
         param0->unk_113F = 0;

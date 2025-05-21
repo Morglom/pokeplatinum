@@ -116,13 +116,13 @@ BOOL BattleBagTask_FinishTask(SysTask *task, BattleBagTask *battleBagTask);
 static void ov13_02226ED0(BattleBagTask *battleBagTask);
 static void ov13_02226F9C(BgConfig *param0);
 static void ov13_02226FC4(BattleBagTask *battleBagTask);
-static void ov13_022270B8(BattleBagTask *battleBagTask);
-static void ov13_022270F8(BattleBagTask *battleBagTask);
+static void InitializeMessageLoader(BattleBagTask *battleBagTask);
+static void CleanupMessageLoader(BattleBagTask *battleBagTask);
 static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask);
-static void ov13_02227118(BattleBagTask *battleBagTask, u8 param1);
-static void ChangeInBattleBagScreen(BattleBagTask *battleBagTask, u8 param1);
+static void ov13_02227118(BattleBagTask *battleBagTask, u8 screen);
+static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen);
 static int CheckTouchRectIsPressed(BattleBagTask *battleBagTask, const TouchScreenRect *rect);
-static void ov13_02227260(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
+static void UseBagItem(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
 
 static const TouchScreenRect menuScreenTouchRects[] = {
     { 0x8, 0x4F, 0x0, 0x7F },
@@ -249,24 +249,24 @@ static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBag
 
     ov13_02226ED0(battleBagTask);
     ov13_02226FC4(battleBagTask);
-    ov13_022270B8(battleBagTask);
+    InitializeMessageLoader(battleBagTask);
     Font_InitManager(FONT_SUBSCREEN, battleBagTask->unk_00->heapID);
 
     battleBagTask->currentBattleBagPocket = (u8)BagCursor_GetBattleCurrentCategory(BattleSystem_BagCursor(battleBagTask->unk_00->battleSystem));
 
     RefreshBagSubMenus(battleBagTask);
-    ov13_02228924(battleBagTask, battleBagTask->unk_114C);
+    ov13_02228924(battleBagTask, battleBagTask->currentScreen);
     ov13_02227288(battleBagTask);
-    DrawInBattleBagScreen(battleBagTask, battleBagTask->unk_114C);
+    DrawInBattleBagScreen(battleBagTask, battleBagTask->currentScreen);
     ov13_02227BDC(battleBagTask);
-    ov13_02227E68(battleBagTask, battleBagTask->unk_114C);
+    ov13_02227E68(battleBagTask, battleBagTask->currentScreen);
 
     if (battleBagTask->unk_00->unk_25 != FALSE) {
         SetBattlePartyBagCursorVisiblity(battleBagTask->cursor, TRUE);
     }
 
-    ov13_02228008(battleBagTask, battleBagTask->unk_114C);
-    ov13_022280F0(battleBagTask, battleBagTask->unk_114C);
+    ov13_02228008(battleBagTask, battleBagTask->currentScreen);
+    ov13_022280F0(battleBagTask, battleBagTask->currentScreen);
     PaletteData_StartFade(battleBagTask->unk_08, (0x2 | 0x8), 0xffff, -8, 16, 0, 0);
 
     if (battleBagTask->unk_00->isCatchTutorial == TRUE) {
@@ -399,8 +399,8 @@ static enum BattleBagTaskState BattleBagTask_ChangePocketPage(BattleBagTask *bat
 
     DrawBagSubMenuPage(battleBagTask);
     DrawBagSubMenuPageInfo(battleBagTask);
-    ov13_02227E68(battleBagTask, battleBagTask->unk_114C);
-    ov13_02228924(battleBagTask, battleBagTask->unk_114C);
+    ov13_02227E68(battleBagTask, battleBagTask->currentScreen);
+    ov13_02228924(battleBagTask, battleBagTask->currentScreen);
 
     return BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN;
 }
@@ -449,7 +449,7 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
             Strbuf *v4;
 
             v3 = BattleSystem_PartyPokemon(v0->battleSystem, v0->battler, v1);
-            v4 = MessageLoader_GetNewStrbuf(battleBagTask->unk_10, 46);
+            v4 = MessageLoader_GetNewStrbuf(battleBagTask->messageLoader, 46);
 
             StringTemplate_SetNickname(battleBagTask->unk_14, 0, Pokemon_GetBoxPokemon(v3));
             StringTemplate_SetMoveName(battleBagTask->unk_14, 1, 373);
@@ -463,11 +463,11 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
         }
 
         if (BattleSystem_UseBagItem(v0->battleSystem, v0->battler, v1, 0, v0->unk_1C) == TRUE) {
-            ov13_02227260(v0->battleSystem, v0->unk_1C, battleBagTask->currentBattleBagPocket, v0->heapID);
+            UseBagItem(v0->battleSystem, v0->unk_1C, battleBagTask->currentBattleBagPocket, v0->heapID);
             return 13;
         } else if (v2 == 3) {
             if (!(BattleSystem_BattleType(v0->battleSystem) & BATTLE_TYPE_TRAINER)) {
-                ov13_02227260(v0->battleSystem, v0->unk_1C, battleBagTask->currentBattleBagPocket, v0->heapID);
+                UseBagItem(v0->battleSystem, v0->unk_1C, battleBagTask->currentBattleBagPocket, v0->heapID);
                 return 13;
             } else {
                 MessageLoader *v5;
@@ -484,28 +484,28 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
                 return 9;
             }
         } else {
-            MessageLoader_GetStrbuf(battleBagTask->unk_10, 34, battleBagTask->unk_18);
+            MessageLoader_GetStrbuf(battleBagTask->messageLoader, 34, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
             battleBagTask->queuedState = 8;
             return 9;
         }
     } else if (battleBagTask->currentBattleBagPocket == ITEM_BATTLE_CATEGORY_POKE_BALLS) {
         if (v0->unk_22 == 1) {
-            MessageLoader_GetStrbuf(battleBagTask->unk_10, 44, battleBagTask->unk_18);
+            MessageLoader_GetStrbuf(battleBagTask->messageLoader, 44, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
             battleBagTask->queuedState = 8;
             return 9;
         }
 
         if (v0->unk_23 == 1) {
-            MessageLoader_GetStrbuf(battleBagTask->unk_10, 47, battleBagTask->unk_18);
+            MessageLoader_GetStrbuf(battleBagTask->messageLoader, 47, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
             battleBagTask->queuedState = 8;
             return 9;
         }
 
         if (v0->unk_24 == 1) {
-            MessageLoader_GetStrbuf(battleBagTask->unk_10, 48, battleBagTask->unk_18);
+            MessageLoader_GetStrbuf(battleBagTask->messageLoader, 48, battleBagTask->unk_18);
             ov13_022279F4(battleBagTask);
             battleBagTask->queuedState = 8;
             return 9;
@@ -516,7 +516,7 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
             PCBoxes *v8 = ov16_0223E228(v0->battleSystem);
 
             if ((Party_GetCurrentCount(v7) == 6) && (PCBoxes_FirstEmptyBox(v8) == 18)) {
-                MessageLoader_GetStrbuf(battleBagTask->unk_10, 45, battleBagTask->unk_18);
+                MessageLoader_GetStrbuf(battleBagTask->messageLoader, 45, battleBagTask->unk_18);
                 ov13_022279F4(battleBagTask);
                 battleBagTask->queuedState = 8;
                 return 9;
@@ -529,19 +529,19 @@ static enum BattleBagTaskState ov13_02226A5C(BattleBagTask *battleBagTask)
 
 static enum BattleBagTaskState BattleBagTask_SetupMenuScreen(BattleBagTask *battleBagTask)
 {
-    ChangeInBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU);
+    ChangeBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU);
     return BATTLE_BAG_TASK_STATE_MENU_SCREEN;
 }
 
 static enum BattleBagTaskState BattleBagTask_SetupPocketMenuScreen(BattleBagTask *battleBagTask)
 {
-    ChangeInBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU);
+    ChangeBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU);
     return BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN;
 }
 
 static enum BattleBagTaskState BattleBagTask_SetupUseItemScreen(BattleBagTask *battleBagTask)
 {
-    ChangeInBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM);
+    ChangeBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM);
     return BATTLE_BAG_TASK_STATE_USE_ITEM_SCREEN;
 }
 
@@ -592,7 +592,7 @@ BOOL BattleBagTask_FinishTask(SysTask *task, BattleBagTask *battleBagTask)
 
     ov13_02227E08(battleBagTask);
     ov13_02227334(battleBagTask);
-    ov13_022270F8(battleBagTask);
+    CleanupMessageLoader(battleBagTask);
     ov13_02226F9C(battleBagTask->unk_04);
 
     battleBagTask->unk_00->unk_25 = IsBattleSubMenuCursorVisible(battleBagTask->cursor);
@@ -796,43 +796,43 @@ static void ov13_02226FC4(BattleBagTask *battleBagTask)
     }
 }
 
-static void ov13_022270B8(BattleBagTask *battleBagTask)
+static void InitializeMessageLoader(BattleBagTask *battleBagTask)
 {
-    battleBagTask->unk_10 = MessageLoader_Init(MESSAGE_LOADER_BANK_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_UNK_0002, battleBagTask->unk_00->heapID);
+    battleBagTask->messageLoader = MessageLoader_Init(MESSAGE_LOADER_BANK_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_UNK_0002, battleBagTask->unk_00->heapID);
     battleBagTask->unk_0C = sub_0200C440(15, 14, 0, battleBagTask->unk_00->heapID);
     battleBagTask->unk_14 = StringTemplate_Default(battleBagTask->unk_00->heapID);
     battleBagTask->unk_18 = Strbuf_Init(512, battleBagTask->unk_00->heapID);
 }
 
-static void ov13_022270F8(BattleBagTask *battleBagTask)
+static void CleanupMessageLoader(BattleBagTask *battleBagTask)
 {
-    MessageLoader_Free(battleBagTask->unk_10);
+    MessageLoader_Free(battleBagTask->messageLoader);
     sub_0200C560(battleBagTask->unk_0C);
     StringTemplate_Free(battleBagTask->unk_14);
     Strbuf_Free(battleBagTask->unk_18);
 }
 
-static void ov13_02227118(BattleBagTask *battleBagTask, u8 param1)
+static void ov13_02227118(BattleBagTask *battleBagTask, u8 screen)
 {
-    switch (param1) {
-    case 0:
+    switch (screen) {
+    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
         Bg_ScheduleScroll(battleBagTask->unk_04, 6, 0, 0);
         Bg_ScheduleScroll(battleBagTask->unk_04, 6, 3, 0);
         break;
-    case 1:
+    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
         Bg_ScheduleScroll(battleBagTask->unk_04, 6, 0, 256);
         Bg_ScheduleScroll(battleBagTask->unk_04, 6, 3, 0);
         break;
-    case 2:
+    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         Bg_ScheduleScroll(battleBagTask->unk_04, 6, 0, 0);
         Bg_ScheduleScroll(battleBagTask->unk_04, 6, 3, 256);
         break;
     }
 }
 
-static void ov13_0222717C(BattleBagTask *battleBagTask, u8 param1)
+static void ov13_0222717C(BattleBagTask *battleBagTask, u8 screen)
 {
-    if (param1 != 2) {
+    if (screen != IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM) {
         return;
     }
 
@@ -840,24 +840,24 @@ static void ov13_0222717C(BattleBagTask *battleBagTask, u8 param1)
     Bg_ChangeTilemapRectPalette(battleBagTask->unk_04, 6, 2, 40, 28, 8, 8 + battleBagTask->currentBattleBagPocket);
 }
 
-static void ChangeInBattleBagScreen(BattleBagTask *battleBagTask, u8 param1)
+static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen)
 {
-    ov13_0222717C(battleBagTask, param1);
-    ov13_02227118(battleBagTask, param1);
+    ov13_0222717C(battleBagTask, screen);
+    ov13_02227118(battleBagTask, screen);
 
     Bg_ScheduleFillTilemap(battleBagTask->unk_04, 4, 0);
     Bg_ScheduleFillTilemap(battleBagTask->unk_04, 5, 0);
 
     ClearInBattleBagScreen(battleBagTask);
-    InitializeInBattleBagScreen(battleBagTask, param1);
-    DrawInBattleBagScreen(battleBagTask, param1);
-    ov13_02228924(battleBagTask, param1);
-    ov13_02228008(battleBagTask, param1);
-    ov13_022280F0(battleBagTask, param1);
+    InitializeInBattleBagScreen(battleBagTask, screen);
+    DrawInBattleBagScreen(battleBagTask, screen);
+    ov13_02228924(battleBagTask, screen);
+    ov13_02228008(battleBagTask, screen);
+    ov13_022280F0(battleBagTask, screen);
 
-    battleBagTask->unk_114C = param1;
+    battleBagTask->currentScreen = screen;
 
-    ov13_02227E68(battleBagTask, battleBagTask->unk_114C);
+    ov13_02227E68(battleBagTask, battleBagTask->currentScreen);
 }
 
 static int CheckTouchRectIsPressed(BattleBagTask *battleBagTask, const TouchScreenRect *rect)
@@ -872,7 +872,7 @@ int GetSelectedPartySlot(BattleBagTask *battleBagTask)
     return slot;
 }
 
-static void ov13_02227260(BattleSystem *battleSys, u16 item, u16 category, u32 heapID)
+static void UseBagItem(BattleSystem *battleSys, u16 item, u16 category, u32 heapID)
 {
     Bag_TryRemoveItem(BattleSystem_Bag(battleSys), item, 1, heapID);
     Bag_SetLastBattleItemUsed(BattleSystem_BagCursor(battleSys), item, category);

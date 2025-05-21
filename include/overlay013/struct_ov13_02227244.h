@@ -33,7 +33,7 @@ typedef struct {
     BgConfig *unk_04;
     PaletteData *unk_08;
     UnkStruct_0200C440 *unk_0C;
-    MessageLoader *unk_10;
+    MessageLoader *messageLoader;
     StringTemplate *unk_14;
     Strbuf *unk_18;
     Window unk_1C; // Message box window
@@ -64,7 +64,7 @@ typedef struct {
     u8 unk_1142[8];
     u8 currentState;
     u8 queuedState;
-    u8 unk_114C; // Screen Index
+    u8 currentScreen;
     u8 currentBattleBagPocket;
     s8 queuedPocketPageChange;
     u8 numBattleBagPocketItems[5];

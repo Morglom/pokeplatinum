@@ -3546,12 +3546,12 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                 v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov13_022264F4));
                 memset(v0->unk_04, 0, sizeof(UnkStruct_ov13_022264F4));
 
-                v0->unk_04->unk_00 = v0->unk_00;
+                v0->unk_04->battleSystem = v0->unk_00;
                 v0->unk_04->unk_04 = BattleSystem_TrainerInfo(v0->unk_00, v0->unk_0D);
                 v0->unk_04->heapID = HEAP_ID_BATTLE;
                 v0->unk_04->unk_26 = 0;
                 v0->unk_04->bag = BattleSystem_Bag(v0->unk_00);
-                v0->unk_04->unk_10 = v0->unk_0D;
+                v0->unk_04->battler = v0->unk_0D;
                 v0->unk_04->unk_25 = v0->unk_10;
                 v0->unk_04->unk_22 = v0->unk_14;
                 v0->unk_04->unk_23 = v0->unk_15;
@@ -3616,7 +3616,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         v0->unk_08->unk_04->unk_35 = 2;
         v0->unk_08->unk_04->unk_22 = v0->unk_04->unk_1C;
         v0->unk_08->unk_04->unk_33 = v0->unk_04->unk_1E;
-        v0->unk_08->unk_04->unk_28 = v0->unk_04->unk_10;
+        v0->unk_08->unk_04->unk_28 = v0->unk_04->battler;
         v0->unk_08->unk_04->unk_32 = v0->unk_10;
         v0->unk_08->unk_04->unk_14 = v0->unk_08->unk_0C[v0->unk_0D];
         v0->unk_08->unk_04->unk_15 = v0->unk_08->unk_0C[BattleSystem_Partner(v0->unk_00, v0->unk_0D)];
