@@ -341,8 +341,8 @@ static void ov13_022286B8(BattleBagTask *param0, u8 param1, u8 param2, u8 param3
 
     ov13_0222863C(param0, v0, param1, param2, param3);
 
-    Bg_LoadToTilemapRect(param0->unk_04, 6, v0, Unk_ov13_02229D7C[param1].xCoord, Unk_ov13_02229D7C[param1].yCoord, Unk_ov13_02229D7C[param1].width, Unk_ov13_02229D7C[param1].height);
-    Bg_ScheduleTilemapTransfer(param0->unk_04, 6);
+    Bg_LoadToTilemapRect(param0->backGround, 6, v0, Unk_ov13_02229D7C[param1].xCoord, Unk_ov13_02229D7C[param1].yCoord, Unk_ov13_02229D7C[param1].width, Unk_ov13_02229D7C[param1].height);
+    Bg_ScheduleTilemapTransfer(param0->backGround, 6);
     Heap_FreeToHeap(v0);
 }
 
@@ -379,8 +379,8 @@ static void ov13_0222872C(BattleBagTask *param0, u8 param1, u8 param2)
             break;
         }
 
-        Window_Scroll(&param0->unk_2C[v0[v1]], v2, v3, 0);
-        Window_ScheduleCopyToVRAM(&param0->unk_2C[v0[v1]]);
+        Window_Scroll(&param0->windows[v0[v1]], v2, v3, 0);
+        Window_ScheduleCopyToVRAM(&param0->windows[v0[v1]]);
     }
 }
 
@@ -455,47 +455,47 @@ void ov13_02228848(BattleBagTask *param0)
     }
 }
 
-void ov13_02228924(BattleBagTask *param0, u8 param1)
+void ov13_02228924(BattleBagTask *battleBagTask, u8 screen)
 {
-    switch (param1) {
+    switch (screen) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
-        ov13_022286B8(param0, 0, 0, param1);
-        ov13_022286B8(param0, 1, 0, param1);
-        ov13_022286B8(param0, 2, 0, param1);
-        ov13_022286B8(param0, 3, 0, param1);
+        ov13_022286B8(battleBagTask, 0, 0, screen);
+        ov13_022286B8(battleBagTask, 1, 0, screen);
+        ov13_022286B8(battleBagTask, 2, 0, screen);
+        ov13_022286B8(battleBagTask, 3, 0, screen);
 
-        if (param0->unk_00->lastUsedItem == ITEM_NONE) {
-            ov13_022286B8(param0, 4, 3, param1);
+        if (battleBagTask->unk_00->lastUsedItem == ITEM_NONE) {
+            ov13_022286B8(battleBagTask, 4, 3, screen);
         } else {
-            ov13_022286B8(param0, 4, 0, param1);
+            ov13_022286B8(battleBagTask, 4, 0, screen);
         }
 
-        ov13_022286B8(param0, 5, 0, param1);
+        ov13_022286B8(battleBagTask, 5, 0, screen);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU: {
         u32 i;
 
         for (i = 0; i < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; i++) {
-            if (GetBagItemOnPage(param0, i) == ITEM_NONE) {
-                ov13_022286B8(param0, 6 + i, 3, param1);
+            if (GetBagItemOnPage(battleBagTask, i) == ITEM_NONE) {
+                ov13_022286B8(battleBagTask, 6 + i, 3, screen);
             } else {
-                ov13_022286B8(param0, 6 + i, 0, param1);
+                ov13_022286B8(battleBagTask, 6 + i, 0, screen);
             }
         }
     }
 
-        if (param0->numBattleBagPocketPages[param0->currentBattleBagPocket] == 0) {
-            ov13_022286B8(param0, 12, 3, param1);
-            ov13_022286B8(param0, 13, 3, param1);
+        if (battleBagTask->numBattleBagPocketPages[battleBagTask->currentBattleBagPocket] == 0) {
+            ov13_022286B8(battleBagTask, 12, 3, screen);
+            ov13_022286B8(battleBagTask, 13, 3, screen);
         } else {
-            ov13_022286B8(param0, 12, 0, param1);
-            ov13_022286B8(param0, 13, 0, param1);
+            ov13_022286B8(battleBagTask, 12, 0, screen);
+            ov13_022286B8(battleBagTask, 13, 0, screen);
         }
 
-        ov13_022286B8(param0, 14, 0, param1);
+        ov13_022286B8(battleBagTask, 14, 0, screen);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
-        ov13_022286B8(param0, 15, 0, param1);
-        ov13_022286B8(param0, 16, 0, param1);
+        ov13_022286B8(battleBagTask, 15, 0, screen);
+        ov13_022286B8(battleBagTask, 16, 0, screen);
     }
 }

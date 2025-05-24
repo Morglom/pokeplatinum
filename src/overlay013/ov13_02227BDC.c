@@ -91,7 +91,7 @@ static void ov13_02227C54(BattleBagTask *param0)
 
     for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
         SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
-        SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->unk_08, PLTTBUF_SUB_OBJ, v0, param0->unk_30C, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
+        SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->palette, PLTTBUF_SUB_OBJ, v0, param0->unk_30C, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
     }
 
     SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_IconNCERFile(), FALSE, 46263);
@@ -107,7 +107,7 @@ static void ov13_02227D10(BattleBagTask *param0, u16 item, u32 param2)
 
 static void ov13_02227D48(BattleBagTask *param0, u16 item, u16 param2, u32 param3)
 {
-    PaletteData_LoadBufferFromFileStart(param0->unk_08, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_PALETTE), param0->unk_00->heapID, PLTTBUF_SUB_OBJ, 0x20, param2 * 16);
+    PaletteData_LoadBufferFromFileStart(param0->palette, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_PALETTE), param0->unk_00->heapID, PLTTBUF_SUB_OBJ, 0x20, param2 * 16);
 }
 
 static ManagedSprite *ov13_02227D78(BattleBagTask *param0, u32 param1)
@@ -163,23 +163,23 @@ static void DrawManagedSprite(ManagedSprite *sprite, const int x, const int y)
     ManagedSprite_SetPositionXY(sprite, x, y);
 }
 
-void ov13_02227E68(BattleBagTask *param0, u32 param1)
+void RenderBattleBagScreenSprites(BattleBagTask *battleBagTask, u32 screen)
 {
-    u32 v0;
+    u32 i;
 
-    for (v0 = 0; v0 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v0++) {
-        ManagedSprite_SetDrawFlag(param0->unk_310[v0], FALSE);
+    for (i = 0; i < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; i++) {
+        ManagedSprite_SetDrawFlag(battleBagTask->unk_310[i], FALSE);
     }
 
-    switch (param1) {
+    switch (screen) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
-        RenderLastUsedItemSprite(param0);
+        RenderLastUsedItemSprite(battleBagTask);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
-        RenderSubMenuItemSprites(param0);
+        RenderSubMenuItemSprites(battleBagTask);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
-        RenderSelectedItemSprite(param0);
+        RenderSelectedItemSprite(battleBagTask);
         break;
     }
 }
@@ -228,7 +228,7 @@ static void ov13_02227F7C(BattleBagTask *param0)
     UnkStruct_ov16_0226DC24 *v1;
 
     v0 = ov16_0223E010(param0->unk_00->battleSystem);
-    ov16_0226DB7C(v0, param0->unk_30C, param0->unk_08, param0->unk_00->heapID, 46270, 46270, 46265, 46265);
+    ov16_0226DB7C(v0, param0->unk_30C, param0->palette, param0->unk_00->heapID, 46270, 46270, 46265, 46265);
     v1 = ov16_0226DC24(v0, param0->unk_30C, param0->unk_00->heapID, 46270, 46270, 46265, 46265, 0, 1);
 
     SetBattleSubMenuCursorSprites(param0->cursor, v1);
@@ -288,11 +288,11 @@ void ov13_02228008(BattleBagTask *param0, u8 param1)
     }
 }
 
-void ov13_02228050(BattleBagTask *param0)
+void DisableBattleBagCursor(BattleBagTask *battleBagTask)
 {
-    SetBattlePartyBagCursorVisiblity(param0->cursor, 0);
-    ResetBattleSubMenuCursorPosition(param0->cursor);
-    ov16_0226DDE8(GetBattleSubMenuCursorSprites(param0->cursor));
+    SetBattlePartyBagCursorVisiblity(battleBagTask->cursor, 0);
+    ResetBattleSubMenuCursorPosition(battleBagTask->cursor);
+    ov16_0226DDE8(GetBattleSubMenuCursorSprites(battleBagTask->cursor));
 }
 
 static void ov13_02228070(BattleBagTask *param0)
@@ -302,7 +302,7 @@ static void ov13_02228070(BattleBagTask *param0)
 
     v0 = ov16_0223E010(param0->unk_00->battleSystem);
 
-    ov16_0226DE44(v0, param0->unk_30C, param0->unk_00->heapID, param0->unk_08, 46269, 46269, 46264, 46264);
+    ov16_0226DE44(v0, param0->unk_30C, param0->unk_00->heapID, param0->palette, 46269, 46269, 46264, 46264);
     param0->unk_38 = ov16_0226DEEC(v0, param0->unk_30C, param0->unk_00->heapID, 46269, 46269, 46264, 46264, 0, 0);
 }
 

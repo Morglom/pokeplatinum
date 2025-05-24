@@ -100,7 +100,7 @@ static const WindowTemplate useBagItemScreenWindowTemplates[] = {
 
 void ov13_02227288(BattleBagTask *param0)
 {
-    Window_AddFromTemplate(param0->unk_04, &param0->unk_1C, &bagScreenMessageBoxWindowTemplate);
+    Window_AddFromTemplate(param0->backGround, &param0->messageBoxWindow, &bagScreenMessageBoxWindowTemplate);
     InitializeInBattleBagScreen(param0, param0->currentScreen);
 }
 
@@ -112,36 +112,34 @@ void InitializeInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreen
     switch (screenIndex) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
         windowTemplates = bagMenuScreenWindowTemplates;
-        param0->unk_30 = BAG_MENU_SCREEN_WINDOW_NUM;
+        param0->numWindows = BAG_MENU_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
         windowTemplates = bagSubMenuScreenWindowTemplates;
-        param0->unk_30 = BAG_SUB_MENU_SCREEN_WINDOW_NUM;
+        param0->numWindows = BAG_SUB_MENU_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         windowTemplates = useBagItemScreenWindowTemplates;
-        param0->unk_30 = USE_BAG_ITEM_SCREEN_WINDOW_NUM;
+        param0->numWindows = USE_BAG_ITEM_SCREEN_WINDOW_NUM;
         break;
     }
 
-    param0->unk_2C = Window_New(param0->unk_00->heapID, param0->unk_30);
+    param0->windows = Window_New(param0->unk_00->heapID, param0->numWindows);
 
-    for (i = 0; i < param0->unk_30; i++) {
-        Window_AddFromTemplate(param0->unk_04, &param0->unk_2C[i], &windowTemplates[i]);
+    for (i = 0; i < param0->numWindows; i++) {
+        Window_AddFromTemplate(param0->backGround, &param0->windows[i], &windowTemplates[i]);
     }
 }
 
 void ClearInBattleBagScreen(BattleBagTask *param0)
 {
-    Windows_Delete(param0->unk_2C, param0->unk_30);
+    Windows_Delete(param0->windows, param0->numWindows);
 }
 
-void ov13_02227334(BattleBagTask *param0)
+void ClearBattleBagWindows(BattleBagTask *BATTLE_BAG_TASK_STATE_EXIT)
 {
-    u32 v0;
-
-    Windows_Delete(param0->unk_2C, param0->unk_30);
-    Window_Remove(&param0->unk_1C);
+    Windows_Delete(BATTLE_BAG_TASK_STATE_EXIT->windows, BATTLE_BAG_TASK_STATE_EXIT->numWindows);
+    Window_Remove(&BATTLE_BAG_TASK_STATE_EXIT->messageBoxWindow);
 }
 
 void DrawInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex)
@@ -166,7 +164,7 @@ static void WriteTitleText(BattleBagTask *param0, u32 param1, u32 param2, u32 pa
     u32 v2;
     u32 v3;
 
-    v0 = &param0->unk_2C[param1];
+    v0 = &param0->windows[param1];
     v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, param2);
     v2 = Font_CalcStrbufWidth(param3, v1, 0);
     v3 = (Window_GetWidth(v0) * 8 - v2) / 2;
@@ -181,7 +179,7 @@ static void DrawBagMenuScreen(BattleBagTask *param0)
     u32 v0;
 
     for (v0 = 0; v0 < 5; v0++) {
-        Window_FillTilemap(&param0->unk_2C[v0], 0);
+        Window_FillTilemap(&param0->windows[v0], 0);
     }
 
     WriteTitleText(param0, 0, IN_BATTLE_BAG_TEXT_ID_HP_PP, FONT_SUBSCREEN, 8, TEXT_COLOR(3, 2, 1));
@@ -194,9 +192,9 @@ static void DrawBagMenuScreen(BattleBagTask *param0)
     if (param0->unk_00->lastUsedItem != ITEM_NONE) {
         Strbuf *v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_BAG_TEXT_ID_LAST_USED_ITEM);
 
-        Text_AddPrinterWithParamsAndColor(&param0->unk_2C[4], FONT_SUBSCREEN, v1, 0, 6, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(3, 2, 1), NULL);
+        Text_AddPrinterWithParamsAndColor(&param0->windows[4], FONT_SUBSCREEN, v1, 0, 6, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(3, 2, 1), NULL);
         Strbuf_Free(v1);
-        Window_ScheduleCopyToVRAM(&param0->unk_2C[4]);
+        Window_ScheduleCopyToVRAM(&param0->windows[4]);
     }
 }
 
@@ -216,7 +214,7 @@ static void WriteBagItemName(BattleBagTask *param0, u32 param1, u32 param2, u32 
     u32 v2;
     u32 v3;
 
-    v0 = &param0->unk_2C[param3];
+    v0 = &param0->windows[param3];
 
     Window_FillTilemap(v0, 0);
 
@@ -239,7 +237,7 @@ static void WriteBagItemName(BattleBagTask *param0, u32 param1, u32 param2, u32 
 static void WriteBagItemQuantity(BattleBagTask *param0, u32 param1, u32 param2, u32 param3, u32 param4, u32 param5, TextColor param6)
 {
     Strbuf *v0;
-    Window *v1 = &param0->unk_2C[param3];
+    Window *v1 = &param0->windows[param3];
 
     Window_FillTilemap(v1, 0);
 
@@ -274,7 +272,7 @@ void DrawBagSubMenuPage(BattleBagTask *param0)
 {
     u16 v0;
 
-    Bg_FillTilemapRect(param0->unk_04, 5, 0, 0, 0, 32, 19, 17);
+    Bg_FillTilemapRect(param0->backGround, 5, 0, 0, 0, 32, 19, 17);
 
     for (v0 = 0; v0 < 6; v0++) {
         DrawBagSubMenuItem(param0, v0);
@@ -290,9 +288,9 @@ void DrawBagSubMenuPageInfo(BattleBagTask *param0)
     u32 v2;
     u32 v3;
 
-    Window_FillTilemap(&param0->unk_2C[25], 0);
+    Window_FillTilemap(&param0->windows[25], 0);
 
-    v0 = &param0->unk_2C[25];
+    v0 = &param0->windows[25];
     v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_BAG_TEXT_ID_PAGE_DIVIDER);
     v2 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
     v3 = (Window_GetWidth(v0) * 8 - v2) / 2;
@@ -318,7 +316,7 @@ void DrawBagSubMenuPageInfo(BattleBagTask *param0)
 
 static void DrawBagSubMenuTitle(BattleBagTask *param0)
 {
-    Window_FillTilemap(&param0->unk_2C[24], 0);
+    Window_FillTilemap(&param0->windows[24], 0);
 
     switch (param0->currentBattleBagPocket) {
     case IN_BATTLE_BAG_SUB_MENU_INDEX_HP_PP_RESTORE:
@@ -350,7 +348,7 @@ static void WriteUseBagItemName(BattleBagTask *param0, u32 param1)
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_2C[0];
+    v0 = &param0->windows[0];
     v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, Unk_ov13_02229AB0[0][0]);
 
     StringTemplate_SetItemName(param0->unk_14, 0, param0->battleBagItems[param0->currentBattleBagPocket][param1].item);
@@ -366,7 +364,7 @@ static void WriteBagItemDescription(BattleBagTask *param0, u32 param1)
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_2C[2];
+    v0 = &param0->windows[2];
     v1 = Strbuf_Init(130, param0->unk_00->heapID);
 
     Item_LoadDescription(v1, param0->battleBagItems[param0->currentBattleBagPocket][param1].item, param0->unk_00->heapID);
@@ -381,7 +379,7 @@ static void DrawUseBagItemScreen(BattleBagTask *param0)
     u32 v1;
 
     for (v0 = 0; v0 < 4; v0++) {
-        Window_FillTilemap(&param0->unk_2C[v0], 0);
+        Window_FillTilemap(&param0->windows[v0], 0);
     }
 
     v1 = param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * 6 + param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket];
@@ -394,13 +392,13 @@ static void DrawUseBagItemScreen(BattleBagTask *param0)
 
 void ov13_022279F4(BattleBagTask *param0)
 {
-    Window_DrawMessageBoxWithScrollCursor(&param0->unk_1C, 1, 1024 - (18 + 12), 14);
-    Window_FillTilemap(&param0->unk_1C, 15);
+    Window_DrawMessageBoxWithScrollCursor(&param0->messageBoxWindow, 1, 1024 - (18 + 12), 14);
+    Window_FillTilemap(&param0->messageBoxWindow, 15);
     ov13_02227A1C(param0);
 }
 
 void ov13_02227A1C(BattleBagTask *param0)
 {
     RenderControlFlags_SetCanABSpeedUpPrint(1);
-    param0->textPrinter = Text_AddPrinterWithParams(&param0->unk_1C, FONT_MESSAGE, param0->unk_18, 0, 0, BattleSystem_TextSpeed(param0->unk_00->battleSystem), NULL);
+    param0->textPrinter = Text_AddPrinterWithParams(&param0->messageBoxWindow, FONT_MESSAGE, param0->unk_18, 0, 0, BattleSystem_TextSpeed(param0->unk_00->battleSystem), NULL);
 }

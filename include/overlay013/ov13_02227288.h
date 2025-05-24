@@ -6,7 +6,7 @@
 void ov13_02227288(BattleBagTask *param0);
 void InitializeInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex);
 void ClearInBattleBagScreen(BattleBagTask *param0);
-void ov13_02227334(BattleBagTask *param0);
+void ClearBattleBagWindows(BattleBagTask *param0);
 void DrawInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex);
 void DrawBagSubMenuPage(BattleBagTask *param0);
 void DrawBagSubMenuPageInfo(BattleBagTask *param0);
