@@ -337,12 +337,12 @@ static void ov13_0222863C(BattleBagTask *param0, u16 *param1, u8 param2, u8 para
 
 static void ov13_022286B8(BattleBagTask *param0, u8 param1, u8 param2, u8 param3)
 {
-    u16 *v0 = Heap_AllocFromHeap(param0->unk_00->heapID, Unk_ov13_02229D7C[param1].width * Unk_ov13_02229D7C[param1].height * 2);
+    u16 *v0 = Heap_AllocFromHeap(param0->battleInfo->heapID, Unk_ov13_02229D7C[param1].width * Unk_ov13_02229D7C[param1].height * 2);
 
     ov13_0222863C(param0, v0, param1, param2, param3);
 
-    Bg_LoadToTilemapRect(param0->backGround, 6, v0, Unk_ov13_02229D7C[param1].xCoord, Unk_ov13_02229D7C[param1].yCoord, Unk_ov13_02229D7C[param1].width, Unk_ov13_02229D7C[param1].height);
-    Bg_ScheduleTilemapTransfer(param0->backGround, 6);
+    Bg_LoadToTilemapRect(param0->background, 6, v0, Unk_ov13_02229D7C[param1].xCoord, Unk_ov13_02229D7C[param1].yCoord, Unk_ov13_02229D7C[param1].width, Unk_ov13_02229D7C[param1].height);
+    Bg_ScheduleTilemapTransfer(param0->background, 6);
     Heap_FreeToHeap(v0);
 }
 
@@ -464,7 +464,7 @@ void ov13_02228924(BattleBagTask *battleBagTask, u8 screen)
         ov13_022286B8(battleBagTask, 2, 0, screen);
         ov13_022286B8(battleBagTask, 3, 0, screen);
 
-        if (battleBagTask->unk_00->lastUsedItem == ITEM_NONE) {
+        if (battleBagTask->battleInfo->lastUsedItem == ITEM_NONE) {
             ov13_022286B8(battleBagTask, 4, 3, screen);
         } else {
             ov13_022286B8(battleBagTask, 4, 0, screen);

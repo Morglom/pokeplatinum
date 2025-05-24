@@ -20,13 +20,13 @@ enum BattleBagPocketMask {
 
 BOOL IsLastUsedItemUsable(BattleBagTask *param0)
 {
-    if (param0->unk_00->lastUsedItem == ITEM_NONE) {
+    if (param0->battleInfo->lastUsedItem == ITEM_NONE) {
         return FALSE;
     }
 
-    if (Bag_CanRemoveItem(param0->unk_00->bag, param0->unk_00->lastUsedItem, 1, param0->unk_00->heapID) == FALSE) {
-        param0->unk_00->lastUsedItem = ITEM_NONE;
-        param0->unk_00->lastUsedItemPocket = ITEM_BATTLE_CATEGORY_RECOVER_HP;
+    if (Bag_CanRemoveItem(param0->battleInfo->bag, param0->battleInfo->lastUsedItem, 1, param0->battleInfo->heapID) == FALSE) {
+        param0->battleInfo->lastUsedItem = ITEM_NONE;
+        param0->battleInfo->lastUsedItemPocket = ITEM_BATTLE_CATEGORY_RECOVER_HP;
         return FALSE;
     }
 
@@ -38,9 +38,9 @@ void SetNavigationForLastUsedItem(BattleBagTask *param0)
     u32 i;
 
     for (i = 0; i < BATTLE_BAG_POCKET_SIZE; i++) {
-        if (param0->unk_00->lastUsedItem == param0->battleBagItems[param0->currentBattleBagPocket][i].item) {
-            param0->unk_00->pocketCurrentPagePositions[param0->currentBattleBagPocket] = i % BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
-            param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] = i / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
+        if (param0->battleInfo->lastUsedItem == param0->battleBagItems[param0->currentBattleBagPocket][i].item) {
+            param0->battleInfo->pocketCurrentPagePositions[param0->currentBattleBagPocket] = i % BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
+            param0->battleInfo->pocketCurrentPages[param0->currentBattleBagPocket] = i / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
             break;
         }
     }
@@ -64,14 +64,14 @@ void RefreshBagSubMenus(BattleBagTask *param0)
         currentSlot = 0;
 
         while (TRUE) {
-            bagItem = Bag_GetItemSlot(param0->unk_00->bag, i, currentSlot);
+            bagItem = Bag_GetItemSlot(param0->battleInfo->bag, i, currentSlot);
 
             if (bagItem == NULL) {
                 break;
             }
 
             if (!((bagItem->item == ITEM_NONE) || (bagItem->quantity == 0))) {
-                bagItemBattlePocketMask = Item_LoadParam(bagItem->item, ITEM_PARAM_BATTLE_POCKET, param0->unk_00->heapID);
+                bagItemBattlePocketMask = Item_LoadParam(bagItem->item, ITEM_PARAM_BATTLE_POCKET, param0->battleInfo->heapID);
 
                 for (l = 0; l < BATTLE_BAG_POCKET_NUM; l++) {
                     if ((bagItemBattlePocketMask & (1 << l)) == FALSE) {
@@ -94,16 +94,16 @@ void RefreshBagSubMenus(BattleBagTask *param0)
             param0->numBattleBagPocketPages[i] = (param0->numBattleBagPocketItems[i] - 1) / BATTLE_BAG_ITEMS_PER_POCKET_PAGE;
         }
 
-        if (param0->numBattleBagPocketPages[i] < param0->unk_00->pocketCurrentPages[i]) {
-            param0->unk_00->pocketCurrentPages[i] = param0->numBattleBagPocketPages[i];
+        if (param0->numBattleBagPocketPages[i] < param0->battleInfo->pocketCurrentPages[i]) {
+            param0->battleInfo->pocketCurrentPages[i] = param0->numBattleBagPocketPages[i];
         }
     }
 }
 
 u16 GetBagItemOnPage(BattleBagTask *param0, u32 positionOnPage)
 {
-    if ((param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].quantity != 0)) {
-        return param0->battleBagItems[param0->currentBattleBagPocket][param0->unk_00->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item;
+    if ((param0->battleBagItems[param0->currentBattleBagPocket][param0->battleInfo->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item != ITEM_NONE) && (param0->battleBagItems[param0->currentBattleBagPocket][param0->battleInfo->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].quantity != 0)) {
+        return param0->battleBagItems[param0->currentBattleBagPocket][param0->battleInfo->pocketCurrentPages[param0->currentBattleBagPocket] * BATTLE_BAG_ITEMS_PER_POCKET_PAGE + positionOnPage].item;
     }
 
     return ITEM_NONE;

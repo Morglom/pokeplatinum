@@ -10870,7 +10870,7 @@ static void BattleScript_CatchMonTask(SysTask *param0, void *param1)
                 }
 
                 v16->unk_08 = Pokemon_GetValue(v3, MON_DATA_FORM, NULL);
-                v16->unk_48 = ov16_0223E228(v2->battleSys);
+                v16->unk_48 = BattleSystem_PCBoxes(v2->battleSys);
                 v16->unk_10 = Pokemon_GetValue(v3, MON_DATA_GENDER, NULL);
                 v2->tmpPtr[0] = OverlayManager_New(&Unk_020F2DAC, v16, 5);
                 v2->seqNum = 21;
@@ -10952,7 +10952,7 @@ static void BattleScript_CatchMonTask(SysTask *param0, void *param1)
                         int v28;
                         int v29;
 
-                        v24 = ov16_0223E228(v2->battleSys);
+                        v24 = BattleSystem_PCBoxes(v2->battleSys);
                         v25 = PCBoxes_GetCurrentBoxID(v24);
                         v26 = PCBoxes_FirstEmptyBox(v24);
 

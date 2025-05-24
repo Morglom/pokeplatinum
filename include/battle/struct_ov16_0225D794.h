@@ -8,7 +8,7 @@
 
 typedef struct {
     BattleSystem *unk_00;
-    UnkStruct_ov13_022264F4 *unk_04;
+    BattleBagBattleInfo *unk_04;
     UnkStruct_ov16_0225D840 *unk_08;
     u8 unk_0C;
     u8 unk_0D;

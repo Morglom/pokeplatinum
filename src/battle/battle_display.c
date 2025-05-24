@@ -3543,36 +3543,36 @@ static void ov16_022611DC(SysTask *param0, void *param1)
             {
                 ov16_0223B384(v0->unk_00);
 
-                v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov13_022264F4));
-                memset(v0->unk_04, 0, sizeof(UnkStruct_ov13_022264F4));
+                v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(BattleBagBattleInfo));
+                memset(v0->unk_04, 0, sizeof(BattleBagBattleInfo));
 
                 v0->unk_04->battleSystem = v0->unk_00;
-                v0->unk_04->unk_04 = BattleSystem_TrainerInfo(v0->unk_00, v0->unk_0D);
+                v0->unk_04->trainerInfo = BattleSystem_TrainerInfo(v0->unk_00, v0->unk_0D);
                 v0->unk_04->heapID = HEAP_ID_BATTLE;
-                v0->unk_04->unk_26 = 0;
+                v0->unk_04->battleBagExited = FALSE;
                 v0->unk_04->bag = BattleSystem_Bag(v0->unk_00);
                 v0->unk_04->battler = v0->unk_0D;
-                v0->unk_04->unk_25 = v0->unk_10;
-                v0->unk_04->unk_22 = v0->unk_14;
-                v0->unk_04->unk_23 = v0->unk_15;
-                v0->unk_04->unk_24 = v0->unk_16;
-                v0->unk_04->unk_18 = v0->unk_30[v0->unk_0D];
+                v0->unk_04->isCursorEnabled = v0->unk_10;
+                v0->unk_04->twoOpponents = v0->unk_14;
+                v0->unk_04->opponentHidden = v0->unk_15;
+                v0->unk_04->opponentSubstituted = v0->unk_16;
+                v0->unk_04->embargoTurns = v0->unk_30[v0->unk_0D];
                 BattleBagTask_Start(v0->unk_04);
                 v0->unk_0E = 3;
             }
         }
         break;
     case 2:
-        v0->unk_04->unk_25 = v0->unk_10;
+        v0->unk_04->isCursorEnabled = v0->unk_10;
         BattleBagTask_Start(v0->unk_04);
         v0->unk_0E++;
     case 3:
-        if (v0->unk_04->unk_26) {
-            v0->unk_04->unk_26 = 0;
-            v0->unk_10 = v0->unk_04->unk_25;
+        if (v0->unk_04->battleBagExited) {
+            v0->unk_04->battleBagExited = FALSE;
+            v0->unk_10 = v0->unk_04->isCursorEnabled;
 
-            if (v0->unk_04->unk_1C) {
-                switch (v0->unk_04->unk_1E) {
+            if (v0->unk_04->selectedBattleBagItem) {
+                switch (v0->unk_04->selectedBattleBagPocket) {
                 case 1:
                 case 0:
                     v0->unk_0E = 4;
@@ -3614,8 +3614,8 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         v0->unk_08->unk_04->unk_36 = 0;
         v0->unk_08->unk_04->unk_24 = 0;
         v0->unk_08->unk_04->unk_35 = 2;
-        v0->unk_08->unk_04->unk_22 = v0->unk_04->unk_1C;
-        v0->unk_08->unk_04->unk_33 = v0->unk_04->unk_1E;
+        v0->unk_08->unk_04->unk_22 = v0->unk_04->selectedBattleBagItem;
+        v0->unk_08->unk_04->unk_33 = v0->unk_04->selectedBattleBagPocket;
         v0->unk_08->unk_04->unk_28 = v0->unk_04->battler;
         v0->unk_08->unk_04->unk_32 = v0->unk_10;
         v0->unk_08->unk_04->unk_14 = v0->unk_08->unk_0C[v0->unk_0D];
@@ -3655,15 +3655,15 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         if (PaletteData_GetSelectedBuffersMask(v1) == 0) {
             sub_02015738(ov16_0223E220(v0->unk_00), 0);
 
-            if (v0->unk_04->unk_1C) {
+            if (v0->unk_04->selectedBattleBagItem) {
                 v0->unk_0E = 9;
 
-                switch (v0->unk_04->unk_1E) {
+                switch (v0->unk_04->selectedBattleBagPocket) {
                 case 1:
-                    if ((v0->unk_04->unk_1C == 28) || (v0->unk_04->unk_1C == 29)) {
+                    if ((v0->unk_04->selectedBattleBagItem == 28) || (v0->unk_04->selectedBattleBagItem == 29)) {
                         v0->unk_0E = 8;
                     } else if (((v0->unk_08->unk_04->selectedPartyIndex < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartyIndex < 1)) {
-                        if (v0->unk_04->unk_1C == 23) {
+                        if (v0->unk_04->selectedBattleBagItem == 23) {
                             if (BattleSystem_AnimationsOn(v0->unk_00) == 1) {
                                 v0->unk_12 = 17;
                             } else {
@@ -3683,7 +3683,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                     }
                     break;
                 case 0:
-                    if ((((v0->unk_08->unk_04->selectedPartyIndex < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartyIndex < 1)) && (Item_LoadParam(v0->unk_04->unk_1C, 38, 5))) {
+                    if ((((v0->unk_08->unk_04->selectedPartyIndex < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartyIndex < 1)) && (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 38, 5))) {
                         if (BattleSystem_AnimationsOn(v0->unk_00) == 1) {
                             v0->unk_12 = 17;
                         } else {
@@ -3695,10 +3695,10 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                     }
                     break;
                 case 3:
-                    if ((v0->unk_04->unk_1C == 63) || (v0->unk_04->unk_1C == 64)) {
+                    if ((v0->unk_04->selectedBattleBagItem == 63) || (v0->unk_04->selectedBattleBagItem == 64)) {
                         v0->unk_0E = 8;
                     } else {
-                        if (v0->unk_04->unk_1C == 55) {
+                        if (v0->unk_04->selectedBattleBagItem == 55) {
                             if (BattleSystem_AnimationsOn(v0->unk_00) == 1) {
                                 v0->unk_12 = 13;
                             } else {
@@ -3731,13 +3731,13 @@ static void ov16_022611DC(SysTask *param0, void *param1)
     case 8: {
         BattleItemUse v7;
 
-        if (v0->unk_04->unk_1C == 0) {
+        if (v0->unk_04->selectedBattleBagItem == 0) {
             v7.item = 0xff;
         } else {
-            v7.item = v0->unk_04->unk_1C;
-            v7.category = v0->unk_04->unk_1E;
+            v7.item = v0->unk_04->selectedBattleBagItem;
+            v7.category = v0->unk_04->selectedBattleBagPocket;
 
-            if ((v0->unk_04->unk_1E == 1) || (v0->unk_04->unk_1E == 0)) {
+            if ((v0->unk_04->selectedBattleBagPocket == 1) || (v0->unk_04->selectedBattleBagPocket == 0)) {
                 v7.target = 1 + v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartyIndex];
             }
         }
@@ -3758,7 +3758,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
 
         v9.id = 1206;
         v9.tags = 5;
-        v9.params[0] = v0->unk_04->unk_1C;
+        v9.params[0] = v0->unk_04->selectedBattleBagItem;
 
         v8 = BattleSystem_MessageLoader(v0->unk_00);
 
@@ -3795,10 +3795,10 @@ static void ov16_022611DC(SysTask *param0, void *param1)
     case 13: {
         UnkStruct_ov16_02265BBC v13;
 
-        if (v0->unk_04->unk_1C == 55) {
+        if (v0->unk_04->selectedBattleBagItem == 55) {
             ov16_02266B78(v0->unk_00, NULL, &v13, 0, NULL, v0->unk_0D, v0->unk_0D, 54);
             ov16_02264408(v0->unk_00, BattleSystem_BattlerData(v0->unk_00, v0->unk_0D), ov16_0223E008(v0->unk_00), &v13);
-        } else if (v0->unk_04->unk_1C == 56) {
+        } else if (v0->unk_04->selectedBattleBagItem == 56) {
             ov16_02266B78(v0->unk_00, NULL, &v13, 0, NULL, v0->unk_0D, v0->unk_0D, 116);
             ov16_02264408(v0->unk_00, BattleSystem_BattlerData(v0->unk_00, v0->unk_0D), ov16_0223E008(v0->unk_00), &v13);
         } else {
@@ -3816,7 +3816,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         v15.tags = 12;
         v15.params[0] = v0->unk_0D | (v0->unk_08->unk_0C[v0->unk_0D] << 8);
 
-        switch (v0->unk_04->unk_1C) {
+        switch (v0->unk_04->selectedBattleBagItem) {
         case 57:
             v15.params[1] = 0x1;
             break;
@@ -3948,37 +3948,37 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         v30.tags = 2;
         v30.params[0] = v28 | (v0->unk_08->unk_0C[v28] << 8);
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 15, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 15, 5)) {
             v31 = 0;
             v32++;
         }
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 16, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 16, 5)) {
             v31 = 1;
             v32++;
         }
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 17, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 17, 5)) {
             v31 = 2;
             v32++;
         }
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 18, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 18, 5)) {
             v31 = 3;
             v32++;
         }
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 19, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 19, 5)) {
             v31 = 4;
             v32++;
         }
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 20, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 20, 5)) {
             v31 = 5;
             v32++;
         }
 
-        if (Item_LoadParam(v0->unk_04->unk_1C, 21, 5)) {
+        if (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 21, 5)) {
             v31 = 6;
             v32++;
         }

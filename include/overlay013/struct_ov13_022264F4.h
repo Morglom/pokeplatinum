@@ -10,23 +10,23 @@
 
 typedef struct {
     BattleSystem *battleSystem;
-    TrainerInfo *unk_04;
+    TrainerInfo *trainerInfo;
     Bag *bag;
     u32 heapID;
     s32 battler;
     BOOL isCatchTutorial;
-    u32 unk_18;
-    u16 unk_1C; // Item of some kind
-    u8 unk_1E; // Sub menu index
+    u32 embargoTurns;
+    u16 selectedBattleBagItem; // Item of some kind
+    u8 selectedBattleBagPocket; // Sub menu index
     u8 lastUsedItemPocket;
     u16 lastUsedItem;
-    u8 unk_22;
-    u8 unk_23;
-    u8 unk_24;
-    u8 unk_25;
-    u8 unk_26;
+    u8 twoOpponents;
+    u8 opponentHidden; // Has used fly, bounce, dig, etc
+    u8 opponentSubstituted;
+    u8 isCursorEnabled;
+    u8 battleBagExited;
     u8 pocketCurrentPagePositions[5];
     u8 pocketCurrentPages[5];
-} UnkStruct_ov13_022264F4;
+} BattleBagBattleInfo;
 
 #endif // POKEPLATINUM_STRUCT_OV13_022264F4_H

@@ -29,16 +29,16 @@ enum InBattleBagSubMenuIndex {
 };
 
 typedef struct {
-    UnkStruct_ov13_022264F4 *unk_00;
-    BgConfig *backGround;
+    BattleBagBattleInfo *battleInfo;
+    BgConfig *background;
     PaletteData *palette;
     UnkStruct_0200C440 *unk_0C;
     MessageLoader *messageLoader;
-    StringTemplate *unk_14;
-    Strbuf *unk_18;
-    Window messageBoxWindow; // Message box window
-    Window *windows; // Windows
-    u8 numWindows; // Window num
+    StringTemplate *stringTemplate;
+    Strbuf *strbuf;
+    Window messageBoxWindow;
+    Window *windows;
+    u8 numWindows;
     u8 unk_31;
     u8 textPrinter;
     BattleSubMenuCursor *cursor;

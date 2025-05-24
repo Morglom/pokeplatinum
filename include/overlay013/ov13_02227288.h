@@ -10,7 +10,7 @@ void ClearBattleBagWindows(BattleBagTask *param0);
 void DrawInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex);
 void DrawBagSubMenuPage(BattleBagTask *param0);
 void DrawBagSubMenuPageInfo(BattleBagTask *param0);
-void ov13_022279F4(BattleBagTask *param0);
-void ov13_02227A1C(BattleBagTask *param0);
+void DisplayMessageBox(BattleBagTask *param0);
+void PrintTextToMessageBox(BattleBagTask *param0);
 
 #endif // POKEPLATINUM_OV13_02227288_H
