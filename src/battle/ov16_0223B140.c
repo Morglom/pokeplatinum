@@ -316,8 +316,8 @@ void ov16_0223B3E4(BattleSystem *battleSys)
     ov16_0223C288(battleSys->unk_04);
     ov16_0223C2BC(battleSys);
 
-    SpriteSystem_FreeResourcesAndManager(battleSys->unk_90, battleSys->unk_94);
-    SpriteSystem_Free(battleSys->unk_90);
+    SpriteSystem_FreeResourcesAndManager(battleSys->spriteSystem, battleSys->unk_94);
+    SpriteSystem_Free(battleSys->spriteSystem);
     VramTransfer_Free();
     Font_Free(FONT_SUBSCREEN);
 }
@@ -358,7 +358,7 @@ void ov16_0223B430(BattleSystem *battleSys)
     NARC_dtor(v1);
     TextPrinter_SetScrollArrowBaseTile(1);
     ov16_0223DD4C(battleSys);
-    SetSubScreenViewRect(SpriteSystem_GetRenderer(battleSys->unk_90), 0, ((192 + 80) << FX32_SHIFT));
+    SetSubScreenViewRect(SpriteSystem_GetRenderer(battleSys->spriteSystem), 0, ((192 + 80) << FX32_SHIFT));
 }
 
 void ov16_0223B53C(BattleSystem *battleSys)
@@ -571,17 +571,17 @@ static void ov16_0223B790(OverlayManager *param0)
     Window_FillTilemap(&battleSys->windows[0], 0xff);
     Window_DrawMessageBoxWithScrollCursor(&battleSys->windows[0], 0, 1, 10);
 
-    battleSys->unk_90 = SpriteSystem_Alloc(5);
+    battleSys->spriteSystem = SpriteSystem_Alloc(5);
 
-    SpriteSystem_Init(battleSys->unk_90, &Unk_ov16_0226E2E4, &Unk_ov16_0226E29C, (16 + 16));
+    SpriteSystem_Init(battleSys->spriteSystem, &Unk_ov16_0226E2E4, &Unk_ov16_0226E29C, (16 + 16));
     ReserveVramForWirelessIconChars(NNS_G2D_VRAM_TYPE_2DMAIN, GX_OBJVRAMMODE_CHAR_1D_64K);
     ReserveSlotsForWirelessIconPalette(NNS_G2D_VRAM_TYPE_2DMAIN);
 
-    battleSys->unk_94 = SpriteManager_New(battleSys->unk_90);
+    battleSys->unk_94 = SpriteManager_New(battleSys->spriteSystem);
 
-    SpriteSystem_InitSprites(battleSys->unk_90, battleSys->unk_94, (64 + 64));
-    SpriteSystem_InitManagerWithCapacities(battleSys->unk_90, battleSys->unk_94, &Unk_ov16_0226E2B0);
-    SetSubScreenViewRect(SpriteSystem_GetRenderer(battleSys->unk_90), 0, ((192 + 80) << FX32_SHIFT));
+    SpriteSystem_InitSprites(battleSys->spriteSystem, battleSys->unk_94, (64 + 64));
+    SpriteSystem_InitManagerWithCapacities(battleSys->spriteSystem, battleSys->unk_94, &Unk_ov16_0226E2B0);
+    SetSubScreenViewRect(SpriteSystem_GetRenderer(battleSys->spriteSystem), 0, ((192 + 80) << FX32_SHIFT));
 
     ov16_02268A88(battleSys->unk_198);
 

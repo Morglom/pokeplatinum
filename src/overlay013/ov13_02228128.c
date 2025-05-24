@@ -167,51 +167,51 @@ static const u8 *const Unk_ov13_02229DC0[] = {
     Unk_ov13_02229D54
 };
 
-void ov13_02228128(BattleBagTask *param0, u16 *param1)
+void ov13_02228128(BattleBagTask *battleBagTask, u16 *param1)
 {
-    ov13_02228460(param0->unk_328[0], param1, 0, 0, 16, 9);
-    ov13_02228460(param0->unk_328[1], param1, 0, (0 + 9), 16, 9);
-    ov13_02228460(param0->unk_328[2], param1, 0, ((0 + 9) + 9), 16, 9);
+    ov13_02228460(battleBagTask->unk_328[0], param1, 0, 0, 16, 9);
+    ov13_02228460(battleBagTask->unk_328[1], param1, 0, (0 + 9), 16, 9);
+    ov13_02228460(battleBagTask->unk_328[2], param1, 0, ((0 + 9) + 9), 16, 9);
 
-    ov13_02228460(param0->unk_688[0], param1, 0, 27, 26, 5);
-    ov13_02228460(param0->unk_688[1], param1, 0, (27 + 5), 26, 5);
-    ov13_02228460(param0->unk_688[2], param1, 0, ((27 + 5) + 5), 26, 5);
-    ov13_02228460(param0->unk_688[3], param1, 0, ((27 + 5) + 5), 26, 5);
+    ov13_02228460(battleBagTask->unk_688[0], param1, 0, 27, 26, 5);
+    ov13_02228460(battleBagTask->unk_688[1], param1, 0, (27 + 5), 26, 5);
+    ov13_02228460(battleBagTask->unk_688[2], param1, 0, ((27 + 5) + 5), 26, 5);
+    ov13_02228460(battleBagTask->unk_688[3], param1, 0, ((27 + 5) + 5), 26, 5);
 
-    ov13_02228460(param0->unk_A98[0], param1, 0, 57, 5, 5);
-    ov13_02228460(param0->unk_A98[1], param1, (0 + 5), 57, 5, 5);
-    ov13_02228460(param0->unk_A98[2], param1, ((0 + 5) + 5), 57, 5, 5);
+    ov13_02228460(battleBagTask->unk_A98[0], param1, 0, 57, 5, 5);
+    ov13_02228460(battleBagTask->unk_A98[1], param1, (0 + 5), 57, 5, 5);
+    ov13_02228460(battleBagTask->unk_A98[2], param1, ((0 + 5) + 5), 57, 5, 5);
 
-    ov13_02228460(param0->unk_B2E[0], param1, 16, 0, 16, 6);
-    ov13_02228460(param0->unk_B2E[1], param1, 16, (0 + 6), 16, 6);
-    ov13_02228460(param0->unk_B2E[2], param1, 16, ((0 + 6) + 6), 16, 6);
-    ov13_02228460(param0->unk_B2E[3], param1, 16, (((0 + 6) + 6) + 6), 16, 6);
+    ov13_02228460(battleBagTask->unk_B2E[0], param1, 16, 0, 16, 6);
+    ov13_02228460(battleBagTask->unk_B2E[1], param1, 16, (0 + 6), 16, 6);
+    ov13_02228460(battleBagTask->unk_B2E[2], param1, 16, ((0 + 6) + 6), 16, 6);
+    ov13_02228460(battleBagTask->unk_B2E[3], param1, 16, (((0 + 6) + 6) + 6), 16, 6);
 
-    ov13_02228460(param0->unk_E2E[0], param1, 0, 47, 5, 5);
-    ov13_02228460(param0->unk_E2E[1], param1, (0 + 5), 47, 5, 5);
-    ov13_02228460(param0->unk_E2E[2], param1, ((0 + 5) + 5), 47, 5, 5);
-    ov13_02228460(param0->unk_E2E[3], param1, (((0 + 5) + 5) + 5), 47, 5, 5);
+    ov13_02228460(battleBagTask->unk_E2E[0], param1, 0, 47, 5, 5);
+    ov13_02228460(battleBagTask->unk_E2E[1], param1, (0 + 5), 47, 5, 5);
+    ov13_02228460(battleBagTask->unk_E2E[2], param1, ((0 + 5) + 5), 47, 5, 5);
+    ov13_02228460(battleBagTask->unk_E2E[3], param1, (((0 + 5) + 5) + 5), 47, 5, 5);
 
-    ov13_02228460(param0->unk_EF6[0], param1, 0, 52, 5, 5);
-    ov13_02228460(param0->unk_EF6[1], param1, (0 + 5), 52, 5, 5);
-    ov13_02228460(param0->unk_EF6[2], param1, ((0 + 5) + 5), 52, 5, 5);
-    ov13_02228460(param0->unk_EF6[3], param1, (((0 + 5) + 5) + 5), 52, 5, 5);
+    ov13_02228460(battleBagTask->unk_EF6[0], param1, 0, 52, 5, 5);
+    ov13_02228460(battleBagTask->unk_EF6[1], param1, (0 + 5), 52, 5, 5);
+    ov13_02228460(battleBagTask->unk_EF6[2], param1, ((0 + 5) + 5), 52, 5, 5);
+    ov13_02228460(battleBagTask->unk_EF6[3], param1, (((0 + 5) + 5) + 5), 52, 5, 5);
 
-    ov13_02228460(param0->unk_FBE[0], param1, 20, 47, 4, 4);
-    ov13_02228460(param0->unk_FBE[1], param1, (20 + 4), 47, 4, 4);
-    ov13_02228460(param0->unk_FBE[2], param1, ((20 + 4) + 4), 47, 4, 4);
+    ov13_02228460(battleBagTask->unk_FBE[0], param1, 20, 47, 4, 4);
+    ov13_02228460(battleBagTask->unk_FBE[1], param1, (20 + 4), 47, 4, 4);
+    ov13_02228460(battleBagTask->unk_FBE[2], param1, ((20 + 4) + 4), 47, 4, 4);
 
-    ov13_02228460(param0->unk_101E[0], param1, 20, (47 + 4), 4, 4);
-    ov13_02228460(param0->unk_101E[1], param1, (20 + 4), (47 + 4), 4, 4);
-    ov13_02228460(param0->unk_101E[2], param1, ((20 + 4) + 4), (47 + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_101E[0], param1, 20, (47 + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_101E[1], param1, (20 + 4), (47 + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_101E[2], param1, ((20 + 4) + 4), (47 + 4), 4, 4);
 
-    ov13_02228460(param0->unk_107E[0], param1, 20, ((47 + 4) + 4), 4, 4);
-    ov13_02228460(param0->unk_107E[1], param1, (20 + 4), ((47 + 4) + 4), 4, 4);
-    ov13_02228460(param0->unk_107E[2], param1, ((20 + 4) + 4), ((47 + 4) + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_107E[0], param1, 20, ((47 + 4) + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_107E[1], param1, (20 + 4), ((47 + 4) + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_107E[2], param1, ((20 + 4) + 4), ((47 + 4) + 4), 4, 4);
 
-    ov13_02228460(param0->unk_10DE[0], param1, 20, (((47 + 4) + 4) + 4), 4, 4);
-    ov13_02228460(param0->unk_10DE[1], param1, (20 + 4), (((47 + 4) + 4) + 4), 4, 4);
-    ov13_02228460(param0->unk_10DE[2], param1, ((20 + 4) + 4), (((47 + 4) + 4) + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_10DE[0], param1, 20, (((47 + 4) + 4) + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_10DE[1], param1, (20 + 4), (((47 + 4) + 4) + 4), 4, 4);
+    ov13_02228460(battleBagTask->unk_10DE[2], param1, ((20 + 4) + 4), (((47 + 4) + 4) + 4), 4, 4);
 }
 
 static void ov13_02228460(u16 *param0, u16 *param1, u8 param2, u8 param3, u8 param4, u8 param5)
@@ -414,43 +414,43 @@ static void ov13_022287A4(BattleBagTask *param0, u8 param1, u8 param2)
     }
 }
 
-void ov13_0222880C(BattleBagTask *param0, u8 param1, u8 param2)
+void ov13_0222880C(BattleBagTask *battleBagTask, u8 param1, u8 param2)
 {
-    param0->unk_113E = 0;
-    param0->unk_113F = 0;
-    param0->unk_1140 = param1;
-    param0->unk_1141_4 = param2;
-    param0->unk_1141_0 = 1;
+    battleBagTask->unk_113E = 0;
+    battleBagTask->unk_113F = 0;
+    battleBagTask->unk_1140 = param1;
+    battleBagTask->unk_1141_4 = param2;
+    battleBagTask->unk_1141_0 = 1;
 }
 
-void ov13_02228848(BattleBagTask *param0)
+void ov13_02228848(BattleBagTask *battleBagTask)
 {
-    if (param0->unk_1141_0 == 0) {
+    if (battleBagTask->unk_1141_0 == 0) {
         return;
     }
 
-    switch (param0->unk_113E) {
+    switch (battleBagTask->unk_113E) {
     case 0:
-        ov13_022286B8(param0, param0->unk_1140, 1, param0->currentScreen);
-        ov13_0222872C(param0, param0->unk_1140, 1);
-        ov13_022287A4(param0, param0->unk_1140, 1);
-        param0->unk_113F = 0;
-        param0->unk_113E = 1;
+        ov13_022286B8(battleBagTask, battleBagTask->unk_1140, 1, battleBagTask->currentScreen);
+        ov13_0222872C(battleBagTask, battleBagTask->unk_1140, 1);
+        ov13_022287A4(battleBagTask, battleBagTask->unk_1140, 1);
+        battleBagTask->unk_113F = 0;
+        battleBagTask->unk_113E = 1;
         break;
     case 1:
-        ov13_022286B8(param0, param0->unk_1140, 2, param0->currentScreen);
-        ov13_0222872C(param0, param0->unk_1140, 2);
-        ov13_022287A4(param0, param0->unk_1140, 2);
-        param0->unk_113F = 0;
-        param0->unk_113E = 2;
+        ov13_022286B8(battleBagTask, battleBagTask->unk_1140, 2, battleBagTask->currentScreen);
+        ov13_0222872C(battleBagTask, battleBagTask->unk_1140, 2);
+        ov13_022287A4(battleBagTask, battleBagTask->unk_1140, 2);
+        battleBagTask->unk_113F = 0;
+        battleBagTask->unk_113E = 2;
         break;
     case 2:
-        ov13_022286B8(param0, param0->unk_1140, 0, param0->currentScreen);
-        ov13_0222872C(param0, param0->unk_1140, 0);
-        ov13_022287A4(param0, param0->unk_1140, 0);
-        param0->unk_113F = 0;
-        param0->unk_113E = 0;
-        param0->unk_1141_0 = 0;
+        ov13_022286B8(battleBagTask, battleBagTask->unk_1140, 0, battleBagTask->currentScreen);
+        ov13_0222872C(battleBagTask, battleBagTask->unk_1140, 0);
+        ov13_022287A4(battleBagTask, battleBagTask->unk_1140, 0);
+        battleBagTask->unk_113F = 0;
+        battleBagTask->unk_113E = 0;
+        battleBagTask->unk_1141_0 = 0;
         break;
     }
 }

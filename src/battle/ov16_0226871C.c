@@ -1198,7 +1198,7 @@ void ov16_02268A88(UnkStruct_ov16_02268A14 *param0)
     PaletteData *v3;
     int i;
 
-    v1 = ov16_0223E010(param0->unk_00);
+    v1 = BattleSystem_SpriteSystem(param0->unk_00);
     v2 = ov16_0223E018(param0->unk_00);
     v0 = BattleSystem_BGL(param0->unk_00);
     v3 = BattleSystem_PaletteSys(param0->unk_00);
@@ -1234,7 +1234,7 @@ void ov16_02268B8C(UnkStruct_ov16_02268A14 *param0)
     SpriteSystem *v1;
     SpriteManager *v2;
 
-    v1 = ov16_0223E010(param0->unk_00);
+    v1 = BattleSystem_SpriteSystem(param0->unk_00);
     v2 = ov16_0223E018(param0->unk_00);
 
     for (i = 0; i < 4; i++) {
@@ -1265,7 +1265,7 @@ void ov16_02268C04(NARC *param0, NARC *param1, UnkStruct_ov16_02268A14 *param2, 
     param2->unk_66E = 0;
 
     v3 = BattleSystem_BGL(param2->unk_00);
-    v4 = ov16_0223E010(param2->unk_00);
+    v4 = BattleSystem_SpriteSystem(param2->unk_00);
     v5 = ov16_0223E018(param2->unk_00);
 
     if (param2->unk_66B == -1) {
@@ -1327,7 +1327,7 @@ void ov16_02268D40(NARC *param0, UnkStruct_ov16_02268A14 *param1)
 
     GF_ASSERT(param1->unk_5BC[0] == NULL && param1->unk_5D4[0] == NULL);
 
-    v1 = ov16_0223E010(param1->unk_00);
+    v1 = BattleSystem_SpriteSystem(param1->unk_00);
     v2 = ov16_0223E018(param1->unk_00);
 
     SpriteSystem_LoadCharResObjFromOpenNarc(v1, v2, param0, 208, TRUE, NNS_G2D_VRAM_TYPE_2DSUB, 20023);
@@ -1369,7 +1369,7 @@ static void ov16_02268F00(UnkStruct_ov16_02268A14 *param0)
 
     GF_ASSERT(param0->unk_5BC[0] != NULL && param0->unk_5D4[0] != NULL);
 
-    v1 = ov16_0223E010(param0->unk_00);
+    v1 = BattleSystem_SpriteSystem(param0->unk_00);
     v2 = ov16_0223E018(param0->unk_00);
 
     SpriteManager_UnloadCharObjById(v2, 20023);
@@ -2405,7 +2405,7 @@ static void ov16_0226A698(UnkStruct_ov16_02268A14 *param0)
     int v2, v3, v4;
     PaletteData *v5;
 
-    v0 = ov16_0223E010(param0->unk_00);
+    v0 = BattleSystem_SpriteSystem(param0->unk_00);
     v1 = ov16_0223E018(param0->unk_00);
     v5 = BattleSystem_PaletteSys(param0->unk_00);
 
@@ -2478,7 +2478,7 @@ static ManagedSprite *ov16_0226A7A4(UnkStruct_ov16_02268A14 *param0, Pokemon *pa
         return NULL;
     }
 
-    v0 = ov16_0223E010(param0->unk_00);
+    v0 = BattleSystem_SpriteSystem(param0->unk_00);
     v1 = ov16_0223E018(param0->unk_00);
 
     SpriteSystem_LoadCharResObj(v0, v1, NARC_INDEX_POKETOOL__ICONGRA__PL_POKE_ICON, Pokemon_IconSpriteIndex(param1), 0, NNS_G2D_VRAM_TYPE_2DSUB, v2);
@@ -2828,7 +2828,7 @@ static void ov16_0226AF0C(UnkStruct_ov16_02268A14 *param0)
     UnkStruct_ov16_0226ABD4 *v7;
 
     v4 = &param0->unk_1A.val2;
-    v1 = ov16_0223E010(param0->unk_00);
+    v1 = BattleSystem_SpriteSystem(param0->unk_00);
     v2 = ov16_0223E018(param0->unk_00);
     v7 = ov16_0226ABD4(param0, param0->unk_66A);
     v3 = Unk_ov16_0227047C;
@@ -2865,7 +2865,7 @@ static void ov16_0226AFF4(UnkStruct_ov16_02268A14 *param0)
     SpriteSystem *v1;
     SpriteManager *v2;
 
-    v1 = ov16_0223E010(param0->unk_00);
+    v1 = BattleSystem_SpriteSystem(param0->unk_00);
     v2 = ov16_0223E018(param0->unk_00);
 
     for (i = 0; i < 4; i++) {
@@ -2882,7 +2882,7 @@ static void ov16_0226B028(UnkStruct_ov16_02268A14 *param0)
     SpriteSystem *v1;
     SpriteManager *v2;
 
-    v1 = ov16_0223E010(param0->unk_00);
+    v1 = BattleSystem_SpriteSystem(param0->unk_00);
     v2 = ov16_0223E018(param0->unk_00);
 
     for (i = 0; i < 4; i++) {
@@ -4440,7 +4440,7 @@ static int ov16_0226CD18(UnkStruct_ov16_02268A14 *param0)
     PaletteData *v2;
     int v3;
 
-    v0 = ov16_0223E010(param0->unk_00);
+    v0 = BattleSystem_SpriteSystem(param0->unk_00);
     v1 = ov16_0223E018(param0->unk_00);
     v2 = BattleSystem_PaletteSys(param0->unk_00);
     v3 = 0xffffffff;

@@ -60,60 +60,60 @@ static const int Unk_ov13_02229CBC[][5] = {
     { 0xB4BC, 0xB4BC, 0xB4B7, 0xB4B7, 0x1 }
 };
 
-void ov13_02227BDC(BattleBagTask *param0)
+void ov13_02227BDC(BattleBagTask *battleBagTask)
 {
-    ov13_02227C08(param0);
-    ov13_02227C54(param0);
-    ov13_02227DE8(param0);
-    ov13_02227F7C(param0);
-    ov13_02228070(param0);
+    ov13_02227C08(battleBagTask);
+    ov13_02227C54(battleBagTask);
+    ov13_02227DE8(battleBagTask);
+    ov13_02227F7C(battleBagTask);
+    ov13_02228070(battleBagTask);
 
     GXLayers_EngineBToggleLayers(GX_PLANEMASK_OBJ, 1);
 }
 
-static void ov13_02227C08(BattleBagTask *param0)
+static void ov13_02227C08(BattleBagTask *battleBagTask)
 {
     SpriteResourceCapacities v0 = { 8, 8, 3, 3, 0, 0 };
-    SpriteSystem *v1 = ov16_0223E010(param0->battleInfo->battleSystem);
+    SpriteSystem *v1 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
-    param0->unk_30C = SpriteManager_New(v1);
+    battleBagTask->unk_30C = SpriteManager_New(v1);
 
-    SpriteSystem_InitSprites(v1, param0->unk_30C, 6 + 5 + 1);
-    SpriteSystem_InitManagerWithCapacities(v1, param0->unk_30C, &v0);
+    SpriteSystem_InitSprites(v1, battleBagTask->unk_30C, 6 + 5 + 1);
+    SpriteSystem_InitManagerWithCapacities(v1, battleBagTask->unk_30C, &v0);
 }
 
-static void ov13_02227C54(BattleBagTask *param0)
+static void ov13_02227C54(BattleBagTask *battleBagTask)
 {
     SpriteSystem *v0;
     u32 v1;
-    NARC *v2 = NARC_ctor(NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, param0->battleInfo->heapID);
-    v0 = ov16_0223E010(param0->battleInfo->battleSystem);
+    NARC *v2 = NARC_ctor(NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, battleBagTask->battleInfo->heapID);
+    v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
     for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
-        SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
-        SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->palette, PLTTBUF_SUB_OBJ, v0, param0->unk_30C, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
+        SpriteSystem_LoadCharResObjFromOpenNarc(v0, battleBagTask->unk_30C, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
+        SpriteSystem_LoadPaletteBufferFromOpenNarc(battleBagTask->palette, PLTTBUF_SUB_OBJ, v0, battleBagTask->unk_30C, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
     }
 
-    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_IconNCERFile(), FALSE, 46263);
-    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->unk_30C, v2, Item_IconNANRFile(), FALSE, 46263);
+    SpriteSystem_LoadCellResObjFromOpenNarc(v0, battleBagTask->unk_30C, v2, Item_IconNCERFile(), FALSE, 46263);
+    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, battleBagTask->unk_30C, v2, Item_IconNANRFile(), FALSE, 46263);
     NARC_dtor(v2);
 }
 
-static void ov13_02227D10(BattleBagTask *param0, u16 item, u32 param2)
+static void ov13_02227D10(BattleBagTask *battleBagTask, u16 item, u32 param2)
 {
-    SpriteSystem *v0 = ov16_0223E010(param0->battleInfo->battleSystem);
-    SpriteSystem_ReplaceCharResObj(v0, param0->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), FALSE, param2);
+    SpriteSystem *v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
+    SpriteSystem_ReplaceCharResObj(v0, battleBagTask->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), FALSE, param2);
 }
 
-static void ov13_02227D48(BattleBagTask *param0, u16 item, u16 param2, u32 param3)
+static void ov13_02227D48(BattleBagTask *battleBagTask, u16 item, u16 param2, u32 param3)
 {
-    PaletteData_LoadBufferFromFileStart(param0->palette, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_PALETTE), param0->battleInfo->heapID, PLTTBUF_SUB_OBJ, 0x20, param2 * 16);
+    PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_PALETTE), battleBagTask->battleInfo->heapID, PLTTBUF_SUB_OBJ, 0x20, param2 * 16);
 }
 
-static ManagedSprite *ov13_02227D78(BattleBagTask *param0, u32 param1)
+static ManagedSprite *ov13_02227D78(BattleBagTask *battleBagTask, u32 param1)
 {
     SpriteTemplate template;
-    SpriteSystem *spriteSystem = ov16_0223E010(param0->battleInfo->battleSystem);
+    SpriteSystem *spriteSystem = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
     template.x = 0;
     template.y = 0;
@@ -129,32 +129,32 @@ static ManagedSprite *ov13_02227D78(BattleBagTask *param0, u32 param1)
     template.bgPriority = 1;
     template.vramTransfer = FALSE;
 
-    return SpriteSystem_NewSprite(spriteSystem, param0->unk_30C, &template);
+    return SpriteSystem_NewSprite(spriteSystem, battleBagTask->unk_30C, &template);
 }
 
-static void ov13_02227DE8(BattleBagTask *param0)
+static void ov13_02227DE8(BattleBagTask *battleBagTask)
 {
     u32 v0;
 
     for (v0 = 0; v0 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v0++) {
-        param0->unk_310[v0] = ov13_02227D78(param0, v0);
+        battleBagTask->unk_310[v0] = ov13_02227D78(battleBagTask, v0);
     }
 }
 
-void ov13_02227E08(BattleBagTask *param0)
+void ClearPocketItemSprites(BattleBagTask *battleBagTask)
 {
-    SpriteSystem *v0;
-    u32 v1;
+    SpriteSystem *spriteSystem;
+    u32 i;
 
-    v0 = ov16_0223E010(param0->battleInfo->battleSystem);
+    spriteSystem = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
-    for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
-        Sprite_DeleteAndFreeResources(param0->unk_310[v1]);
+    for (i = 0; i < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; i++) {
+        Sprite_DeleteAndFreeResources(battleBagTask->unk_310[i]);
     }
 
-    ov13_02227FDC(param0);
-    ov13_022280C8(param0);
-    SpriteSystem_FreeResourcesAndManager(v0, param0->unk_30C);
+    ov13_02227FDC(battleBagTask);
+    ov13_022280C8(battleBagTask);
+    SpriteSystem_FreeResourcesAndManager(spriteSystem, battleBagTask->unk_30C);
 }
 
 static void DrawManagedSprite(ManagedSprite *sprite, const int x, const int y)
@@ -184,60 +184,60 @@ void RenderBattleBagScreenSprites(BattleBagTask *battleBagTask, u32 screen)
     }
 }
 
-static void RenderLastUsedItemSprite(BattleBagTask *param0)
+static void RenderLastUsedItemSprite(BattleBagTask *battleBagTask)
 {
     u16 v0;
 
-    if (param0->battleInfo->lastUsedItem != ITEM_NONE) {
-        ov13_02227D10(param0, param0->battleInfo->lastUsedItem, 46263);
-        ov13_02227D48(param0, param0->battleInfo->lastUsedItem, 0, 46263);
-        DrawManagedSprite(param0->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
+    if (battleBagTask->battleInfo->lastUsedItem != ITEM_NONE) {
+        ov13_02227D10(battleBagTask, battleBagTask->battleInfo->lastUsedItem, 46263);
+        ov13_02227D48(battleBagTask, battleBagTask->battleInfo->lastUsedItem, 0, 46263);
+        DrawManagedSprite(battleBagTask->unk_310[0], Unk_ov13_02229BC0[0], Unk_ov13_02229BC0[1]);
     }
 }
 
-static void RenderSubMenuItemSprites(BattleBagTask *param0)
+static void RenderSubMenuItemSprites(BattleBagTask *battleBagTask)
 {
     u32 v0;
     u16 item;
 
     for (v0 = 0; v0 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v0++) {
-        item = GetBagItemOnPage(param0, v0);
+        item = GetBagItemOnPage(battleBagTask, v0);
 
         if (item == ITEM_NONE) {
             continue;
         }
 
-        ov13_02227D10(param0, item, 46263 + v0);
-        ov13_02227D48(param0, item, (u16)v0, 46263 + v0);
-        DrawManagedSprite(param0->unk_310[v0], Unk_ov13_02229C44[v0][0], Unk_ov13_02229C44[v0][1]);
+        ov13_02227D10(battleBagTask, item, 46263 + v0);
+        ov13_02227D48(battleBagTask, item, (u16)v0, 46263 + v0);
+        DrawManagedSprite(battleBagTask->unk_310[v0], Unk_ov13_02229C44[v0][0], Unk_ov13_02229C44[v0][1]);
     }
 }
 
-static void RenderSelectedItemSprite(BattleBagTask *param0)
+static void RenderSelectedItemSprite(BattleBagTask *battleBagTask)
 {
-    u16 item = GetBagItemOnPage(param0, param0->battleInfo->pocketCurrentPagePositions[param0->currentBattleBagPocket]);
+    u16 item = GetBagItemOnPage(battleBagTask, battleBagTask->battleInfo->pocketCurrentPagePositions[battleBagTask->currentBattleBagPocket]);
 
-    ov13_02227D10(param0, item, 46263);
-    ov13_02227D48(param0, item, 0, 46263);
-    DrawManagedSprite(param0->unk_310[0], Unk_ov13_02229BB8[0], Unk_ov13_02229BB8[1]);
+    ov13_02227D10(battleBagTask, item, 46263);
+    ov13_02227D48(battleBagTask, item, 0, 46263);
+    DrawManagedSprite(battleBagTask->unk_310[0], Unk_ov13_02229BB8[0], Unk_ov13_02229BB8[1]);
 }
 
-static void ov13_02227F7C(BattleBagTask *param0)
+static void ov13_02227F7C(BattleBagTask *battleBagTask)
 {
     SpriteSystem *v0;
     UnkStruct_ov16_0226DC24 *v1;
 
-    v0 = ov16_0223E010(param0->battleInfo->battleSystem);
-    ov16_0226DB7C(v0, param0->unk_30C, param0->palette, param0->battleInfo->heapID, 46270, 46270, 46265, 46265);
-    v1 = ov16_0226DC24(v0, param0->unk_30C, param0->battleInfo->heapID, 46270, 46270, 46265, 46265, 0, 1);
+    v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
+    ov16_0226DB7C(v0, battleBagTask->unk_30C, battleBagTask->palette, battleBagTask->battleInfo->heapID, 46270, 46270, 46265, 46265);
+    v1 = ov16_0226DC24(v0, battleBagTask->unk_30C, battleBagTask->battleInfo->heapID, 46270, 46270, 46265, 46265, 0, 1);
 
-    SetBattleSubMenuCursorSprites(param0->cursor, v1);
+    SetBattleSubMenuCursorSprites(battleBagTask->cursor, v1);
 }
 
-static void ov13_02227FDC(BattleBagTask *param0)
+static void ov13_02227FDC(BattleBagTask *battleBagTask)
 {
-    ov16_0226DCA8(GetBattleSubMenuCursorSprites(param0->cursor));
-    ov16_0226DBFC(param0->unk_30C, 46270, 46270, 46265, 46265);
+    ov16_0226DCA8(GetBattleSubMenuCursorSprites(battleBagTask->cursor));
+    ov16_0226DBFC(battleBagTask->unk_30C, 46270, 46270, 46265, 46265);
 }
 
 static const ByteFlagSet Unk_ov13_02229C14[] = {
@@ -272,16 +272,16 @@ static const ByteFlagSet *const Unk_ov13_02229BC8[] = {
     Unk_ov13_02229BD4
 };
 
-void ov13_02228008(BattleBagTask *param0, u8 param1)
+void SetupBattleBagCursor(BattleBagTask *battleBagTask, u8 screen)
 {
-    SetBattleSubMenuCursorPositions(param0->cursor, Unk_ov13_02229BC8[param1]);
+    SetBattleSubMenuCursorPositions(battleBagTask->cursor, Unk_ov13_02229BC8[screen]);
 
-    switch (param1) {
+    switch (screen) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->currentBattleBagPocket);
+        SetBattleSubMenuCursorPosition(battleBagTask->cursor, battleBagTask->currentBattleBagPocket);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->battleInfo->pocketCurrentPagePositions[param0->currentBattleBagPocket]);
+        SetBattleSubMenuCursorPosition(battleBagTask->cursor, battleBagTask->battleInfo->pocketCurrentPagePositions[battleBagTask->currentBattleBagPocket]);
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         break;
@@ -295,21 +295,21 @@ void DisableBattleBagCursor(BattleBagTask *battleBagTask)
     ov16_0226DDE8(GetBattleSubMenuCursorSprites(battleBagTask->cursor));
 }
 
-static void ov13_02228070(BattleBagTask *param0)
+static void ov13_02228070(BattleBagTask *battleBagTask)
 {
     SpriteSystem *v0;
     UnkStruct_ov16_0226DEEC *v1;
 
-    v0 = ov16_0223E010(param0->battleInfo->battleSystem);
+    v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
-    ov16_0226DE44(v0, param0->unk_30C, param0->battleInfo->heapID, param0->palette, 46269, 46269, 46264, 46264);
-    param0->unk_38 = ov16_0226DEEC(v0, param0->unk_30C, param0->battleInfo->heapID, 46269, 46269, 46264, 46264, 0, 0);
+    ov16_0226DE44(v0, battleBagTask->unk_30C, battleBagTask->battleInfo->heapID, battleBagTask->palette, 46269, 46269, 46264, 46264);
+    battleBagTask->unk_38 = ov16_0226DEEC(v0, battleBagTask->unk_30C, battleBagTask->battleInfo->heapID, 46269, 46269, 46264, 46264, 0, 0);
 }
 
-static void ov13_022280C8(BattleBagTask *param0)
+static void ov13_022280C8(BattleBagTask *battleBagTask)
 {
-    ov16_0226DF68(param0->unk_38);
-    ov16_0226DEC4(param0->unk_30C, 46269, 46269, 46264, 46264);
+    ov16_0226DF68(battleBagTask->unk_38);
+    ov16_0226DEC4(battleBagTask->unk_30C, 46269, 46269, 46264, 46264);
 }
 
 static const int Unk_ov13_02229BFC[3][2] = {
@@ -318,12 +318,12 @@ static const int Unk_ov13_02229BFC[3][2] = {
     { 0x68, 0x98 }
 };
 
-void ov13_022280F0(BattleBagTask *param0, u8 param1)
+void ov13_022280F0(BattleBagTask *battleBagTask, u8 screen)
 {
-    if (param0->battleInfo->isCatchTutorial == TRUE) {
-        ov16_0226DFB0(param0->unk_38, Unk_ov13_02229BFC[param1][0], Unk_ov13_02229BFC[param1][1]);
-        ov16_0226DFD0(param0->unk_38, 60);
+    if (battleBagTask->battleInfo->isCatchTutorial == TRUE) {
+        ov16_0226DFB0(battleBagTask->unk_38, Unk_ov13_02229BFC[screen][0], Unk_ov13_02229BFC[screen][1]);
+        ov16_0226DFD0(battleBagTask->unk_38, 60);
     } else {
-        ov16_0226DFBC(param0->unk_38);
+        ov16_0226DFBC(battleBagTask->unk_38);
     }
 }

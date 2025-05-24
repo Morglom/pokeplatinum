@@ -98,13 +98,13 @@ static const WindowTemplate useBagItemScreenWindowTemplates[] = {
     { 0x5, 0xA, 0x14, 0x6, 0x3, 0x0, 0x38F }
 };
 
-void ov13_02227288(BattleBagTask *param0)
+void InitializeWindows(BattleBagTask *battleBagTask)
 {
-    Window_AddFromTemplate(param0->background, &param0->messageBoxWindow, &bagScreenMessageBoxWindowTemplate);
-    InitializeInBattleBagScreen(param0, param0->currentScreen);
+    Window_AddFromTemplate(battleBagTask->background, &battleBagTask->messageBoxWindow, &bagScreenMessageBoxWindowTemplate);
+    InitializeInBattleBagScreen(battleBagTask, battleBagTask->currentScreen);
 }
 
-void InitializeInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex)
+void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum InBattlePartyScreenIndex screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
@@ -112,28 +112,28 @@ void InitializeInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreen
     switch (screenIndex) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
         windowTemplates = bagMenuScreenWindowTemplates;
-        param0->numWindows = BAG_MENU_SCREEN_WINDOW_NUM;
+        battleBagTask->numWindows = BAG_MENU_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
         windowTemplates = bagSubMenuScreenWindowTemplates;
-        param0->numWindows = BAG_SUB_MENU_SCREEN_WINDOW_NUM;
+        battleBagTask->numWindows = BAG_SUB_MENU_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
         windowTemplates = useBagItemScreenWindowTemplates;
-        param0->numWindows = USE_BAG_ITEM_SCREEN_WINDOW_NUM;
+        battleBagTask->numWindows = USE_BAG_ITEM_SCREEN_WINDOW_NUM;
         break;
     }
 
-    param0->windows = Window_New(param0->battleInfo->heapID, param0->numWindows);
+    battleBagTask->windows = Window_New(battleBagTask->battleInfo->heapID, battleBagTask->numWindows);
 
-    for (i = 0; i < param0->numWindows; i++) {
-        Window_AddFromTemplate(param0->background, &param0->windows[i], &windowTemplates[i]);
+    for (i = 0; i < battleBagTask->numWindows; i++) {
+        Window_AddFromTemplate(battleBagTask->background, &battleBagTask->windows[i], &windowTemplates[i]);
     }
 }
 
-void ClearInBattleBagScreen(BattleBagTask *param0)
+void ClearInBattleBagScreen(BattleBagTask *battleBagTask)
 {
-    Windows_Delete(param0->windows, param0->numWindows);
+    Windows_Delete(battleBagTask->windows, battleBagTask->numWindows);
 }
 
 void ClearBattleBagWindows(BattleBagTask *BATTLE_BAG_TASK_STATE_EXIT)

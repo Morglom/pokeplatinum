@@ -3,11 +3,11 @@
 
 #include "overlay013/struct_ov13_02227244.h"
 
-void ov13_02227BDC(BattleBagTask *param0);
-void ov13_02227E08(BattleBagTask *param0);
-void RenderBattleBagScreenSprites(BattleBagTask *param0, u32 param1);
-void ov13_02228008(BattleBagTask *param0, u8 param1);
-void DisableBattleBagCursor(BattleBagTask *param0);
-void ov13_022280F0(BattleBagTask *param0, u8 param1);
+void ov13_02227BDC(BattleBagTask *battleBagTask);
+void ClearPocketItemSprites(BattleBagTask *battleBagTask);
+void RenderBattleBagScreenSprites(BattleBagTask *battleBagTask, u32 screen);
+void SetupBattleBagCursor(BattleBagTask *battleBagTask, u8 param1);
+void DisableBattleBagCursor(BattleBagTask *battleBagTask);
+void ov13_022280F0(BattleBagTask *battleBagTask, u8 screen);
 
 #endif // POKEPLATINUM_OV13_02227BDC_H

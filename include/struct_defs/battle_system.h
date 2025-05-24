@@ -64,7 +64,7 @@ struct BattleSystem {
     ChatotCry *unk_78[MAX_BATTLERS];
     PokemonSpriteManager *unk_88;
     UnkStruct_ov12_0221FCDC *unk_8C;
-    SpriteSystem *unk_90;
+    SpriteSystem *spriteSystem;
     SpriteManager *unk_94;
     Poketch *poketch;
     UnkStruct_0206D140 *unk_9C;

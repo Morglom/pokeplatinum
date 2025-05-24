@@ -176,7 +176,7 @@ void ov16_02268520(UnkStruct_ov16_02268520 *param0)
     int v3, v4, v5, v6, v7, v8;
     int v9;
     NARC *v10 = NARC_ctor(NARC_INDEX_BATTLE__GRAPHIC__PL_BATT_OBJ, HEAP_ID_BATTLE);
-    v0 = ov16_0223E010(param0->unk_04);
+    v0 = BattleSystem_SpriteSystem(param0->unk_04);
     v1 = ov16_0223E018(param0->unk_04);
     v9 = ov16_0223EC04(param0->unk_04);
     v2 = &Unk_ov16_022700CC[param0->unk_08];
@@ -211,7 +211,7 @@ void ov16_0226862C(UnkStruct_ov16_02268520 *param0)
     SpriteManager *v1;
     const SpriteTemplate *v2;
 
-    v0 = ov16_0223E010(param0->unk_04);
+    v0 = BattleSystem_SpriteSystem(param0->unk_04);
     v1 = ov16_0223E018(param0->unk_04);
     v2 = &Unk_ov16_022700CC[param0->unk_08];
 

@@ -10562,7 +10562,7 @@ static void BattleScript_CatchMonTask(SysTask *param0, void *param1)
                 v7.heapID = HEAP_ID_BATTLE;
                 v7.target = v1 + 20000;
                 v7.ballID = v2->ball;
-                v7.cellActorSys = ov16_0223E010(v2->battleSys);
+                v7.cellActorSys = BattleSystem_SpriteSystem(v2->battleSys);
                 v7.paletteSys = BattleSystem_PaletteSys(v2->battleSys);
                 v7.bgPrio = 1;
                 v7.surface = 0;
@@ -12201,7 +12201,7 @@ static void BattleScript_LoadPartyLevelUpIcon(BattleSystem *battleSys, BattleScr
     v7 = ov16_0223E0D4(battleSys);
     v5 = BattleSystem_StringTemplate(battleSys);
     v8 = BattleSystem_BGL(battleSys);
-    v1 = ov16_0223E010(battleSys);
+    v1 = BattleSystem_SpriteSystem(battleSys);
     v2 = ov16_0223E018(battleSys);
     v3 = BattleSystem_PaletteSys(battleSys);
 

@@ -56,7 +56,7 @@ typedef struct {
     u16 unk_101E[3][16];
     u16 unk_107E[3][16];
     u16 unk_10DE[3][16];
-    u8 unk_113E;
+    u8 unk_113E; // Some kind of state
     u8 unk_113F;
     u8 unk_1140;
     u8 unk_1141_0 : 4;

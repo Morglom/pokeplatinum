@@ -128,12 +128,12 @@ static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *battle
 static enum BattleBagTaskState BattleBagTask_Exit(BattleBagTask *battleBagTask);
 BOOL BattleBagTask_FinishTask(SysTask *task, BattleBagTask *battleBagTask);
 static void InitializeBackground(BattleBagTask *battleBagTask);
-static void CleanupBackground(BgConfig *param0);
-static void ov13_02226FC4(BattleBagTask *battleBagTask);
+static void CleanupBackground(BgConfig *background);
+static void LoadBackgroundData(BattleBagTask *battleBagTask);
 static void InitializeMessageLoader(BattleBagTask *battleBagTask);
 static void CleanupMessageLoader(BattleBagTask *battleBagTask);
 static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask);
-static void ov13_02227118(BattleBagTask *battleBagTask, u8 screen);
+static void SetupBackgroundScroll(BattleBagTask *battleBagTask, u8 screen);
 static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen);
 static int CheckTouchRectIsPressed(BattleBagTask *battleBagTask, const TouchScreenRect *rect);
 static void UseBagItem(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
@@ -167,21 +167,21 @@ static const TouchScreenRect useItemScreenTouchRects[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-void BattleBagTask_Start(BattleBagBattleInfo *param0)
+void BattleBagTask_Start(BattleBagBattleInfo *battleInfo)
 {
-    BattleBagTask *battleBagTask = SysTask_GetParam(SysTask_StartAndAllocateParam(BattleBagTask_Tick, sizeof(BattleBagTask), 100, param0->heapID));
+    BattleBagTask *battleBagTask = SysTask_GetParam(SysTask_StartAndAllocateParam(BattleBagTask_Tick, sizeof(BattleBagTask), 100, battleInfo->heapID));
     memset(battleBagTask, 0, sizeof(BattleBagTask));
 
-    battleBagTask->battleInfo = param0;
-    battleBagTask->background = BattleSystem_BGL(param0->battleSystem);
-    battleBagTask->palette = BattleSystem_PaletteSys(param0->battleSystem);
+    battleBagTask->battleInfo = battleInfo;
+    battleBagTask->background = BattleSystem_BGL(battleInfo->battleSystem);
+    battleBagTask->palette = BattleSystem_PaletteSys(battleInfo->battleSystem);
     battleBagTask->currentState = BATTLE_BAG_TASK_STATE_INITIALIZE;
 
     {
         BagCursor *bagCursor;
         u8 i;
 
-        bagCursor = BattleSystem_BagCursor(param0->battleSystem);
+        bagCursor = BattleSystem_BagCursor(battleInfo->battleSystem);
 
         for (i = 0; i < BATTLE_BAG_POCKET_NUM; i++) {
             BagCursor_GetBattleCategoryPosition(bagCursor, i, &battleBagTask->battleInfo->pocketCurrentPagePositions[i], &battleBagTask->battleInfo->pocketCurrentPages[i]);
@@ -262,7 +262,7 @@ static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBag
     battleBagTask->cursor = MakeBattleSubMenuCursor(battleBagTask->battleInfo->heapID);
 
     InitializeBackground(battleBagTask);
-    ov13_02226FC4(battleBagTask);
+    LoadBackgroundData(battleBagTask);
     InitializeMessageLoader(battleBagTask);
     Font_InitManager(FONT_SUBSCREEN, battleBagTask->battleInfo->heapID);
 
@@ -270,7 +270,7 @@ static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBag
 
     RefreshBagSubMenus(battleBagTask);
     ov13_02228924(battleBagTask, battleBagTask->currentScreen);
-    ov13_02227288(battleBagTask);
+    InitializeWindows(battleBagTask);
     DrawInBattleBagScreen(battleBagTask, battleBagTask->currentScreen);
     ov13_02227BDC(battleBagTask);
     RenderBattleBagScreenSprites(battleBagTask, battleBagTask->currentScreen);
@@ -279,7 +279,7 @@ static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBag
         SetBattlePartyBagCursorVisiblity(battleBagTask->cursor, TRUE);
     }
 
-    ov13_02228008(battleBagTask, battleBagTask->currentScreen);
+    SetupBattleBagCursor(battleBagTask, battleBagTask->currentScreen);
     ov13_022280F0(battleBagTask, battleBagTask->currentScreen);
     PaletteData_StartFade(battleBagTask->palette, (0x2 | 0x8), 0xffff, -8, 16, 0, 0);
 
@@ -452,17 +452,17 @@ static enum BattleBagTaskState BattleBagTask_UseItemScreen(BattleBagTask *battle
 
 static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask)
 {
-    BattleBagBattleInfo *v0 = battleBagTask->battleInfo;
+    BattleBagBattleInfo *battleInfo = battleBagTask->battleInfo;
 
     if (battleBagTask->currentBattleBagPocket == ITEM_BATTLE_CATEGORY_BATTLE_ITEMS) {
         int partySlot = GetSelectedPartySlot(battleBagTask);
-        u32 itemBattleUse = Item_LoadParam(v0->selectedBattleBagItem, ITEM_PARAM_BATTLE_USE_FUNC, v0->heapID);
+        u32 itemBattleUse = Item_LoadParam(battleInfo->selectedBattleBagItem, ITEM_PARAM_BATTLE_USE_FUNC, battleInfo->heapID);
 
-        if ((v0->embargoTurns != 0) && (v0->selectedBattleBagItem != ITEM_GUARD_SPEC) && (itemBattleUse != 3)) {
+        if ((battleInfo->embargoTurns != 0) && (battleInfo->selectedBattleBagItem != ITEM_GUARD_SPEC) && (itemBattleUse != 3)) {
             Pokemon *pokemon;
             Strbuf *strbuf;
 
-            pokemon = BattleSystem_PartyPokemon(v0->battleSystem, v0->battler, partySlot);
+            pokemon = BattleSystem_PartyPokemon(battleInfo->battleSystem, battleInfo->battler, partySlot);
             strbuf = MessageLoader_GetNewStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_EMBARGO_BLOCKING_ITEM_USE);
 
             StringTemplate_SetNickname(battleBagTask->stringTemplate, 0, Pokemon_GetBoxPokemon(pokemon));
@@ -476,20 +476,20 @@ static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask)
             return BATTLE_BAG_TASK_AWAITING_TEXT_FINISH;
         }
 
-        if (BattleSystem_UseBagItem(v0->battleSystem, v0->battler, partySlot, 0, v0->selectedBattleBagItem) == TRUE) {
-            UseBagItem(v0->battleSystem, v0->selectedBattleBagItem, battleBagTask->currentBattleBagPocket, v0->heapID);
+        if (BattleSystem_UseBagItem(battleInfo->battleSystem, battleInfo->battler, partySlot, 0, battleInfo->selectedBattleBagItem) == TRUE) {
+            UseBagItem(battleInfo->battleSystem, battleInfo->selectedBattleBagItem, battleBagTask->currentBattleBagPocket, battleInfo->heapID);
             return BATTLE_BAG_TASK_STATE_EXIT;
         } else if (itemBattleUse == 3) {
-            if (!(BattleSystem_BattleType(v0->battleSystem) & BATTLE_TYPE_TRAINER)) {
-                UseBagItem(v0->battleSystem, v0->selectedBattleBagItem, battleBagTask->currentBattleBagPocket, v0->heapID);
+            if (!(BattleSystem_BattleType(battleInfo->battleSystem) & BATTLE_TYPE_TRAINER)) {
+                UseBagItem(battleInfo->battleSystem, battleInfo->selectedBattleBagItem, battleBagTask->currentBattleBagPocket, battleInfo->heapID);
                 return BATTLE_BAG_TASK_STATE_EXIT;
             } else {
                 MessageLoader *messageLoader;
                 Strbuf *strbuf;
 
-                messageLoader = MessageLoader_Init(MESSAGE_LOADER_NARC_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_COMMON_STRINGS, v0->heapID);
+                messageLoader = MessageLoader_Init(MESSAGE_LOADER_NARC_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_COMMON_STRINGS, battleInfo->heapID);
                 strbuf = MessageLoader_GetNewStrbuf(messageLoader, TEXT_ID_ROWANS_WARNING);
-                StringTemplate_SetPlayerName(battleBagTask->stringTemplate, 0, v0->trainerInfo);
+                StringTemplate_SetPlayerName(battleBagTask->stringTemplate, 0, battleInfo->trainerInfo);
                 StringTemplate_Format(battleBagTask->stringTemplate, battleBagTask->strbuf, strbuf);
                 Strbuf_Free(strbuf);
                 MessageLoader_Free(messageLoader);
@@ -504,21 +504,21 @@ static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask)
             return BATTLE_BAG_TASK_AWAITING_TEXT_FINISH;
         }
     } else if (battleBagTask->currentBattleBagPocket == ITEM_BATTLE_CATEGORY_POKE_BALLS) {
-        if (v0->twoOpponents == TRUE) {
+        if (battleInfo->twoOpponents == TRUE) {
             MessageLoader_GetStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_TWO_POKEMON, battleBagTask->strbuf);
             DisplayMessageBox(battleBagTask);
             battleBagTask->queuedState = BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE;
             return BATTLE_BAG_TASK_AWAITING_TEXT_FINISH;
         }
 
-        if (v0->opponentHidden == TRUE) {
+        if (battleInfo->opponentHidden == TRUE) {
             MessageLoader_GetStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_POKEMON_HIDDEN, battleBagTask->strbuf);
             DisplayMessageBox(battleBagTask);
             battleBagTask->queuedState = BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE;
             return BATTLE_BAG_TASK_AWAITING_TEXT_FINISH;
         }
 
-        if (v0->opponentSubstituted == TRUE) {
+        if (battleInfo->opponentSubstituted == TRUE) {
             MessageLoader_GetStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_POKEMON_SUBSTITUTED, battleBagTask->strbuf);
             DisplayMessageBox(battleBagTask);
             battleBagTask->queuedState = BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE;
@@ -526,8 +526,8 @@ static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask)
         }
 
         {
-            Party *party = BattleSystem_Party(v0->battleSystem, v0->battler);
-            PCBoxes *boxes = BattleSystem_PCBoxes(v0->battleSystem);
+            Party *party = BattleSystem_Party(battleInfo->battleSystem, battleInfo->battler);
+            PCBoxes *boxes = BattleSystem_PCBoxes(battleInfo->battleSystem);
 
             if ((Party_GetCurrentCount(party) == MAX_PARTY_SIZE) && (PCBoxes_FirstEmptyBox(boxes) == MAX_PC_BOXES)) {
                 MessageLoader_GetStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_NO_ROOM_LEFT, battleBagTask->strbuf);
@@ -604,7 +604,7 @@ BOOL BattleBagTask_FinishTask(SysTask *task, BattleBagTask *battleBagTask)
         return FALSE;
     }
 
-    ov13_02227E08(battleBagTask);
+    ClearPocketItemSprites(battleBagTask);
     ClearBattleBagWindows(battleBagTask);
     CleanupMessageLoader(battleBagTask);
     CleanupBackground(battleBagTask->background);
@@ -693,18 +693,18 @@ static enum BattleBagTaskState BattleBagTask_CatchTutorial(BattleBagTask *battle
 static void InitializeBackground(BattleBagTask *battleBagTask)
 {
     {
-        GraphicsModes v0 = {
+        GraphicsModes graphicsMode = {
             GX_DISPMODE_GRAPHICS,
             GX_BGMODE_0,
             GX_BGMODE_0,
             GX_BG0_AS_3D,
         };
 
-        SetScreenGraphicsModes(&v0, DS_SCREEN_SUB);
+        SetScreenGraphicsModes(&graphicsMode, DS_SCREEN_SUB);
     }
 
     {
-        BgTemplate v1 = {
+        BgTemplate backgroundTemplate = {
             0,
             0,
             0x2000,
@@ -720,11 +720,11 @@ static void InitializeBackground(BattleBagTask *battleBagTask)
             FALSE
         };
 
-        Bg_InitFromTemplate(battleBagTask->background, BG_LAYER_SUB_2, &v1, BG_TYPE_STATIC);
+        Bg_InitFromTemplate(battleBagTask->background, BG_LAYER_SUB_2, &backgroundTemplate, BG_TYPE_STATIC);
     }
 
     {
-        BgTemplate v2 = {
+        BgTemplate backgroundTemplate = {
             0,
             0,
             0x800,
@@ -740,12 +740,12 @@ static void InitializeBackground(BattleBagTask *battleBagTask)
             FALSE
         };
 
-        Bg_InitFromTemplate(battleBagTask->background, BG_LAYER_SUB_1, &v2, BG_TYPE_STATIC);
+        Bg_InitFromTemplate(battleBagTask->background, BG_LAYER_SUB_1, &backgroundTemplate, BG_TYPE_STATIC);
         Bg_ClearTilemap(battleBagTask->background, BG_LAYER_SUB_1);
     }
 
     {
-        BgTemplate v3 = {
+        BgTemplate backgroundTemplate = {
             0,
             0,
             0x800,
@@ -761,7 +761,7 @@ static void InitializeBackground(BattleBagTask *battleBagTask)
             FALSE
         };
 
-        Bg_InitFromTemplate(battleBagTask->background, BG_LAYER_SUB_0, &v3, BG_TYPE_STATIC);
+        Bg_InitFromTemplate(battleBagTask->background, BG_LAYER_SUB_0, &backgroundTemplate, BG_TYPE_STATIC);
         Bg_ClearTilemap(battleBagTask->background, BG_LAYER_SUB_0);
     }
 
@@ -779,34 +779,34 @@ static void CleanupBackground(BgConfig *background)
     Bg_FreeTilemapBuffer(background, BG_LAYER_SUB_2);
 }
 
-static void ov13_02226FC4(BattleBagTask *battleBagTask)
+static void LoadBackgroundData(BattleBagTask *battleBagTask)
 {
-    NARC *v0 = NARC_ctor(NARC_INDEX_BATTLE__GRAPHIC__B_BAG_GRA, battleBagTask->battleInfo->heapID);
+    NARC *narc = NARC_ctor(NARC_INDEX_BATTLE__GRAPHIC__B_BAG_GRA, battleBagTask->battleInfo->heapID);
 
-    Graphics_LoadTilesToBgLayerFromOpenNARC(v0, 2, battleBagTask->background, 6, 0, 0, 0, battleBagTask->battleInfo->heapID);
-    Graphics_LoadTilemapToBgLayerFromOpenNARC(v0, 0, battleBagTask->background, 6, 0, 0, 0, battleBagTask->battleInfo->heapID);
+    Graphics_LoadTilesToBgLayerFromOpenNARC(narc, 2, battleBagTask->background, 6, 0, 0, 0, battleBagTask->battleInfo->heapID);
+    Graphics_LoadTilemapToBgLayerFromOpenNARC(narc, 0, battleBagTask->background, 6, 0, 0, 0, battleBagTask->battleInfo->heapID);
 
     {
-        NNSG2dScreenData *v1;
-        void *v2;
-        u16 *v3;
+        NNSG2dScreenData *screenData;
+        void *buffer;
+        u16 *rawData;
 
-        v2 = NARC_AllocAndReadWholeMember(v0, 1, battleBagTask->battleInfo->heapID);
-        NNS_G2dGetUnpackedScreenData(v2, &v1);
-        v3 = (u16 *)v1->rawData;
-        ov13_02228128(battleBagTask, v3);
-        Heap_FreeToHeap(v2);
+        buffer = NARC_AllocAndReadWholeMember(narc, 1, battleBagTask->battleInfo->heapID);
+        NNS_G2dGetUnpackedScreenData(buffer, &screenData);
+        rawData = (u16 *)screenData->rawData;
+        ov13_02228128(battleBagTask, rawData);
+        Heap_FreeToHeap(buffer);
     }
 
-    NARC_dtor(v0);
-    PaletteData_LoadBufferFromFileStart(battleBagTask->palette, 77, 3, battleBagTask->battleInfo->heapID, 1, 0x20 * 12, 0);
-    PaletteData_LoadBufferFromFileStart(battleBagTask->palette, 14, 7, battleBagTask->battleInfo->heapID, 1, 0x20, 15 * 16);
+    NARC_dtor(narc);
+    PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_BATTLE__GRAPHIC__B_BAG_GRA, 3, battleBagTask->battleInfo->heapID, PLTTBUF_SUB_BG, 0x20 * 12, 0);
+    PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_GRAPHIC__PL_FONT, 7, battleBagTask->battleInfo->heapID, PLTTBUF_SUB_BG, 0x20, 15 * 16);
 
     {
         int v4 = ov16_0223EDE0(battleBagTask->battleInfo->battleSystem);
 
-        Graphics_LoadTilesToBgLayer(38, GetMessageBoxTilesNARCMember(v4), battleBagTask->background, 4, 1024 - (18 + 12), 0, 0, battleBagTask->battleInfo->heapID);
-        PaletteData_LoadBufferFromFileStart(battleBagTask->palette, 38, GetMessageBoxPaletteNARCMember(v4), battleBagTask->battleInfo->heapID, 1, 0x20, 14 * 16);
+        Graphics_LoadTilesToBgLayer(NARC_INDEX_GRAPHIC__PL_WINFRAME, GetMessageBoxTilesNARCMember(v4), battleBagTask->background, 4, 1024 - (18 + 12), 0, 0, battleBagTask->battleInfo->heapID);
+        PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_GRAPHIC__PL_WINFRAME, GetMessageBoxPaletteNARCMember(v4), battleBagTask->battleInfo->heapID, PLTTBUF_SUB_BG, 0x20, 14 * 16);
     }
 }
 
@@ -826,7 +826,7 @@ static void CleanupMessageLoader(BattleBagTask *battleBagTask)
     Strbuf_Free(battleBagTask->strbuf);
 }
 
-static void ov13_02227118(BattleBagTask *battleBagTask, u8 screen)
+static void SetupBackgroundScroll(BattleBagTask *battleBagTask, u8 screen)
 {
     switch (screen) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
@@ -844,7 +844,7 @@ static void ov13_02227118(BattleBagTask *battleBagTask, u8 screen)
     }
 }
 
-static void ov13_0222717C(BattleBagTask *battleBagTask, u8 screen)
+static void SetupBackgroundTilemap(BattleBagTask *battleBagTask, u8 screen)
 {
     if (screen != IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM) {
         return;
@@ -856,8 +856,8 @@ static void ov13_0222717C(BattleBagTask *battleBagTask, u8 screen)
 
 static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen)
 {
-    ov13_0222717C(battleBagTask, screen);
-    ov13_02227118(battleBagTask, screen);
+    SetupBackgroundTilemap(battleBagTask, screen);
+    SetupBackgroundScroll(battleBagTask, screen);
 
     Bg_ScheduleFillTilemap(battleBagTask->background, 4, 0);
     Bg_ScheduleFillTilemap(battleBagTask->background, 5, 0);
@@ -866,7 +866,7 @@ static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen)
     InitializeInBattleBagScreen(battleBagTask, screen);
     DrawInBattleBagScreen(battleBagTask, screen);
     ov13_02228924(battleBagTask, screen);
-    ov13_02228008(battleBagTask, screen);
+    SetupBattleBagCursor(battleBagTask, screen);
     ov13_022280F0(battleBagTask, screen);
 
     battleBagTask->currentScreen = screen;

@@ -84,7 +84,7 @@ int BattleSystem_PartyCount(BattleSystem *battleSys, int battler);
 Pokemon *BattleSystem_PartyPokemon(BattleSystem *battleSys, int battler, int slot);
 PokemonSpriteManager *ov16_0223E000(BattleSystem *battleSys);
 UnkStruct_ov12_0221FCDC *ov16_0223E008(BattleSystem *battleSys);
-SpriteSystem *ov16_0223E010(BattleSystem *battleSys);
+SpriteSystem *BattleSystem_SpriteSystem(BattleSystem *battleSys);
 SpriteManager *ov16_0223E018(BattleSystem *battleSys);
 UnkStruct_ov16_02268520 *ov16_0223E020(BattleSystem *battleSys, int param1);
 UnkStruct_ov16_02268A14 *ov16_0223E02C(BattleSystem *battleSys);
