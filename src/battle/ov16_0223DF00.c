@@ -485,9 +485,9 @@ u8 BattleSystem_BattlerSlot(BattleSystem *battleSys, int battler)
     return Battler_Type(battleSys->battlers[battler]);
 }
 
-u8 Battler_Side(BattleSystem *battleSystem, int param1)
+u8 Battler_Side(BattleSystem *battleSystem, int battler)
 {
-    return Battler_Type(battleSystem->battlers[param1]) & 1;
+    return Battler_Type(battleSystem->battlers[battler]) & 1;
 }
 
 void *ov16_0223E220(BattleSystem *battleSystem)

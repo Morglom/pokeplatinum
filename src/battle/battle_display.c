@@ -742,7 +742,7 @@ void ov16_0225D794(BattleSystem *battleSys, BattlerData *param1, UnkStruct_ov16_
     v0 = (UnkStruct_ov16_0225D794 *)Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov16_0225D794));
 
     v0->unk_08 = (UnkStruct_ov16_0225D840 *)Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov16_0225D840));
-    v0->unk_08->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov13_0221FC20));
+    v0->unk_08->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(BattlePartyBattleInfo));
     v0->unk_08->unk_04->unk_00 = Party_New(HEAP_ID_BATTLE);
     v0->unk_0E = 0;
     v0->unk_00 = battleSys;
@@ -3608,9 +3608,9 @@ static void ov16_022611DC(SysTask *param0, void *param1)
             v0->unk_08->unk_04->unk_2C[i] = v0->unk_18[v4][i];
         }
 
-        v0->unk_08->unk_04->unk_08 = v0->unk_00;
+        v0->unk_08->unk_04->battleSystem = v0->unk_00;
         v0->unk_08->unk_04->heapID = HEAP_ID_BATTLE;
-        v0->unk_08->unk_04->selectedPartyIndex = 0;
+        v0->unk_08->unk_04->selectedPartySlot = 0;
         v0->unk_08->unk_04->unk_36 = 0;
         v0->unk_08->unk_04->unk_24 = 0;
         v0->unk_08->unk_04->unk_35 = 2;
@@ -3629,7 +3629,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
             v0->unk_08->unk_04->unk_18[1] = v0->unk_30[BattleSystem_Partner(v0->unk_00, v0->unk_0D)];
         }
 
-        StartPartyTransitions(v0->unk_08->unk_04);
+        BattlePartyTask_Start(v0->unk_08->unk_04);
         v0->unk_0E++;
     } break;
     case 5:
@@ -3637,7 +3637,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
             v0->unk_10 = v0->unk_08->unk_04->unk_32;
             v0->unk_08->unk_04->unk_36 = 0;
 
-            if (v0->unk_08->unk_04->selectedPartyIndex == 6) {
+            if (v0->unk_08->unk_04->selectedPartySlot == 6) {
                 v0->unk_0E = 2;
             } else {
                 v0->unk_0E = 6;
@@ -3662,7 +3662,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                 case 1:
                     if ((v0->unk_04->selectedBattleBagItem == 28) || (v0->unk_04->selectedBattleBagItem == 29)) {
                         v0->unk_0E = 8;
-                    } else if (((v0->unk_08->unk_04->selectedPartyIndex < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartyIndex < 1)) {
+                    } else if (((v0->unk_08->unk_04->selectedPartySlot < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartySlot < 1)) {
                         if (v0->unk_04->selectedBattleBagItem == 23) {
                             if (BattleSystem_AnimationsOn(v0->unk_00) == 1) {
                                 v0->unk_12 = 17;
@@ -3683,7 +3683,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
                     }
                     break;
                 case 0:
-                    if ((((v0->unk_08->unk_04->selectedPartyIndex < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartyIndex < 1)) && (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 38, 5))) {
+                    if ((((v0->unk_08->unk_04->selectedPartySlot < 2) && ((BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TRAINER_DOUBLES) || (BattleSystem_BattleType(v0->unk_00) == BATTLE_TYPE_TAG_DOUBLES))) || (v0->unk_08->unk_04->selectedPartySlot < 1)) && (Item_LoadParam(v0->unk_04->selectedBattleBagItem, 38, 5))) {
                         if (BattleSystem_AnimationsOn(v0->unk_00) == 1) {
                             v0->unk_12 = 17;
                         } else {
@@ -3738,7 +3738,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
             v7.category = v0->unk_04->selectedBattleBagPocket;
 
             if ((v0->unk_04->selectedBattleBagPocket == 1) || (v0->unk_04->selectedBattleBagPocket == 0)) {
-                v7.target = 1 + v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartyIndex];
+                v7.target = 1 + v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartySlot];
             }
         }
 
@@ -3786,7 +3786,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         UnkStruct_ov16_02265BBC v11;
         int v12;
 
-        v12 = v0->unk_08->unk_04->selectedPartyIndex * 2;
+        v12 = v0->unk_08->unk_04->selectedPartySlot * 2;
         ov16_02266B78(v0->unk_00, NULL, &v11, 1, 9, v12, v12, NULL);
         ov16_02264408(v0->unk_00, BattleSystem_BattlerData(v0->unk_00, v12), ov16_0223E008(v0->unk_00), &v11);
     }
@@ -3856,7 +3856,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         UnkStruct_ov16_02265BBC v16;
         int v17;
 
-        v17 = v0->unk_08->unk_04->selectedPartyIndex * 2;
+        v17 = v0->unk_08->unk_04->selectedPartySlot * 2;
         ov16_02266B78(v0->unk_00, NULL, &v16, 1, 14, v17, v17, NULL);
         ov16_02264408(v0->unk_00, BattleSystem_BattlerData(v0->unk_00, v17), ov16_0223E008(v0->unk_00), &v16);
     }
@@ -3868,8 +3868,8 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         int v20;
         int v21;
 
-        v20 = v0->unk_08->unk_04->selectedPartyIndex * 2;
-        v21 = v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartyIndex];
+        v20 = v0->unk_08->unk_04->selectedPartySlot * 2;
+        v21 = v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartySlot];
 
         v18 = ov16_0223F35C(v0->unk_00, v20);
         MI_CpuClear8(&v18->state, sizeof(u8));
@@ -3892,7 +3892,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         Healthbar *v22;
         int v23;
 
-        v23 = v0->unk_08->unk_04->selectedPartyIndex * 2;
+        v23 = v0->unk_08->unk_04->selectedPartySlot * 2;
         v22 = ov16_0223F35C(v0->unk_00, v23);
 
         if (ov16_022674F8(v22) == -1) {
@@ -3906,7 +3906,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         int v26;
 
         v24 = BattleSystem_MessageLoader(v0->unk_00);
-        v26 = v0->unk_08->unk_04->selectedPartyIndex * 2;
+        v26 = v0->unk_08->unk_04->selectedPartySlot * 2;
 
         if (v0->unk_08->unk_04->unk_20) {
             v25.id = 1214;
@@ -3934,9 +3934,9 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         Pokemon *v33;
         int v34;
 
-        v28 = v0->unk_08->unk_04->selectedPartyIndex * 2;
+        v28 = v0->unk_08->unk_04->selectedPartySlot * 2;
         v27 = ov16_0223F35C(v0->unk_00, v28);
-        v34 = v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartyIndex];
+        v34 = v0->unk_08->unk_04->unk_2C[v0->unk_08->unk_04->selectedPartySlot];
         v33 = BattleSystem_PartyPokemon(v0->unk_00, v28, v34);
 
         if (Pokemon_GetValue(v33, MON_DATA_STATUS_CONDITION, NULL) == 0) {
@@ -4142,7 +4142,7 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
 
                 ov16_0223B384(v0->unk_00);
 
-                v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov13_0221FC20));
+                v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(BattlePartyBattleInfo));
                 v0->unk_04->unk_00 = Party_New(HEAP_ID_BATTLE);
 
                 if (((BattleSystem_BattleType(v0->unk_00) & (BATTLE_TYPE_LINK | BATTLE_TYPE_2vs2)) == (BATTLE_TYPE_LINK | BATTLE_TYPE_2vs2)) || (BattleSystem_BattleType(v0->unk_00) == ((BATTLE_TYPE_TRAINER_DOUBLES | BATTLE_TYPE_2vs2 | BATTLE_TYPE_AI) | BATTLE_TYPE_FRONTIER))) {
@@ -4177,9 +4177,9 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
                     }
 
                     if (BattleSystem_BattlerSlot(v0->unk_00, v0->unk_09) == 4) {
-                        v0->unk_04->selectedPartyIndex = 1;
+                        v0->unk_04->selectedPartySlot = 1;
                     } else {
-                        v0->unk_04->selectedPartyIndex = 0;
+                        v0->unk_04->selectedPartySlot = 0;
                     }
                 } else {
                     if ((BattleSystem_BattleType(v0->unk_00) & BATTLE_TYPE_DOUBLES) && ((BattleSystem_BattleType(v0->unk_00) & BATTLE_TYPE_2vs2) == FALSE)) {
@@ -4189,9 +4189,9 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
                     }
 
                     if (BattleSystem_BattlerSlot(v0->unk_00, v0->unk_09) == 4) {
-                        v0->unk_04->selectedPartyIndex = 1;
+                        v0->unk_04->selectedPartySlot = 1;
                     } else {
-                        v0->unk_04->selectedPartyIndex = 0;
+                        v0->unk_04->selectedPartySlot = 0;
                     }
 
                     v8 = BattleSystem_Party(v0->unk_00, v0->unk_09);
@@ -4203,7 +4203,7 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
                     }
                 }
 
-                v0->unk_04->unk_08 = v0->unk_00;
+                v0->unk_04->battleSystem = v0->unk_00;
                 v0->unk_04->heapID = HEAP_ID_BATTLE;
                 v0->unk_04->unk_36 = 0;
                 v0->unk_04->unk_24 = v0->unk_10;
@@ -4227,7 +4227,7 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
                     v0->unk_04->unk_15 = 6;
                 }
 
-                StartPartyTransitions(v0->unk_04);
+                BattlePartyTask_Start(v0->unk_04);
                 v0->unk_0A++;
             }
         }
@@ -4245,10 +4245,10 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
         if (PaletteData_GetSelectedBuffersMask(v1) == 0) {
             sub_02015738(ov16_0223E220(v0->unk_00), 0);
 
-            if (v0->unk_04->selectedPartyIndex == 6) {
+            if (v0->unk_04->selectedPartySlot == 6) {
                 ov16_02265B10(v0->unk_00, v0->unk_09, 0xff);
             } else {
-                ov16_02265B10(v0->unk_00, v0->unk_09, 1 + v0->unk_04->unk_2C[v0->unk_04->selectedPartyIndex]);
+                ov16_02265B10(v0->unk_00, v0->unk_09, 1 + v0->unk_04->unk_2C[v0->unk_04->selectedPartySlot]);
             }
 
             ClearCommand(v0->unk_00, v0->unk_09, v0->unk_08);
@@ -5182,11 +5182,11 @@ static void ov16_022633A4(SysTask *param0, void *param1)
         if (PaletteData_GetSelectedBuffersMask(v1) == 0) {
             ov16_0223B384(v0->unk_00);
 
-            v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_ov13_0221FC20));
+            v0->unk_04 = Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(BattlePartyBattleInfo));
             v0->unk_04->unk_00 = BattleSystem_Party(v0->unk_00, v0->unk_09);
-            v0->unk_04->unk_08 = v0->unk_00;
+            v0->unk_04->battleSystem = v0->unk_00;
             v0->unk_04->heapID = HEAP_ID_BATTLE;
-            v0->unk_04->selectedPartyIndex = v0->unk_0E;
+            v0->unk_04->selectedPartySlot = v0->unk_0E;
             v0->unk_04->unk_24 = v0->unk_0C;
             v0->unk_04->unk_36 = 0;
             v0->unk_04->unk_12 = 0;
@@ -5195,7 +5195,7 @@ static void ov16_022633A4(SysTask *param0, void *param1)
             v0->unk_04->unk_28 = v0->unk_09;
             v0->unk_04->unk_32 = 0;
 
-            StartPartyTransitions(v0->unk_04);
+            BattlePartyTask_Start(v0->unk_04);
             v0->unk_0A++;
         }
         break;

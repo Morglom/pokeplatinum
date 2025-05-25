@@ -76,10 +76,10 @@ static void ov13_02227C08(BattleBagTask *battleBagTask)
     SpriteResourceCapacities v0 = { 8, 8, 3, 3, 0, 0 };
     SpriteSystem *v1 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
-    battleBagTask->unk_30C = SpriteManager_New(v1);
+    battleBagTask->spriteManager = SpriteManager_New(v1);
 
-    SpriteSystem_InitSprites(v1, battleBagTask->unk_30C, 6 + 5 + 1);
-    SpriteSystem_InitManagerWithCapacities(v1, battleBagTask->unk_30C, &v0);
+    SpriteSystem_InitSprites(v1, battleBagTask->spriteManager, 6 + 5 + 1);
+    SpriteSystem_InitManagerWithCapacities(v1, battleBagTask->spriteManager, &v0);
 }
 
 static void ov13_02227C54(BattleBagTask *battleBagTask)
@@ -90,19 +90,19 @@ static void ov13_02227C54(BattleBagTask *battleBagTask)
     v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
     for (v1 = 0; v1 < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; v1++) {
-        SpriteSystem_LoadCharResObjFromOpenNarc(v0, battleBagTask->unk_30C, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
-        SpriteSystem_LoadPaletteBufferFromOpenNarc(battleBagTask->palette, PLTTBUF_SUB_OBJ, v0, battleBagTask->unk_30C, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
+        SpriteSystem_LoadCharResObjFromOpenNarc(v0, battleBagTask->spriteManager, v2, Item_FileID(1, 1), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
+        SpriteSystem_LoadPaletteBufferFromOpenNarc(battleBagTask->palette, PLTTBUF_SUB_OBJ, v0, battleBagTask->spriteManager, v2, Item_FileID(1, 2), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 46263 + v1);
     }
 
-    SpriteSystem_LoadCellResObjFromOpenNarc(v0, battleBagTask->unk_30C, v2, Item_IconNCERFile(), FALSE, 46263);
-    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, battleBagTask->unk_30C, v2, Item_IconNANRFile(), FALSE, 46263);
+    SpriteSystem_LoadCellResObjFromOpenNarc(v0, battleBagTask->spriteManager, v2, Item_IconNCERFile(), FALSE, 46263);
+    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, battleBagTask->spriteManager, v2, Item_IconNANRFile(), FALSE, 46263);
     NARC_dtor(v2);
 }
 
 static void ov13_02227D10(BattleBagTask *battleBagTask, u16 item, u32 param2)
 {
     SpriteSystem *v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
-    SpriteSystem_ReplaceCharResObj(v0, battleBagTask->unk_30C, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), FALSE, param2);
+    SpriteSystem_ReplaceCharResObj(v0, battleBagTask->spriteManager, NARC_INDEX_ITEMTOOL__ITEMDATA__ITEM_ICON, Item_FileID(item, ITEM_FILE_TYPE_ICON), FALSE, param2);
 }
 
 static void ov13_02227D48(BattleBagTask *battleBagTask, u16 item, u16 param2, u32 param3)
@@ -129,7 +129,7 @@ static ManagedSprite *ov13_02227D78(BattleBagTask *battleBagTask, u32 param1)
     template.bgPriority = 1;
     template.vramTransfer = FALSE;
 
-    return SpriteSystem_NewSprite(spriteSystem, battleBagTask->unk_30C, &template);
+    return SpriteSystem_NewSprite(spriteSystem, battleBagTask->spriteManager, &template);
 }
 
 static void ov13_02227DE8(BattleBagTask *battleBagTask)
@@ -154,7 +154,7 @@ void ClearPocketItemSprites(BattleBagTask *battleBagTask)
 
     ov13_02227FDC(battleBagTask);
     ov13_022280C8(battleBagTask);
-    SpriteSystem_FreeResourcesAndManager(spriteSystem, battleBagTask->unk_30C);
+    SpriteSystem_FreeResourcesAndManager(spriteSystem, battleBagTask->spriteManager);
 }
 
 static void DrawManagedSprite(ManagedSprite *sprite, const int x, const int y)
@@ -228,8 +228,8 @@ static void ov13_02227F7C(BattleBagTask *battleBagTask)
     UnkStruct_ov16_0226DC24 *v1;
 
     v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
-    ov16_0226DB7C(v0, battleBagTask->unk_30C, battleBagTask->palette, battleBagTask->battleInfo->heapID, 46270, 46270, 46265, 46265);
-    v1 = ov16_0226DC24(v0, battleBagTask->unk_30C, battleBagTask->battleInfo->heapID, 46270, 46270, 46265, 46265, 0, 1);
+    ov16_0226DB7C(v0, battleBagTask->spriteManager, battleBagTask->palette, battleBagTask->battleInfo->heapID, 46270, 46270, 46265, 46265);
+    v1 = ov16_0226DC24(v0, battleBagTask->spriteManager, battleBagTask->battleInfo->heapID, 46270, 46270, 46265, 46265, 0, 1);
 
     SetBattleSubMenuCursorSprites(battleBagTask->cursor, v1);
 }
@@ -237,7 +237,7 @@ static void ov13_02227F7C(BattleBagTask *battleBagTask)
 static void ov13_02227FDC(BattleBagTask *battleBagTask)
 {
     ov16_0226DCA8(GetBattleSubMenuCursorSprites(battleBagTask->cursor));
-    ov16_0226DBFC(battleBagTask->unk_30C, 46270, 46270, 46265, 46265);
+    ov16_0226DBFC(battleBagTask->spriteManager, 46270, 46270, 46265, 46265);
 }
 
 static const ByteFlagSet Unk_ov13_02229C14[] = {
@@ -302,14 +302,14 @@ static void ov13_02228070(BattleBagTask *battleBagTask)
 
     v0 = BattleSystem_SpriteSystem(battleBagTask->battleInfo->battleSystem);
 
-    ov16_0226DE44(v0, battleBagTask->unk_30C, battleBagTask->battleInfo->heapID, battleBagTask->palette, 46269, 46269, 46264, 46264);
-    battleBagTask->unk_38 = ov16_0226DEEC(v0, battleBagTask->unk_30C, battleBagTask->battleInfo->heapID, 46269, 46269, 46264, 46264, 0, 0);
+    ov16_0226DE44(v0, battleBagTask->spriteManager, battleBagTask->battleInfo->heapID, battleBagTask->palette, 46269, 46269, 46264, 46264);
+    battleBagTask->unk_38 = ov16_0226DEEC(v0, battleBagTask->spriteManager, battleBagTask->battleInfo->heapID, 46269, 46269, 46264, 46264, 0, 0);
 }
 
 static void ov13_022280C8(BattleBagTask *battleBagTask)
 {
     ov16_0226DF68(battleBagTask->unk_38);
-    ov16_0226DEC4(battleBagTask->unk_30C, 46269, 46269, 46264, 46264);
+    ov16_0226DEC4(battleBagTask->spriteManager, 46269, 46269, 46264, 46264);
 }
 
 static const int Unk_ov13_02229BFC[3][2] = {

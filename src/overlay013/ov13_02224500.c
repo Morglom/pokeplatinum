@@ -24,29 +24,29 @@
 #include "unk_0207E0B8.h"
 #include "unk_0208C098.h"
 
-static void ov13_0222453C(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224588(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224670(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224848(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224720(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224798(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224948(UnkStruct_ov13_022213F0 *param0);
-static void ov13_022249CC(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224C14(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224CB0(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224D08(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224E78(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224F3C(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02224FA8(UnkStruct_ov13_022213F0 *param0);
-static void ov13_0222506C(UnkStruct_ov13_022213F0 *param0);
-static void ov13_022250D8(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02225150(UnkStruct_ov13_022213F0 *param0);
-static void ov13_022251B4(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02225248(UnkStruct_ov13_022213F0 *param0);
-static void ov13_02225420(UnkStruct_ov13_022213F0 *param0);
-static void ov13_0222554C(UnkStruct_ov13_022213F0 *param0);
-static void ov13_022255B8(UnkStruct_ov13_022213F0 *param0);
+static void ov13_0222453C(BattlePartyTask *param0);
+static void ov13_02224588(BattlePartyTask *param0);
+static void ov13_02224670(BattlePartyTask *param0);
+static void ov13_02224848(BattlePartyTask *param0);
+static void ov13_02224720(BattlePartyTask *param0);
+static void ov13_02224798(BattlePartyTask *param0);
+static void ov13_02224948(BattlePartyTask *param0);
+static void ov13_022249CC(BattlePartyTask *param0);
+static void ov13_02224C14(BattlePartyTask *param0);
+static void ov13_02224CB0(BattlePartyTask *param0);
+static void ov13_02224D08(BattlePartyTask *param0);
+static void ov13_02224DA0(BattlePartyTask *param0);
+static void ov13_02224E78(BattlePartyTask *param0);
+static void ov13_02224F3C(BattlePartyTask *param0);
+static void ov13_02224FA8(BattlePartyTask *param0);
+static void ov13_0222506C(BattlePartyTask *param0);
+static void ov13_022250D8(BattlePartyTask *param0);
+static void ov13_02225150(BattlePartyTask *param0);
+static void ov13_022251B4(BattlePartyTask *param0);
+static void ov13_02225248(BattlePartyTask *param0);
+static void ov13_02225420(BattlePartyTask *param0);
+static void ov13_0222554C(BattlePartyTask *param0);
+static void ov13_022255B8(BattlePartyTask *param0);
 
 static const int Unk_ov13_02229514[][5] = {
     { 0xB016, 0xB00A, 0xB00A, 0xB00A, 0x0 },
@@ -218,7 +218,7 @@ static const int Unk_ov13_0222925C[2] = {
     0x48
 };
 
-void ov13_02224500(UnkStruct_ov13_022213F0 *param0)
+void ov13_02224500(BattlePartyTask *param0)
 {
     ov13_0222453C(param0);
     ov13_02224588(param0);
@@ -231,96 +231,96 @@ void ov13_02224500(UnkStruct_ov13_022213F0 *param0)
     GXLayers_EngineBToggleLayers(GX_PLANEMASK_OBJ, 1);
 }
 
-static void ov13_0222453C(UnkStruct_ov13_022213F0 *param0)
+static void ov13_0222453C(BattlePartyTask *param0)
 {
     SpriteResourceCapacities v0 = { 18, 6, 6, 6, 0, 0 };
-    SpriteSystem *v1 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    SpriteSystem *v1 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    param0->unk_1FB0 = SpriteManager_New(v1);
+    param0->spriteManager = SpriteManager_New(v1);
 
-    SpriteSystem_InitSprites(v1, param0->unk_1FB0, 38 + 5);
-    SpriteSystem_InitManagerWithCapacities(v1, param0->unk_1FB0, &v0);
+    SpriteSystem_InitSprites(v1, param0->spriteManager, 38 + 5);
+    SpriteSystem_InitManagerWithCapacities(v1, param0->spriteManager, &v0);
 }
 
-static void ov13_02224588(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224588(BattlePartyTask *param0)
 {
     SpriteSystem *v0;
     u32 v1;
-    NARC *v2 = NARC_ctor(NARC_INDEX_POKETOOL__ICONGRA__PL_POKE_ICON, param0->unk_00->heapID);
-    v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    NARC *v2 = NARC_ctor(NARC_INDEX_POKETOOL__ICONGRA__PL_POKE_ICON, param0->battleInfo->heapID);
+    v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->unk_1E4, PLTTBUF_SUB_OBJ, v0, param0->unk_1FB0, v2, PokeIconPalettesFileIndex(), FALSE, 3, NNS_G2D_VRAM_TYPE_2DSUB, 45063);
-    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->unk_1FB0, v2, PokeIcon32KCellsFileIndex(), FALSE, 45063);
-    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->unk_1FB0, v2, PokeIcon32KAnimationFileIndex(), FALSE, 45063);
+    SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->palette, PLTTBUF_SUB_OBJ, v0, param0->spriteManager, v2, PokeIconPalettesFileIndex(), FALSE, 3, NNS_G2D_VRAM_TYPE_2DSUB, 45063);
+    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->spriteManager, v2, PokeIcon32KCellsFileIndex(), FALSE, 45063);
+    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->spriteManager, v2, PokeIcon32KAnimationFileIndex(), FALSE, 45063);
 
     for (v1 = 0; v1 < 6; v1++) {
         if (param0->unk_04[v1].species != 0) {
-            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v2, Pokemon_IconSpriteIndex(param0->unk_04[v1].pokemon), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
+            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v2, Pokemon_IconSpriteIndex(param0->unk_04[v1].pokemon), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
         } else {
-            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v2, PokeIconSpriteIndex(0, 0, 0), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
+            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v2, PokeIconSpriteIndex(0, 0, 0), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
         }
     }
 
     NARC_dtor(v2);
 }
 
-static void ov13_02224670(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224670(BattlePartyTask *param0)
 {
-    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
-    NARC *v1 = NARC_ctor(NARC_INDEX_GRAPHIC__PL_PST_GRA, param0->unk_00->heapID);
+    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
+    NARC *v1 = NARC_ctor(NARC_INDEX_GRAPHIC__PL_PST_GRA, param0->battleInfo->heapID);
 
-    SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->unk_1E4, PLTTBUF_SUB_OBJ, v0, param0->unk_1FB0, v1, PokemonSummaryScreen_StatusIconPltt(), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 45064);
-    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->unk_1FB0, v1, PokemonSummaryScreen_StatusIconCell(), FALSE, 45064);
-    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->unk_1FB0, v1, PokemonSummaryScreen_StatusIconAnim(), FALSE, 45064);
-    SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v1, PokemonSummaryScreen_StatusIconChar(), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45069);
+    SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->palette, PLTTBUF_SUB_OBJ, v0, param0->spriteManager, v1, PokemonSummaryScreen_StatusIconPltt(), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 45064);
+    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->spriteManager, v1, PokemonSummaryScreen_StatusIconCell(), FALSE, 45064);
+    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->spriteManager, v1, PokemonSummaryScreen_StatusIconAnim(), FALSE, 45064);
+    SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v1, PokemonSummaryScreen_StatusIconChar(), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45069);
     NARC_dtor(v1);
 }
 
-static void ov13_02224720(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224720(BattlePartyTask *param0)
 {
     SpriteSystem *v0;
     u32 v1;
 
-    v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    sub_0207C9B0(param0->unk_1E4, 3, v0, param0->unk_1FB0, NNS_G2D_VRAM_TYPE_2DSUB, 45065);
-    sub_0207C9EC(v0, param0->unk_1FB0, 45065, 45065);
+    sub_0207C9B0(param0->palette, 3, v0, param0->spriteManager, NNS_G2D_VRAM_TYPE_2DSUB, 45065);
+    sub_0207C9EC(v0, param0->spriteManager, 45065, 45065);
 
     for (v1 = 45070; v1 <= 45076; v1++) {
-        sub_0207C948(v0, param0->unk_1FB0, NNS_G2D_VRAM_TYPE_2DSUB, 0, v1);
+        sub_0207C948(v0, param0->spriteManager, NNS_G2D_VRAM_TYPE_2DSUB, 0, v1);
     }
 
-    sub_0207CAC4(v0, param0->unk_1FB0, NNS_G2D_VRAM_TYPE_2DSUB, 0, 45077);
+    sub_0207CAC4(v0, param0->spriteManager, NNS_G2D_VRAM_TYPE_2DSUB, 0, 45077);
 }
 
-static void ov13_02224798(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224798(BattlePartyTask *param0)
 {
     SpriteSystem *v0;
     u32 v1;
-    NARC *v2 = NARC_ctor(NARC_INDEX_GRAPHIC__PL_PLIST_GRA, param0->unk_00->heapID);
-    v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    NARC *v2 = NARC_ctor(NARC_INDEX_GRAPHIC__PL_PLIST_GRA, param0->battleInfo->heapID);
+    v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->unk_1E4, PLTTBUF_SUB_OBJ, v0, param0->unk_1FB0, v2, sub_02081934(), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 45066);
-    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->unk_1FB0, v2, sub_02081938(), FALSE, 45066);
-    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->unk_1FB0, v2, sub_0208193C(), FALSE, 45066);
-    SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->unk_1FB0, v2, sub_02081930(), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45078);
+    SpriteSystem_LoadPaletteBufferFromOpenNarc(param0->palette, PLTTBUF_SUB_OBJ, v0, param0->spriteManager, v2, sub_02081934(), FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 45066);
+    SpriteSystem_LoadCellResObjFromOpenNarc(v0, param0->spriteManager, v2, sub_02081938(), FALSE, 45066);
+    SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->spriteManager, v2, sub_0208193C(), FALSE, 45066);
+    SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v2, sub_02081930(), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45078);
     NARC_dtor(v2);
 }
 
-static void ov13_02224848(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224848(BattlePartyTask *param0)
 {
-    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    SpriteSystem_LoadPaletteBuffer(param0->unk_1E4, 3, v0, param0->unk_1FB0, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 27, FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 45067);
-    SpriteSystem_LoadCellResObj(v0, param0->unk_1FB0, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 25, FALSE, 45067);
-    SpriteSystem_LoadAnimResObj(v0, param0->unk_1FB0, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 24, FALSE, 45067);
-    SpriteSystem_LoadCharResObj(v0, param0->unk_1FB0, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 26, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45079);
+    SpriteSystem_LoadPaletteBuffer(param0->palette, 3, v0, param0->spriteManager, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 27, FALSE, 1, NNS_G2D_VRAM_TYPE_2DSUB, 45067);
+    SpriteSystem_LoadCellResObj(v0, param0->spriteManager, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 25, FALSE, 45067);
+    SpriteSystem_LoadAnimResObj(v0, param0->spriteManager, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 24, FALSE, 45067);
+    SpriteSystem_LoadCharResObj(v0, param0->spriteManager, NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, 26, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45079);
 }
 
-static ManagedSprite *ov13_022248D8(UnkStruct_ov13_022213F0 *param0, u32 param1)
+static ManagedSprite *ov13_022248D8(BattlePartyTask *param0, u32 param1)
 {
     SpriteTemplate v0;
-    SpriteSystem *v1 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    SpriteSystem *v1 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
     v0.x = 0;
     v0.y = 0;
@@ -336,10 +336,10 @@ static ManagedSprite *ov13_022248D8(UnkStruct_ov13_022213F0 *param0, u32 param1)
     v0.bgPriority = 1;
     v0.vramTransfer = FALSE;
 
-    return SpriteSystem_NewSprite(v1, param0->unk_1FB0, &v0);
+    return SpriteSystem_NewSprite(v1, param0->spriteManager, &v0);
 }
 
-static void ov13_02224948(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224948(BattlePartyTask *param0)
 {
     u32 v0;
 
@@ -350,19 +350,19 @@ static void ov13_02224948(UnkStruct_ov13_022213F0 *param0)
     ov13_022249CC(param0);
 }
 
-void ov13_02224970(UnkStruct_ov13_022213F0 *param0)
+void ov13_02224970(BattlePartyTask *param0)
 {
     SpriteSystem *v0;
     u32 v1;
 
-    v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
     for (v1 = 0; v1 < 38; v1++) {
         Sprite_DeleteAndFreeResources(param0->unk_1FB4[v1]);
     }
 
     ov13_022255B8(param0);
-    SpriteSystem_FreeResourcesAndManager(v0, param0->unk_1FB0);
+    SpriteSystem_FreeResourcesAndManager(v0, param0->spriteManager);
 }
 
 static void ov13_022249AC(ManagedSprite *param0, const int x, const int y)
@@ -371,7 +371,7 @@ static void ov13_022249AC(ManagedSprite *param0, const int x, const int y)
     ManagedSprite_SetPositionXY(param0, x, y);
 }
 
-static void ov13_022249CC(UnkStruct_ov13_022213F0 *param0)
+static void ov13_022249CC(BattlePartyTask *param0)
 {
     s32 v0;
 
@@ -384,19 +384,19 @@ static void ov13_022249CC(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-static void ov13_02224A0C(UnkStruct_ov13_022213F0 *param0, ManagedSprite *param1, u32 param2, u8 param3)
+static void ov13_02224A0C(BattlePartyTask *param0, ManagedSprite *param1, u32 param2, u8 param3)
 {
-    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    SpriteSystem_ReplaceCharResObj(v0, param0->unk_1FB0, sub_0207C944(), sub_0207C908(param3), 1, param2);
+    SpriteSystem_ReplaceCharResObj(v0, param0->spriteManager, sub_0207C944(), sub_0207C908(param3), 1, param2);
     ManagedSprite_SetExplicitPalette(param1, sub_0207C92C(param3) + 4);
 }
 
-static void ov13_02224A5C(UnkStruct_ov13_022213F0 *param0, ManagedSprite *param1, u32 param2)
+static void ov13_02224A5C(BattlePartyTask *param0, ManagedSprite *param1, u32 param2)
 {
-    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
+    SpriteSystem *v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
 
-    SpriteSystem_ReplaceCharResObj(v0, param0->unk_1FB0, sub_0207CAC0(), sub_0207CA90(param2), 1, 45077);
+    SpriteSystem_ReplaceCharResObj(v0, param0->spriteManager, sub_0207CAC0(), sub_0207CA90(param2), 1, 45077);
     ManagedSprite_SetExplicitPalette(param1, sub_0207CAA8(param2) + 4);
 }
 
@@ -410,7 +410,7 @@ static void ov13_02224AB0(u16 param0, ManagedSprite *param1, const int param2, c
     ov13_022249AC(param1, param2, param3);
 }
 
-static void ov13_02224AD4(UnkStruct_ov13_022213F0 *param0, PartyPokemonData *param1, const int *param2)
+static void ov13_02224AD4(BattlePartyTask *param0, PartyPokemonData *param1, const int *param2)
 {
     ov13_02224A0C(param0, param0->unk_1FB4[19], 45070, param1->type1);
     ov13_022249AC(param0->unk_1FB4[19], param2[0], param2[1]);
@@ -446,7 +446,7 @@ static void ov13_02224B5C(u8 param0, ManagedSprite *param1, const int param2, co
     ov13_022249AC(param1, param2, param3);
 }
 
-void ov13_02224B7C(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex screenIndex)
+void ov13_02224B7C(BattlePartyTask *param0, enum InBattleScreenIndex screenIndex)
 {
     u32 v0;
 
@@ -488,7 +488,7 @@ void ov13_02224B7C(UnkStruct_ov13_022213F0 *param0, enum InBattleScreenIndex scr
     }
 }
 
-static void ov13_02224C14(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224C14(BattlePartyTask *param0)
 {
     s32 v0;
 
@@ -504,45 +504,45 @@ static void ov13_02224C14(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-static void ov13_02224CB0(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224CB0(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222921C[0], Unk_ov13_0222921C[1]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222921C[0] + 8, Unk_ov13_0222921C[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222921C[0] + 16, Unk_ov13_0222921C[1] + 8);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222921C[0], Unk_ov13_0222921C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222921C[0] + 8, Unk_ov13_0222921C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222921C[0] + 16, Unk_ov13_0222921C[1] + 8);
 }
 
-static void ov13_02224D08(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224D08(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222923C[0], Unk_ov13_0222923C[1]);
-    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222924C[0], Unk_ov13_0222924C[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222923C[0], Unk_ov13_0222923C[1]);
+    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222924C[0], Unk_ov13_0222924C[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_022292C4[0][0]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222923C[0] + 8, Unk_ov13_0222923C[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222923C[0] + 16, Unk_ov13_0222923C[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222923C[0] + 8, Unk_ov13_0222923C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222923C[0] + 16, Unk_ov13_0222923C[1] + 8);
     ov13_02224B28(v0->heldItem, param0->unk_1FB4[6], 20, 132);
 }
 
-static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224DA0(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u32 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229244[0], Unk_ov13_02229244[1]);
-    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229254[0], Unk_ov13_02229254[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229244[0], Unk_ov13_02229244[1]);
+    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229254[0], Unk_ov13_02229254[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_022292A4[0][0]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229244[0] + 8, Unk_ov13_02229244[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229244[0] + 16, Unk_ov13_02229244[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229244[0] + 8, Unk_ov13_02229244[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229244[0] + 16, Unk_ov13_02229244[1] + 8);
 
     for (v1 = 0; v1 < 4; v1++) {
         if (v0->moves[v1].move == 0) {
@@ -554,95 +554,95 @@ static void ov13_02224DA0(UnkStruct_ov13_022213F0 *param0)
     }
 }
 
-static void ov13_02224E78(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224E78(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0], Unk_ov13_02229264[1]);
-    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229224[0], Unk_ov13_02229224[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229264[0], Unk_ov13_02229264[1]);
+    ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229224[0], Unk_ov13_02229224[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_022292B4[0][0]);
-    ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222922C[0], Unk_ov13_0222922C[1]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0] + 8, Unk_ov13_02229264[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229264[0] + 16, Unk_ov13_02229264[1] + 8);
-    ov13_02224A5C(param0, param0->unk_1FB4[26], v0->moves[param0->unk_00->unk_34].class);
+    ov13_022249AC(param0->unk_1FB4[21 + param0->battleInfo->unk_34], Unk_ov13_0222922C[0], Unk_ov13_0222922C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229264[0] + 8, Unk_ov13_02229264[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229264[0] + 16, Unk_ov13_02229264[1] + 8);
+    ov13_02224A5C(param0, param0->unk_1FB4[26], v0->moves[param0->battleInfo->unk_34].class);
     ov13_022249AC(param0->unk_1FB4[26], Unk_ov13_02229214[0], Unk_ov13_02229214[1]);
 }
 
-static void ov13_02224F3C(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224F3C(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229294[0][0]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
     ov13_022252E8(param0);
 }
 
-static void ov13_02224FA8(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02224FA8(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229284[0][0]);
-    ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222926C[0], Unk_ov13_0222926C[1]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
+    ov13_022249AC(param0->unk_1FB4[21 + param0->battleInfo->unk_34], Unk_ov13_0222926C[0], Unk_ov13_0222926C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
 
-    if (param0->unk_00->unk_34 < 4) {
-        ov13_02224A5C(param0, param0->unk_1FB4[26], v0->moves[param0->unk_00->unk_34].class);
+    if (param0->battleInfo->unk_34 < 4) {
+        ov13_02224A5C(param0, param0->unk_1FB4[26], v0->moves[param0->battleInfo->unk_34].class);
     } else {
-        ov13_02224A5C(param0, param0->unk_1FB4[26], MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_CLASS));
+        ov13_02224A5C(param0, param0->unk_1FB4[26], MoveTable_LoadParam(param0->battleInfo->unk_24, MOVEATTRIBUTE_CLASS));
     }
 
     ov13_022249AC(param0->unk_1FB4[26], Unk_ov13_02229274[0], Unk_ov13_02229274[1]);
 }
 
-static void ov13_0222506C(UnkStruct_ov13_022213F0 *param0)
+static void ov13_0222506C(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229294[0][0]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0] + 8, Unk_ov13_02229234[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0] + 16, Unk_ov13_02229234[1] + 8);
     ov13_022252E8(param0);
 }
 
-static void ov13_022250D8(UnkStruct_ov13_022213F0 *param0)
+static void ov13_022250D8(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
-    ov13_022249AC(param0->unk_1FB4[21 + param0->unk_00->unk_34], Unk_ov13_0222925C[0], Unk_ov13_0222925C[1]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
+    ov13_022249AC(param0->unk_1FB4[21 + param0->battleInfo->unk_34], Unk_ov13_0222925C[0], Unk_ov13_0222925C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
     ov13_02225420(param0);
 }
 
-static void ov13_02225150(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02225150(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
-    ov13_022249AC(param0->unk_1FB4[7 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
-    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
-    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->unk_00->selectedPartyIndex], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
+    ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
+    ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
+    ov13_02224B5C(v0->mail, param0->unk_1FB4[32 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 16, Unk_ov13_0222927C[1] + 8);
     ov13_022252E8(param0);
     ov13_02225420(param0);
 }
 
-static void ov13_022251B4(UnkStruct_ov13_022213F0 *param0)
+static void ov13_022251B4(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
     for (v1 = 0; v1 < 4; v1++) {
         if (v0->moves[v1].move == 0) {
@@ -653,18 +653,18 @@ static void ov13_022251B4(UnkStruct_ov13_022213F0 *param0)
         ov13_022249AC(param0->unk_1FB4[21 + v1], Unk_ov13_022293DC[v1][0], Unk_ov13_022293DC[v1][1]);
     }
 
-    if (param0->unk_00->unk_24 != 0) {
-        ov13_02224A0C(param0, param0->unk_1FB4[25], 45076, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_TYPE));
+    if (param0->battleInfo->unk_24 != 0) {
+        ov13_02224A0C(param0, param0->unk_1FB4[25], 45076, MoveTable_LoadParam(param0->battleInfo->unk_24, MOVEATTRIBUTE_TYPE));
         ov13_022249AC(param0->unk_1FB4[25], Unk_ov13_022293DC[4][0], Unk_ov13_022293DC[4][1]);
     }
 }
 
-static void ov13_02225248(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02225248(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
     for (v1 = 0; v1 < 4; v1++) {
         if (v0->moves[v1].move == 0) {
@@ -675,13 +675,13 @@ static void ov13_02225248(UnkStruct_ov13_022213F0 *param0)
         ov13_022249AC(param0->unk_1FB4[21 + v1], Unk_ov13_022293DC[v1][0], Unk_ov13_022293DC[v1][1]);
     }
 
-    if (param0->unk_00->unk_24 != 0) {
-        ov13_02224A0C(param0, param0->unk_1FB4[25], 45076, MoveTable_LoadParam(param0->unk_00->unk_24, MOVEATTRIBUTE_CONTEST_TYPE) + 18);
+    if (param0->battleInfo->unk_24 != 0) {
+        ov13_02224A0C(param0, param0->unk_1FB4[25], 45076, MoveTable_LoadParam(param0->battleInfo->unk_24, MOVEATTRIBUTE_CONTEST_TYPE) + 18);
         ov13_022249AC(param0->unk_1FB4[25], Unk_ov13_022293DC[4][0], Unk_ov13_022293DC[4][1]);
     }
 }
 
-void ov13_022252E8(UnkStruct_ov13_022213F0 *param0)
+void ov13_022252E8(BattlePartyTask *param0)
 {
     if (param0->unk_2073_0 == 0) {
         ov13_022251B4(param0);
@@ -724,12 +724,12 @@ static u8 ov13_02225324(PartyPokemonData *param0)
     return 0;
 }
 
-void ov13_0222537C(UnkStruct_ov13_022213F0 *param0)
+void ov13_0222537C(BattlePartyTask *param0)
 {
     u16 v0;
     u16 v1;
 
-    for (v0 = 0; v0 < Party_GetCurrentCount(param0->unk_00->unk_00); v0++) {
+    for (v0 = 0; v0 < Party_GetCurrentCount(param0->battleInfo->unk_00); v0++) {
         if (param0->unk_04[v0].species == 0) {
             continue;
         }
@@ -760,12 +760,12 @@ static s16 ov13_022253DC(u32 param0, s16 param1, s16 param2)
     return param2 + (s16)v0;
 }
 
-static void ov13_02225420(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02225420(BattlePartyTask *param0)
 {
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->unk_00->selectedPartyIndex];
+    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
 
     ov13_02225304(param0->unk_1FB4[27], 0);
     ov13_02225304(param0->unk_1FB4[28], 1);
@@ -780,22 +780,22 @@ static void ov13_02225420(UnkStruct_ov13_022213F0 *param0)
     ov13_022249AC(param0->unk_1FB4[31], ov13_022253DC(v0->tough, 123, 143), ov13_022253DC(v0->tough, 16, 24));
 }
 
-static void ov13_0222554C(UnkStruct_ov13_022213F0 *param0)
+static void ov13_0222554C(BattlePartyTask *param0)
 {
     SpriteSystem *v0;
     UnkStruct_ov16_0226DC24 *v1;
 
-    v0 = BattleSystem_SpriteSystem(param0->unk_00->unk_08);
-    ov16_0226DB7C(v0, param0->unk_1FB0, param0->unk_1E4, param0->unk_00->heapID, 45080, 45068, 45068, 45068);
-    v1 = ov16_0226DC24(v0, param0->unk_1FB0, param0->unk_00->heapID, 45080, 45068, 45068, 45068, 0, 1);
+    v0 = BattleSystem_SpriteSystem(param0->battleInfo->battleSystem);
+    ov16_0226DB7C(v0, param0->spriteManager, param0->palette, param0->battleInfo->heapID, 45080, 45068, 45068, 45068);
+    v1 = ov16_0226DC24(v0, param0->spriteManager, param0->battleInfo->heapID, 45080, 45068, 45068, 45068, 0, 1);
 
     SetBattleSubMenuCursorSprites(param0->unk_2084, v1);
 }
 
-static void ov13_022255B8(UnkStruct_ov13_022213F0 *param0)
+static void ov13_022255B8(BattlePartyTask *param0)
 {
     ov16_0226DCA8(GetBattleSubMenuCursorSprites(param0->unk_2084));
-    ov16_0226DBFC(param0->unk_1FB0, 45080, 45068, 45068, 45068);
+    ov16_0226DBFC(param0->spriteManager, 45080, 45068, 45068, 45068);
 }
 
 static const ByteFlagSet PartyListCursorCoords[] = {
@@ -878,41 +878,41 @@ static const ByteFlagSet *const Unk_ov13_0222938C[] = {
     ConfirmLearnMoveCursorCoords
 };
 
-static void ov13_022255EC(UnkStruct_ov13_022213F0 *param0)
+static void ov13_022255EC(BattlePartyTask *param0)
 {
-    if (param0->unk_2073_4 == 0) {
+    if (param0->visitedContestHall == 0) {
         SetEnabledPositionsMask(param0->unk_2084, 0x5f);
     } else {
         SetEnabledPositionsMask(param0->unk_2084, 0x7f);
     }
 }
 
-static void ov13_02225614(UnkStruct_ov13_022213F0 *param0)
+static void ov13_02225614(BattlePartyTask *param0)
 {
-    if (param0->unk_2073_4 == 0) {
+    if (param0->visitedContestHall == 0) {
         SetEnabledPositionsMask(param0->unk_2084, 5);
     } else {
         SetEnabledPositionsMask(param0->unk_2084, 7);
     }
 }
 
-void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1)
+void ov13_0222563C(BattlePartyTask *param0, u8 param1)
 {
     SetBattleSubMenuCursorPositions(param0->unk_2084, Unk_ov13_0222938C[param1]);
 
     switch (param1) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_00->selectedPartyIndex);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->battleInfo->selectedPartySlot);
         param0->unk_2088 = 0;
-        param0->unk_00->unk_34 = 0;
+        param0->battleInfo->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
         SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_2088);
-        param0->unk_00->unk_34 = 0;
+        param0->battleInfo->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
     case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_00->unk_34);
+        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->battleInfo->unk_34);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_1:
     case IN_BATTLE_SCREEN_LEARN_MOVE_2:
@@ -927,7 +927,7 @@ void ov13_0222563C(UnkStruct_ov13_022213F0 *param0, u8 param1)
     }
 }
 
-void SomeKindOfReset(UnkStruct_ov13_022213F0 *param0)
+void SomeKindOfReset(BattlePartyTask *param0)
 {
     SetBattlePartyBagCursorVisiblity(param0->unk_2084, FALSE);
     ResetBattleSubMenuCursorPosition(param0->unk_2084);

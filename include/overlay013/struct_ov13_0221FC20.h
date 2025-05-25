@@ -8,10 +8,10 @@
 typedef struct {
     Party *unk_00; // Party
     void *unk_04;
-    BattleSystem *unk_08; // Battle system
+    BattleSystem *battleSystem; // Battle system
     u32 heapID;
     u8 unk_10;
-    u8 selectedPartyIndex;
+    u8 selectedPartySlot;
     u8 unk_12;
     u8 unk_13;
     u8 unk_14;
@@ -27,6 +27,6 @@ typedef struct {
     u8 unk_34; // Index of selected move
     u8 unk_35; // Selection enum maybe
     u8 unk_36;
-} UnkStruct_ov13_0221FC20;
+} BattlePartyBattleInfo;
 
 #endif // POKEPLATINUM_STRUCT_OV13_0221FC20_H

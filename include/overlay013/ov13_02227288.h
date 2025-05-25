@@ -4,10 +4,10 @@
 #include "overlay013/struct_ov13_02227244.h"
 
 void InitializeWindows(BattleBagTask *battleBagTask);
-void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum InBattlePartyScreenIndex screenIndex);
+void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum BattlePartyTaskState screenIndex);
 void ClearInBattleBagScreen(BattleBagTask *battleBagTask);
 void ClearBattleBagWindows(BattleBagTask *battleBagTask);
-void DrawInBattleBagScreen(BattleBagTask *battleBagTask, enum InBattlePartyScreenIndex screenIndex);
+void DrawInBattleBagScreen(BattleBagTask *battleBagTask, enum BattlePartyTaskState screenIndex);
 void DrawBagSubMenuPage(BattleBagTask *battleBagTask);
 void DrawBagSubMenuPageInfo(BattleBagTask *battleBagTask);
 void DisplayMessageBox(BattleBagTask *battleBagTask);

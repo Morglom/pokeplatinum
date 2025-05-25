@@ -28,10 +28,10 @@ enum InBattleScreenIndex {
 };
 
 typedef struct {
-    UnkStruct_ov13_0221FC20 *unk_00;
+    BattlePartyBattleInfo *battleInfo;
     PartyPokemonData unk_04[6]; // Party Pokemon
-    BgConfig *unk_1E0;
-    PaletteData *unk_1E4;
+    BgConfig *background;
+    PaletteData *palette;
     u16 unk_1E8[4][96];
     u16 unk_4E8[4][96];
     u16 unk_7E8[4][65];
@@ -54,17 +54,17 @@ typedef struct {
     MessageLoader *unk_1FA4;
     StringTemplate *unk_1FA8;
     Strbuf *unk_1FAC;
-    SpriteManager *unk_1FB0;
+    SpriteManager *spriteManager;
     ManagedSprite *unk_1FB4[38];
     Window unk_204C[2]; // Message box windows
     Window *unk_206C; // Window array
     u8 unk_2070; // Window num
     u8 unk_2071;
-    u8 unk_2072;
+    u8 selectedPartySlot;
     u8 unk_2073_0 : 4; // Num windows
-    u8 unk_2073_4 : 4; // Some sort of enum
-    u8 unk_2074; // Another enum
-    u8 unk_2075; // Screen queue
+    u8 visitedContestHall : 4; // Some sort of enum
+    u8 currentState; // Another enum
+    u8 queuedState; // Screen queue
     u8 unk_2076; // In battle screen index
     u8 unk_2077; // Printer id
     u8 unk_2078;
@@ -75,7 +75,7 @@ typedef struct {
     u8 unk_2088;
     u8 unk_2089; // Navigation
     u8 unk_208A;
-    u8 unk_208B;
-} UnkStruct_ov13_022213F0;
+    u8 battlerType;
+} BattlePartyTask;
 
 #endif // POKEPLATINUM_STRUCT_OV13_022213F0_H

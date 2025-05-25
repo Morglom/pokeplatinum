@@ -138,8 +138,8 @@ u32 BattleSystem_GetTrainerGender(BattleSystem *battleSys, int param1);
  * @return ID of the battler of the given type.
  */
 int BattleSystem_BattlerOfType(BattleSystem *battleSys, int type);
-u8 BattleSystem_BattlerSlot(BattleSystem *battleSys, int param1);
-u8 Battler_Side(BattleSystem *battleSys, int param1);
+u8 BattleSystem_BattlerSlot(BattleSystem *battleSys, int battler);
+u8 Battler_Side(BattleSystem *battleSys, int battler);
 void *ov16_0223E220(BattleSystem *battleSys);
 PCBoxes *BattleSystem_PCBoxes(BattleSystem *battleSys);
 

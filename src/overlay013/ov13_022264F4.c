@@ -252,7 +252,7 @@ static void BattleBagTask_Tick(SysTask *task, void *taskParam)
     }
 
     ov13_02228848(battleBagTask);
-    SpriteSystem_DrawSprites(battleBagTask->unk_30C);
+    SpriteSystem_DrawSprites(battleBagTask->spriteManager);
 }
 
 static enum BattleBagTaskState BattleBagTask_Initialize(BattleBagTask *battleBagTask)

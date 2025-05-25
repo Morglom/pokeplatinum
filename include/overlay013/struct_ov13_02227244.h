@@ -15,7 +15,7 @@
 #include "strbuf.h"
 #include "string_template.h"
 
-enum InBattlePartyScreenIndex {
+enum BattlePartyTaskState {
     IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU = 0,
     IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU,
     IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM,
@@ -44,7 +44,7 @@ typedef struct {
     BattleSubMenuCursor *cursor;
     UnkStruct_ov16_0226DEEC *unk_38;
     BagItem battleBagItems[5][36];
-    SpriteManager *unk_30C;
+    SpriteManager *spriteManager;
     ManagedSprite *unk_310[6]; // Page item sprites
     u16 unk_328[3][144];
     u16 unk_688[4][130];
@@ -57,11 +57,11 @@ typedef struct {
     u16 unk_107E[3][16];
     u16 unk_10DE[3][16];
     u8 unk_113E; // Some kind of state
-    u8 unk_113F;
+    u8 unk_113F; // Useless
     u8 unk_1140;
-    u8 unk_1141_0 : 4;
-    u8 unk_1141_4 : 4;
-    u8 unk_1142[8];
+    u8 unk_1141_0 : 4; // Useless
+    u8 unk_1141_4 : 4; // Useless
+    u8 unk_1142[8]; // Useless
     u8 currentState;
     u8 queuedState;
     u8 currentScreen;
@@ -70,7 +70,7 @@ typedef struct {
     u8 numBattleBagPocketItems[5];
     u8 numBattleBagPocketPages[5]; // Actually the number of pages after the first
     u8 catchTutorialState;
-    u8 unk_115A;
+    u8 unk_115A; // Catch tutorial tick counter
 } BattleBagTask;
 
 #endif // POKEPLATINUM_STRUCT_OV13_02227244_H

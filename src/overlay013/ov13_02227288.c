@@ -104,7 +104,7 @@ void InitializeWindows(BattleBagTask *battleBagTask)
     InitializeInBattleBagScreen(battleBagTask, battleBagTask->currentScreen);
 }
 
-void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum InBattlePartyScreenIndex screenIndex)
+void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum BattlePartyTaskState screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
@@ -142,7 +142,7 @@ void ClearBattleBagWindows(BattleBagTask *BATTLE_BAG_TASK_STATE_EXIT)
     Window_Remove(&BATTLE_BAG_TASK_STATE_EXIT->messageBoxWindow);
 }
 
-void DrawInBattleBagScreen(BattleBagTask *param0, enum InBattlePartyScreenIndex screenIndex)
+void DrawInBattleBagScreen(BattleBagTask *param0, enum BattlePartyTaskState screenIndex)
 {
     switch (screenIndex) {
     case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
