@@ -273,10 +273,10 @@ void ov13_02221A88(BattlePartyTask *param0)
     u32 i;
 
     for (i = 0; i < 2; i++) {
-        Window_AddFromTemplate(param0->background, &param0->unk_204C[i], &partyScreenMessageBoxWindowTemplates[i]);
+        Window_AddFromTemplate(param0->background, &param0->messageBoxWindows[i], &partyScreenMessageBoxWindowTemplates[i]);
     }
 
-    InitializeInBattlePartyScreen(param0, param0->unk_2076);
+    InitializeInBattlePartyScreen(param0, param0->currentScreen);
 }
 
 void InitializeInBattlePartyScreen(BattlePartyTask *param0, enum InBattleScreenIndex screenIndex)
@@ -287,63 +287,63 @@ void InitializeInBattlePartyScreen(BattlePartyTask *param0, enum InBattleScreenI
     switch (screenIndex) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
         windowTemplates = partyListScreenWindowTemplates;
-        param0->unk_2070 = PARTY_LIST_SCREEN_WINDOW_NUM;
+        param0->numWindows = PARTY_LIST_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
         windowTemplates = selectPokemonScreenWindowTemplates;
-        param0->unk_2070 = SELECT_POKEMON_SCREEN_WINDOW_NUM;
+        param0->numWindows = SELECT_POKEMON_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY:
         windowTemplates = summaryScreenWindowTemplates;
-        param0->unk_2070 = POKEMON_SUMMARY_SCREEN_WINDOW_NUM;
+        param0->numWindows = POKEMON_SUMMARY_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
         windowTemplates = checkMovesScreenWindowTemplates;
-        param0->unk_2070 = CHECK_MOVES_SCREEN_WINDOW_NUM;
+        param0->numWindows = CHECK_MOVES_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
         windowTemplates = moveSummaryScreenWindowTemplates;
-        param0->unk_2070 = MOVE_SUMMARY_SCREEN_WINDOW_NUM;
+        param0->numWindows = MOVE_SUMMARY_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_INDEX_RESTORE_PP:
         windowTemplates = restorePPScreenWindowTemplates;
-        param0->unk_2070 = RESTORE_PP_SCREEN_WINDOW_NUM;
+        param0->numWindows = RESTORE_PP_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_1:
     case IN_BATTLE_SCREEN_LEARN_MOVE_2:
         windowTemplates = learnMoveScreenWindowTemplates;
-        param0->unk_2070 = LEARN_MOVE_SCREEN_WINDOW_NUM;
+        param0->numWindows = LEARN_MOVE_SCREEN_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
         windowTemplates = learnMoveConfirmScreenWindowTemplates;
-        param0->unk_2070 = LEARN_MOVE_CONFIRM_WINDOW_NUM;
+        param0->numWindows = LEARN_MOVE_CONFIRM_WINDOW_NUM;
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
         windowTemplates = learnMoveContestScreenWindowTemplates;
-        param0->unk_2070 = LEARN_MOVE_CONTEST_WINDOW_NUM;
+        param0->numWindows = LEARN_MOVE_CONTEST_WINDOW_NUM;
         break;
     }
 
-    param0->unk_206C = Window_New(param0->battleInfo->heapID, param0->unk_2070);
+    param0->windows = Window_New(param0->battleInfo->heapID, param0->numWindows);
 
-    for (i = 0; i < param0->unk_2070; i++) {
-        Window_AddFromTemplate(param0->background, &param0->unk_206C[i], &windowTemplates[i]);
+    for (i = 0; i < param0->numWindows; i++) {
+        Window_AddFromTemplate(param0->background, &param0->windows[i], &windowTemplates[i]);
     }
 }
 
 void ClearInBattlePartyScreen(BattlePartyTask *param0)
 {
-    Windows_Delete(param0->unk_206C, param0->unk_2070);
+    Windows_Delete(param0->windows, param0->numWindows);
 }
 
 void ov13_02221BC8(BattlePartyTask *param0)
 {
     u32 i;
 
-    Windows_Delete(param0->unk_206C, param0->unk_2070);
+    Windows_Delete(param0->windows, param0->numWindows);
 
     for (i = 0; i < 2; i++) {
-        Window_Remove(&param0->unk_204C[i]);
+        Window_Remove(&param0->messageBoxWindows[i]);
     }
 }
 
@@ -389,13 +389,13 @@ static void DrawSummaryScreenHeader(BattlePartyTask *param0, u32 windowIndex, en
     Strbuf *v3;
     u32 v4;
 
-    v0 = &param0->unk_206C[windowIndex];
-    v1 = &param0->unk_04[partyIndex];
+    v0 = &param0->windows[windowIndex];
+    v1 = &param0->partyPokemon[partyIndex];
     v2 = Strbuf_Init(12, param0->battleInfo->heapID);
-    v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, partySlotEntryIDs[partyIndex]);
+    v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, partySlotEntryIDs[partyIndex]);
 
-    StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v1->pokemon));
-    StringTemplate_Format(param0->unk_1FA8, v2, v3);
+    StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v1->pokemon));
+    StringTemplate_Format(param0->stringTemplate, v2, v3);
 
     if (font == FONT_SYSTEM) {
         Text_AddPrinterWithParamsAndColor(v0, font, v2, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
@@ -408,7 +408,7 @@ static void DrawSummaryScreenHeader(BattlePartyTask *param0, u32 windowIndex, en
 
     if ((v1->displayGender == FALSE) && (v1->isEgg == FALSE)) {
         if (v1->gender == GENDER_MALE) {
-            v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_MALE_CHARACTER);
+            v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_MALE_CHARACTER);
             v4 = Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(FONT_SYSTEM, v3, 0);
 
             if (font == FONT_SYSTEM) {
@@ -419,7 +419,7 @@ static void DrawSummaryScreenHeader(BattlePartyTask *param0, u32 windowIndex, en
 
             Strbuf_Free(v3);
         } else if (v1->gender == GENDER_FEMALE) {
-            v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_FEMALE_CHARACTER);
+            v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_FEMALE_CHARACTER);
             v4 = Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(FONT_SYSTEM, v3, 0);
 
             if (font == FONT_SYSTEM) {
@@ -437,20 +437,20 @@ static void DrawSummaryScreenHeader(BattlePartyTask *param0, u32 windowIndex, en
 
 static void ov13_02221E08(BattlePartyTask *param0, u32 windowIndex, u16 partyIndex, u8 x, u8 y)
 {
-    PartyPokemonData *v0 = &param0->unk_04[partyIndex];
+    PartyPokemonData *v0 = &param0->partyPokemon[partyIndex];
 
-    sub_0200C648(param0->unk_1FA0, 1, v0->level, 3, 0, &param0->unk_206C[windowIndex], x + 8, y);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
+    sub_0200C648(param0->unk_1FA0, 1, v0->level, 3, 0, &param0->windows[windowIndex], x + 8, y);
+    Window_ScheduleCopyToVRAM(&param0->windows[windowIndex]);
 }
 
 static void ov13_02221E50(BattlePartyTask *param0, u32 param1, u16 param2, u8 param3, u8 param4)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param2];
+    PartyPokemonData *v0 = &param0->partyPokemon[param2];
 
-    sub_0200C5BC(param0->unk_1FA0, v0->currentHP, 3, 1, &param0->unk_206C[param1], param3, param4);
-    sub_0200C578(param0->unk_1FA0, 0, &param0->unk_206C[param1], param3 + 8 * 3, param4);
-    sub_0200C5BC(param0->unk_1FA0, v0->maxHP, 3, 0, &param0->unk_206C[param1], param3 + 8 * 3 + 8, param4);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[param1]);
+    sub_0200C5BC(param0->unk_1FA0, v0->currentHP, 3, 1, &param0->windows[param1], param3, param4);
+    sub_0200C578(param0->unk_1FA0, 0, &param0->windows[param1], param3 + 8 * 3, param4);
+    sub_0200C5BC(param0->unk_1FA0, v0->maxHP, 3, 0, &param0->windows[param1], param3 + 8 * 3 + 8, param4);
+    Window_ScheduleCopyToVRAM(&param0->windows[param1]);
 }
 
 static void DrawHealthBar(BattlePartyTask *param0, u32 windowIndex, u16 partyIndex, u8 x, u8 y)
@@ -459,12 +459,12 @@ static void DrawHealthBar(BattlePartyTask *param0, u32 windowIndex, u16 partyInd
     u8 v1 = 1;
     u8 healthBarFilledPixels;
 
-    pokemon = &param0->unk_04[partyIndex];
+    pokemon = &param0->partyPokemon[partyIndex];
     healthBarFilledPixels = App_PixelCount(pokemon->currentHP, pokemon->maxHP, 48);
 
     switch (HealthBar_Color(pokemon->currentHP, pokemon->maxHP, 48)) {
     case BARCOLOR_EMPTY:
-        Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
+        Window_ScheduleCopyToVRAM(&param0->windows[windowIndex]);
         return;
     case BARCOLOR_MAX:
     case BARCOLOR_GREEN:
@@ -478,10 +478,10 @@ static void DrawHealthBar(BattlePartyTask *param0, u32 windowIndex, u16 partyInd
         break;
     }
 
-    Window_FillRectWithColor(&param0->unk_206C[windowIndex], v1 + 1, x, y + 1, healthBarFilledPixels, 1);
-    Window_FillRectWithColor(&param0->unk_206C[windowIndex], v1, x, y + 2, healthBarFilledPixels, 2);
-    Window_FillRectWithColor(&param0->unk_206C[windowIndex], v1 + 1, x, y + 4, healthBarFilledPixels, 1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
+    Window_FillRectWithColor(&param0->windows[windowIndex], v1 + 1, x, y + 1, healthBarFilledPixels, 1);
+    Window_FillRectWithColor(&param0->windows[windowIndex], v1, x, y + 2, healthBarFilledPixels, 2);
+    Window_FillRectWithColor(&param0->windows[windowIndex], v1 + 1, x, y + 4, healthBarFilledPixels, 1);
+    Window_ScheduleCopyToVRAM(&param0->windows[windowIndex]);
 }
 
 static void WriteAbilityText(BattlePartyTask *param0, u32 windowIndex, u32 partyIndex)
@@ -490,16 +490,16 @@ static void WriteAbilityText(BattlePartyTask *param0, u32 windowIndex, u32 party
     Strbuf *v1;
     Strbuf *v2;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v1 = Strbuf_Init(16, param0->battleInfo->heapID);
-    v2 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_ABILITY_TEXT);
+    v2 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ABILITY_TEXT);
 
-    StringTemplate_SetAbilityName(param0->unk_1FA8, 0, pokemonData->ability);
-    StringTemplate_Format(param0->unk_1FA8, v1, v2);
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[windowIndex], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    StringTemplate_SetAbilityName(param0->stringTemplate, 0, pokemonData->ability);
+    StringTemplate_Format(param0->stringTemplate, v1, v2);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[windowIndex], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v2);
     Strbuf_Free(v1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
+    Window_ScheduleCopyToVRAM(&param0->windows[windowIndex]);
 }
 
 static void WriteHeldItem(BattlePartyTask *param0, u32 windowIndex, u32 partyIndex)
@@ -508,22 +508,22 @@ static void WriteHeldItem(BattlePartyTask *param0, u32 windowIndex, u32 partyInd
     Strbuf *v1;
     Strbuf *v2;
 
-    v0 = &param0->unk_04[partyIndex];
+    v0 = &param0->partyPokemon[partyIndex];
 
     if (v0->heldItem == ITEM_NONE) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_NO_HELD_ITEM);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_NO_HELD_ITEM);
     } else {
         v1 = Strbuf_Init(18, param0->battleInfo->heapID);
-        v2 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HELD_ITEM_TEXT);
+        v2 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_HELD_ITEM_TEXT);
 
-        StringTemplate_SetItemName(param0->unk_1FA8, 0, v0->heldItem);
-        StringTemplate_Format(param0->unk_1FA8, v1, v2);
+        StringTemplate_SetItemName(param0->stringTemplate, 0, v0->heldItem);
+        StringTemplate_Format(param0->stringTemplate, v1, v2);
         Strbuf_Free(v2);
     }
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[windowIndex], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[windowIndex], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
+    Window_ScheduleCopyToVRAM(&param0->windows[windowIndex]);
 }
 
 static void WriteMoveName(BattlePartyTask *param0, u32 move, u32 windowIndex, u32 param3, u16 font, u16 yOffset, TextColor textColor)
@@ -533,12 +533,12 @@ static void WriteMoveName(BattlePartyTask *param0, u32 move, u32 windowIndex, u3
     Strbuf *v2;
     u32 xOffset;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
     v1 = Strbuf_Init(16, param0->battleInfo->heapID);
-    v2 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, param3);
+    v2 = MessageLoader_GetNewStrbuf(param0->messageLoader, param3);
 
-    StringTemplate_SetMoveName(param0->unk_1FA8, 0, move);
-    StringTemplate_Format(param0->unk_1FA8, v1, v2);
+    StringTemplate_SetMoveName(param0->stringTemplate, 0, move);
+    StringTemplate_Format(param0->stringTemplate, v1, v2);
 
     if (font == FONT_SUBSCREEN) {
         xOffset = (Window_GetWidth(v0) * 8 - Font_CalcStrbufWidth(font, v1, 0)) / 2;
@@ -554,25 +554,25 @@ static void WriteMoveName(BattlePartyTask *param0, u32 move, u32 windowIndex, u3
 
 static void WriteSystemFontPP(BattlePartyTask *param0, u16 windowIndex, u8 xOffset, u8 yOffset)
 {
-    Strbuf *v0 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PP);
+    Strbuf *v0 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PP);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[windowIndex], FONT_SYSTEM, v0, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[windowIndex], FONT_SYSTEM, v0, xOffset, yOffset, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v0);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[windowIndex]);
+    Window_ScheduleCopyToVRAM(&param0->windows[windowIndex]);
 }
 
 static void DrawPartyListSubText(BattlePartyTask *param0, u32 param1)
 {
     Strbuf *v0;
 
-    Window_DrawMessageBoxWithScrollCursor(&param0->unk_204C[0], 1, 1, 14);
-    Window_FillTilemap(&param0->unk_204C[0], 15);
+    Window_DrawMessageBoxWithScrollCursor(&param0->messageBoxWindows[0], 1, 1, 14);
+    Window_FillTilemap(&param0->messageBoxWindows[0], 15);
 
-    v0 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, param1);
+    v0 = MessageLoader_GetNewStrbuf(param0->messageLoader, param1);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_204C[0], FONT_MESSAGE, v0, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->messageBoxWindows[0], FONT_MESSAGE, v0, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v0);
-    Window_ScheduleCopyToVRAM(&param0->unk_204C[0]);
+    Window_ScheduleCopyToVRAM(&param0->messageBoxWindows[0]);
 }
 
 static void DrawSelectPartyPokemonButton(BattlePartyTask *param0, u32 windowIndex, u32 param2)
@@ -581,8 +581,8 @@ static void DrawSelectPartyPokemonButton(BattlePartyTask *param0, u32 windowInde
     Strbuf *v1;
     u32 xOffset;
 
-    v0 = &param0->unk_206C[windowIndex];
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, param2);
+    v0 = &param0->windows[windowIndex];
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, param2);
     xOffset = Font_CalcStrbufWidth(FONT_SUBSCREEN, v1, 0);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SUBSCREEN, v1, (Window_GetWidth(v0) * 8 - xOffset) / 2, 6, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(7, 8, 9), NULL);
@@ -598,49 +598,49 @@ static void WriteLevel(BattlePartyTask *param0, u32 partyIndex)
     u16 v3;
     u16 v4;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v4 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_LVL);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_LVL);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[19], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[19], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_LVL_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_LVL_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->level, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[11 + v4], FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->level, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[11 + v4], FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_NEXT_LVL);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_NEXT_LVL);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[20], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[20], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_NEXT_LVL_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_NEXT_LVL_TEXT);
     v2 = Strbuf_Init((6 + 1) * 2, param0->battleInfo->heapID);
 
     if (pokemonData->level < MAX_POKEMON_LEVEL) {
         StringTemplate_SetNumber(
-            param0->unk_1FA8, 0, pokemonData->nextLevelExp - pokemonData->exp, 6, 1, 1);
+            param0->stringTemplate, 0, pokemonData->nextLevelExp - pokemonData->exp, 6, 1, 1);
     } else {
         StringTemplate_SetNumber(
-            param0->unk_1FA8, 0, 0, 6, 1, 1);
+            param0->stringTemplate, 0, 0, 6, 1, 1);
     }
 
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
-    v3 = Window_GetWidth(&param0->unk_206C[12 + v4]) * 8 - Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
+    v3 = Window_GetWidth(&param0->windows[12 + v4]) * 8 - Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[12 + v4], FONT_SYSTEM, v2, v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[12 + v4], FONT_SYSTEM, v2, v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[19]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[11 + v4]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[20]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[12 + v4]);
+    Window_ScheduleCopyToVRAM(&param0->windows[19]);
+    Window_ScheduleCopyToVRAM(&param0->windows[11 + v4]);
+    Window_ScheduleCopyToVRAM(&param0->windows[20]);
+    Window_ScheduleCopyToVRAM(&param0->windows[12 + v4]);
 }
 
 static void WriteAttackStat(BattlePartyTask *param0, u32 partyIndex)
@@ -652,27 +652,27 @@ static void WriteAttackStat(BattlePartyTask *param0, u32 partyIndex)
     u8 v4;
     u8 v5;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v3 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_ATTACK);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ATTACK);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[14], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[14], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_ATTACK_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ATTACK_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->attack, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->attack, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
-    v5 = Window_GetWidth(&param0->unk_206C[5 + v3]) * 8 - v4;
+    v5 = Window_GetWidth(&param0->windows[5 + v3]) * 8 - v4;
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[5 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[5 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[14]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[5 + v3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[14]);
+    Window_ScheduleCopyToVRAM(&param0->windows[5 + v3]);
 }
 
 static void WriteDefenceStat(BattlePartyTask *param0, u32 partyIndex)
@@ -684,27 +684,27 @@ static void WriteDefenceStat(BattlePartyTask *param0, u32 partyIndex)
     u8 v4;
     u8 v5;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v3 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_DEFENCE);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_DEFENCE);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[15], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[15], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_DEFENCE_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_DEFENCE_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->defence, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->defence, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
-    v5 = Window_GetWidth(&param0->unk_206C[6 + v3]) * 8 - v4;
+    v5 = Window_GetWidth(&param0->windows[6 + v3]) * 8 - v4;
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[6 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[6 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[15]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[6 + v3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[15]);
+    Window_ScheduleCopyToVRAM(&param0->windows[6 + v3]);
 }
 
 static void WriteSpeedStat(BattlePartyTask *param0, u32 partyIndex)
@@ -716,28 +716,28 @@ static void WriteSpeedStat(BattlePartyTask *param0, u32 partyIndex)
     u8 v4;
     u8 v5;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v3 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SPEED);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SPEED);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[16], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[16], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SPEED_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SPEED_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->speed, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->speed, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
-    v5 = Window_GetWidth(&param0->unk_206C[7 + v3]) * 8 - v4;
+    v5 = Window_GetWidth(&param0->windows[7 + v3]) * 8 - v4;
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[7 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[7 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
 
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[16]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[7 + v3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[16]);
+    Window_ScheduleCopyToVRAM(&param0->windows[7 + v3]);
 }
 
 static void WriteSpAtkStat(BattlePartyTask *param0, u32 partyIndex)
@@ -749,27 +749,27 @@ static void WriteSpAtkStat(BattlePartyTask *param0, u32 partyIndex)
     u8 v4;
     u8 v5;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v3 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SP_ATK);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SP_ATK);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[17], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[17], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SP_ATK_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SP_ATK_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->spAtk, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->spAtk, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
-    v5 = Window_GetWidth(&param0->unk_206C[8 + v3]) * 8 - v4;
+    v5 = Window_GetWidth(&param0->windows[8 + v3]) * 8 - v4;
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[8 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[8 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[17]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[8 + v3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[17]);
+    Window_ScheduleCopyToVRAM(&param0->windows[8 + v3]);
 }
 
 static void WriteSpDefStat(BattlePartyTask *param0, u32 partyIndex)
@@ -781,27 +781,27 @@ static void WriteSpDefStat(BattlePartyTask *param0, u32 partyIndex)
     u8 v4;
     u8 v5;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v3 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SP_DEF);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SP_DEF);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[18], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[18], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SP_DEF_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SP_DEF_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->spDef, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->spDef, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
-    v5 = Window_GetWidth(&param0->unk_206C[9 + v3]) * 8 - v4;
+    v5 = Window_GetWidth(&param0->windows[9 + v3]) * 8 - v4;
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[9 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[9 + v3], FONT_SYSTEM, v2, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[18]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[9 + v3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[18]);
+    Window_ScheduleCopyToVRAM(&param0->windows[9 + v3]);
 }
 
 static void WriteHPStat(BattlePartyTask *param0, u32 partyIndex)
@@ -813,42 +813,42 @@ static void WriteHPStat(BattlePartyTask *param0, u32 partyIndex)
     u16 v5;
     u16 v6;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v6 = 22 * param0->unk_2071;
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HP);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_HP);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[13], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[13], FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HP_DIVIDER);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_HP_DIVIDER);
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
-    v5 = (Window_GetWidth(&param0->unk_206C[4]) * 8 - v3) / 2;
+    v5 = (Window_GetWidth(&param0->windows[4]) * 8 - v3) / 2;
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[4 + v6], FONT_SYSTEM, v1, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[4 + v6], FONT_SYSTEM, v1, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_HP_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->currentHP, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->currentHP, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[4 + v6], FONT_SYSTEM, v2, v5 - v4, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[4 + v6], FONT_SYSTEM, v2, v5 - v4, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_MAX_HP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_MAX_HP_TEXT);
     v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, pokemonData->maxHP, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[4 + v6], FONT_SYSTEM, v2, v5 + v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, pokemonData->maxHP, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[4 + v6], FONT_SYSTEM, v2, v5 + v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[13]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[4 + v6]);
+    Window_ScheduleCopyToVRAM(&param0->windows[13]);
+    Window_ScheduleCopyToVRAM(&param0->windows[4 + v6]);
 }
 
 static void WriteAbilityStat(BattlePartyTask *param0, u32 partyIndex)
@@ -858,15 +858,15 @@ static void WriteAbilityStat(BattlePartyTask *param0, u32 partyIndex)
     Strbuf *v2;
     u32 v3;
 
-    pokemonData = &param0->unk_04[partyIndex];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v3 = 22 * param0->unk_2071;
     v1 = MessageLoader_Init(MESSAGE_LOADER_NARC_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_ABILITY_DESCRIPTIONS, param0->battleInfo->heapID);
     v2 = MessageLoader_GetNewStrbuf(v1, pokemonData->ability);
 
-    Text_AddPrinterWithParamsAndColor(&param0->unk_206C[2 + v3], FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+    Text_AddPrinterWithParamsAndColor(&param0->windows[2 + v3], FONT_SYSTEM, v2, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v2);
     MessageLoader_Free(v1);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[2 + v3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[2 + v3]);
 }
 
 static void WriteSystemFontAccuracy(BattlePartyTask *param0, u32 windowIndex)
@@ -874,8 +874,8 @@ static void WriteSystemFontAccuracy(BattlePartyTask *param0, u32 windowIndex)
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_206C[windowIndex];
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_ACCURACY);
+    v0 = &param0->windows[windowIndex];
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ACCURACY);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
@@ -890,21 +890,21 @@ static void WriteMoveAccuracy(BattlePartyTask *param0, u32 windowIndex, u32 accu
     u16 v3;
     u16 v4;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
 
     if (accuracy == 0) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_NO_VALUE);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_NO_VALUE);
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
         v4 = Window_GetWidth(v0) * 8 - v3;
 
         Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, v4, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
         Strbuf_Free(v1);
     } else {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_ACCURACY_TEXT);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ACCURACY_TEXT);
         v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-        StringTemplate_SetNumber(param0->unk_1FA8, 0, accuracy, 3, 0, 1);
-        StringTemplate_Format(param0->unk_1FA8, v2, v1);
+        StringTemplate_SetNumber(param0->stringTemplate, 0, accuracy, 3, 0, 1);
+        StringTemplate_Format(param0->stringTemplate, v2, v1);
 
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
         v4 = Window_GetWidth(v0) * 8 - v3;
@@ -922,8 +922,8 @@ static void WriteSystemFontPower(BattlePartyTask *param0, u32 windowIndex)
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_206C[windowIndex];
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_POWER);
+    v0 = &param0->windows[windowIndex];
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_POWER);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
@@ -938,21 +938,21 @@ static void WriteMovePower(BattlePartyTask *param0, u32 windowIndex, u32 power)
     u16 v3;
     u16 v4;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
 
     if (power <= 1) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_NO_VALUE);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_NO_VALUE);
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
         v4 = Window_GetWidth(v0) * 8 - v3;
 
         Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, v4, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
         Strbuf_Free(v1);
     } else {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_POWER_TEXT);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_POWER_TEXT);
         v2 = Strbuf_Init((3 + 1) * 2, param0->battleInfo->heapID);
 
-        StringTemplate_SetNumber(param0->unk_1FA8, 0, power, 3, 0, 1);
-        StringTemplate_Format(param0->unk_1FA8, v2, v1);
+        StringTemplate_SetNumber(param0->stringTemplate, 0, power, 3, 0, 1);
+        StringTemplate_Format(param0->stringTemplate, v2, v1);
 
         v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
         v4 = Window_GetWidth(v0) * 8 - v3;
@@ -971,7 +971,7 @@ static void WriteMoveDescription(BattlePartyTask *param0, u32 windowIndex, u32 m
     Window *v1;
     Strbuf *v2;
 
-    v1 = &param0->unk_206C[windowIndex];
+    v1 = &param0->windows[windowIndex];
     v0 = MessageLoader_Init(MESSAGE_LOADER_NARC_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_MOVE_DESCRIPTIONS, param0->battleInfo->heapID);
     v2 = MessageLoader_GetNewStrbuf(v0, move);
 
@@ -989,7 +989,7 @@ static void WriteMoveContestEffect(BattlePartyTask *param0, u32 windowIndex, u32
     u32 v3;
     u32 v4;
 
-    v1 = &param0->unk_206C[windowIndex];
+    v1 = &param0->windows[windowIndex];
     v3 = MoveTable_LoadParam(move, MOVEATTRIBUTE_CONTEST_EFFECT);
     v4 = sub_0209577C(v3);
     v0 = MessageLoader_Init(MESSAGE_LOADER_BANK_HANDLE, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_CONTEST_EFFECTS, param0->battleInfo->heapID);
@@ -1009,8 +1009,8 @@ static void WriteSystemFontCategory(BattlePartyTask *param0, u32 windowIndex)
     u16 v2;
     u16 v3;
 
-    v0 = &param0->unk_206C[windowIndex];
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_CATEGORY);
+    v0 = &param0->windows[windowIndex];
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_CATEGORY);
     v2 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
     v3 = (Window_GetWidth(v0) * 8 - v2) / 2;
 
@@ -1024,17 +1024,17 @@ static void WriteMoveCategory(BattlePartyTask *param0, u32 windowIndex, u32 move
     Window *v0;
     Strbuf *v1;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
 
     switch (moveClass) {
     case CLASS_PHYSICAL:
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PHYSICAL);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PHYSICAL);
         break;
     case CLASS_SPECIAL:
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SPECIAL);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SPECIAL);
         break;
     case CLASS_STATUS:
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_STATUS);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_STATUS);
     }
 
     {
@@ -1054,19 +1054,19 @@ static void WriteSystemFontMovePP(BattlePartyTask *param0, u32 windowIndex, u32 
     u32 v3, v4;
     u32 v5;
 
-    v0 = &param0->unk_206C[windowIndex];
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PP_DIVIDER);
+    v0 = &param0->windows[windowIndex];
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PP_DIVIDER);
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
     v5 = (Window_GetWidth(v0) * 8 - v3) / 2;
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, v5, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_CURRENT_PP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_CURRENT_PP_TEXT);
     v2 = Strbuf_Init((2 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, currentPP, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, currentPP, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v4 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
 
@@ -1074,11 +1074,11 @@ static void WriteSystemFontMovePP(BattlePartyTask *param0, u32 windowIndex, u32 
     Strbuf_Free(v1);
     Strbuf_Free(v2);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_MAX_PP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_MAX_PP_TEXT);
     v2 = Strbuf_Init((2 + 1) * 2, param0->battleInfo->heapID);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, maxPP, 3, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, maxPP, 3, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v2, v5 + v3, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
     Strbuf_Free(v2);
@@ -1091,12 +1091,12 @@ static void DrawCancelForgetButton(BattlePartyTask *param0, u32 windowIndex)
     Strbuf *v1;
     u32 v2;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
 
     if (param0->battleInfo->unk_34 == 4) {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_CANCEL);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_CANCEL);
     } else {
-        v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_FORGET);
+        v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_FORGET);
     }
 
     v2 = Font_CalcStrbufWidth(FONT_SUBSCREEN, v1, 0);
@@ -1111,15 +1111,15 @@ void ov13_02223118(BattlePartyTask *param0)
     Window *v0;
     Strbuf *v1;
 
-    if (param0->unk_2076 == IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM) {
-        v0 = &param0->unk_206C[8];
+    if (param0->currentScreen == IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM) {
+        v0 = &param0->windows[8];
     } else {
-        v0 = &param0->unk_206C[5];
+        v0 = &param0->windows[5];
     }
 
     Window_FillTilemap(v0, 0);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HM_CANT_BE_FORGOTTEN);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_HM_CANT_BE_FORGOTTEN);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 0, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
     Strbuf_Free(v1);
@@ -1133,30 +1133,30 @@ static void WriteMovePP(BattlePartyTask *param0, PartyPokemonMoveData *moveData,
     Strbuf *v2;
     u32 v3;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
     v2 = Strbuf_Init((2 + 1) * 2, param0->battleInfo->heapID);
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PP_OTHER);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PP_OTHER);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 40, 24, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PP_DIVIDER);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PP_DIVIDER);
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
 
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v1, 80, 24, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_MAX_PP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_MAX_PP_TEXT);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, moveData->maxPP, 2, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, moveData->maxPP, 2, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
     Text_AddPrinterWithParamsAndColor(v0, FONT_SYSTEM, v2, 80 + v3, 24, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
     Strbuf_Free(v1);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_CURRENT_PP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_CURRENT_PP_TEXT);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, moveData->currentPP, 2, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, moveData->currentPP, 2, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
 
@@ -1173,18 +1173,18 @@ static void WriteMoveCurrentPP(BattlePartyTask *param0, PartyPokemonMoveData *mo
     Strbuf *v2;
     u32 v3;
 
-    v0 = &param0->unk_206C[windowIndex];
+    v0 = &param0->windows[windowIndex];
     v2 = Strbuf_Init((2 + 1) * 2, param0->battleInfo->heapID);
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PP_OTHER);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PP_OTHER);
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v1, 0);
 
     Strbuf_Free(v1);
     Window_FillRectWithColor(v0, 0, 40 + v3, 24, 80 - (40 + v3), 16);
 
-    v1 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_CURRENT_PP_TEXT);
+    v1 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_CURRENT_PP_TEXT);
 
-    StringTemplate_SetNumber(param0->unk_1FA8, 0, moveData->currentPP, 2, 0, 1);
-    StringTemplate_Format(param0->unk_1FA8, v2, v1);
+    StringTemplate_SetNumber(param0->stringTemplate, 0, moveData->currentPP, 2, 0, 1);
+    StringTemplate_Format(param0->stringTemplate, v2, v1);
 
     v3 = Font_CalcStrbufWidth(FONT_SYSTEM, v2, 0);
 
@@ -1199,19 +1199,19 @@ static void DrawPartyList(BattlePartyTask *param0)
     s32 i;
 
     for (i = 0; i < Party_GetCurrentCount(param0->battleInfo->unk_00); i++) {
-        Window_FillTilemap(&param0->unk_206C[i], 0);
+        Window_FillTilemap(&param0->windows[i], 0);
 
-        if (param0->unk_04[i].species == SPECIES_NONE) {
+        if (param0->partyPokemon[i].species == SPECIES_NONE) {
             continue;
         }
 
         DrawSummaryScreenHeader(param0, i, FONT_SUBSCREEN, i, 32, 8);
 
-        if (param0->unk_04[i].isEgg == FALSE) {
+        if (param0->partyPokemon[i].isEgg == FALSE) {
             DrawHealthDisplay(param0, i);
         }
 
-        if (PokemonSummaryScreen_StatusIconAnimIdx(param0->unk_04[i].pokemon) != SUMMARY_CONDITION_NONE) {
+        if (PokemonSummaryScreen_StatusIconAnimIdx(param0->partyPokemon[i].pokemon) != SUMMARY_CONDITION_NONE) {
             continue;
         }
 
@@ -1227,8 +1227,8 @@ static void DrawPartyList(BattlePartyTask *param0)
 
 void DrawHealthDisplay(BattlePartyTask *param0, u8 partyIndex)
 {
-    Window_FillRectWithColor(&param0->unk_206C[0 + partyIndex], 0, 56, 32, 24, 8);
-    Window_FillRectWithColor(&param0->unk_206C[0 + partyIndex], 0, (48 + 16), 24, 64, 8);
+    Window_FillRectWithColor(&param0->windows[0 + partyIndex], 0, 56, 32, 24, 8);
+    Window_FillRectWithColor(&param0->windows[0 + partyIndex], 0, (48 + 16), 24, 64, 8);
 
     ov13_02221E50(param0, partyIndex, partyIndex, 56, 32);
     DrawHealthBar(param0, partyIndex, partyIndex, (48 + 16), 24);
@@ -1236,28 +1236,28 @@ void DrawHealthDisplay(BattlePartyTask *param0, u8 partyIndex)
 
 void ov13_022234A8(BattlePartyTask *param0, u8 partyIndex)
 {
-    if (param0->unk_04[partyIndex].isEgg == FALSE) {
+    if (param0->partyPokemon[partyIndex].isEgg == FALSE) {
         ov13_02221E08(param0, partyIndex, partyIndex, 0, 32);
     }
 }
 
 static void DrawSelectPartyPokemonScreen(BattlePartyTask *param0)
 {
-    Window_FillTilemap(&param0->unk_206C[0], 0);
-    Window_FillTilemap(&param0->unk_206C[1], 0);
-    Window_FillTilemap(&param0->unk_206C[2], 0);
-    Window_FillTilemap(&param0->unk_206C[3], 0);
+    Window_FillTilemap(&param0->windows[0], 0);
+    Window_FillTilemap(&param0->windows[1], 0);
+    Window_FillTilemap(&param0->windows[2], 0);
+    Window_FillTilemap(&param0->windows[3], 0);
 
     WriteNameGenderOther(param0, param0->battleInfo->selectedPartySlot);
 
     DrawSelectPartyPokemonButton(param0, 1, IN_BATTLE_TEXT_IDS_SHIFT);
 
-    if (param0->unk_04[param0->battleInfo->selectedPartySlot].isEgg == FALSE) {
+    if (param0->partyPokemon[param0->battleInfo->selectedPartySlot].isEgg == FALSE) {
         DrawSelectPartyPokemonButton(param0, 2, IN_BATTLE_TEXT_IDS_SUMMARY);
         DrawSelectPartyPokemonButton(param0, 3, IN_BATTLE_TEXT_IDS_CHECK_MOVES);
     } else {
-        Window_ScheduleCopyToVRAM(&param0->unk_206C[2]);
-        Window_ScheduleCopyToVRAM(&param0->unk_206C[3]);
+        Window_ScheduleCopyToVRAM(&param0->windows[2]);
+        Window_ScheduleCopyToVRAM(&param0->windows[3]);
     }
 }
 
@@ -1272,22 +1272,22 @@ static void WriteNameGenderOther(BattlePartyTask *param0, u32 partyIndex)
     u8 v6;
     u8 v7;
 
-    v0 = &param0->unk_206C[0];
-    pokemonData = &param0->unk_04[partyIndex];
+    v0 = &param0->windows[0];
+    pokemonData = &param0->partyPokemon[partyIndex];
     v2 = Strbuf_Init(12, param0->battleInfo->heapID);
-    v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, partySlotEntryIDs[partyIndex]);
+    v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, partySlotEntryIDs[partyIndex]);
 
-    StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(pokemonData->pokemon));
-    StringTemplate_Format(param0->unk_1FA8, v2, v3);
+    StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(pokemonData->pokemon));
+    StringTemplate_Format(param0->stringTemplate, v2, v3);
     Strbuf_Free(v3);
 
     v3 = NULL;
 
     if ((pokemonData->displayGender == FALSE) && (pokemonData->isEgg == FALSE)) {
         if (pokemonData->gender == GENDER_MALE) {
-            v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_MALE_CHARACTER);
+            v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_MALE_CHARACTER);
         } else if (pokemonData->gender == GENDER_FEMALE) {
-            v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_FEMALE_CHARACTER);
+            v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_FEMALE_CHARACTER);
         }
     }
 
@@ -1328,17 +1328,17 @@ static void DrawCheckMovesScreen(BattlePartyTask *param0)
 
     v2 = 6 * param0->unk_2071;
 
-    Window_FillTilemap(&param0->unk_206C[0 + v2], 0);
-    Window_FillTilemap(&param0->unk_206C[1 + v2], 0);
-    Window_FillTilemap(&param0->unk_206C[2 + v2], 0);
-    Window_FillTilemap(&param0->unk_206C[3 + v2], 0);
-    Window_FillTilemap(&param0->unk_206C[4 + v2], 0);
-    Window_FillTilemap(&param0->unk_206C[5], 0);
+    Window_FillTilemap(&param0->windows[0 + v2], 0);
+    Window_FillTilemap(&param0->windows[1 + v2], 0);
+    Window_FillTilemap(&param0->windows[2 + v2], 0);
+    Window_FillTilemap(&param0->windows[3 + v2], 0);
+    Window_FillTilemap(&param0->windows[4 + v2], 0);
+    Window_FillTilemap(&param0->windows[5], 0);
 
     DrawSummaryScreenHeader(param0, 0 + v2, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
 
     for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
-        moveData = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[v1];
+        moveData = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[v1];
 
         if (moveData->move == MOVE_NONE) {
             continue;
@@ -1350,10 +1350,10 @@ static void DrawCheckMovesScreen(BattlePartyTask *param0)
 
     DrawSelectPartyPokemonButton(param0, 5, IN_BATTLE_TEXT_IDS_SUMMARY);
 
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[1 + v2]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[2 + v2]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[3 + v2]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[4 + v2]);
+    Window_ScheduleCopyToVRAM(&param0->windows[1 + v2]);
+    Window_ScheduleCopyToVRAM(&param0->windows[2 + v2]);
+    Window_ScheduleCopyToVRAM(&param0->windows[3 + v2]);
+    Window_ScheduleCopyToVRAM(&param0->windows[4 + v2]);
 
     param0->unk_2071 ^= 1;
 }
@@ -1362,29 +1362,29 @@ static void DrawInBattlePokemonSummaryScreen(BattlePartyTask *param0)
 {
     u32 v0 = 22 * param0->unk_2071;
 
-    Window_FillTilemap(&param0->unk_206C[19], 0);
-    Window_FillTilemap(&param0->unk_206C[20], 0);
-    Window_FillTilemap(&param0->unk_206C[14], 0);
-    Window_FillTilemap(&param0->unk_206C[15], 0);
-    Window_FillTilemap(&param0->unk_206C[16], 0);
-    Window_FillTilemap(&param0->unk_206C[17], 0);
-    Window_FillTilemap(&param0->unk_206C[18], 0);
-    Window_FillTilemap(&param0->unk_206C[13], 0);
-    Window_FillTilemap(&param0->unk_206C[21], 0);
+    Window_FillTilemap(&param0->windows[19], 0);
+    Window_FillTilemap(&param0->windows[20], 0);
+    Window_FillTilemap(&param0->windows[14], 0);
+    Window_FillTilemap(&param0->windows[15], 0);
+    Window_FillTilemap(&param0->windows[16], 0);
+    Window_FillTilemap(&param0->windows[17], 0);
+    Window_FillTilemap(&param0->windows[18], 0);
+    Window_FillTilemap(&param0->windows[13], 0);
+    Window_FillTilemap(&param0->windows[21], 0);
 
-    Window_FillTilemap(&param0->unk_206C[0 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[10 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[11 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[12 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[5 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[6 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[7 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[8 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[9 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[4 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[1 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[2 + v0], 0);
-    Window_FillTilemap(&param0->unk_206C[3 + v0], 0);
+    Window_FillTilemap(&param0->windows[0 + v0], 0);
+    Window_FillTilemap(&param0->windows[10 + v0], 0);
+    Window_FillTilemap(&param0->windows[11 + v0], 0);
+    Window_FillTilemap(&param0->windows[12 + v0], 0);
+    Window_FillTilemap(&param0->windows[5 + v0], 0);
+    Window_FillTilemap(&param0->windows[6 + v0], 0);
+    Window_FillTilemap(&param0->windows[7 + v0], 0);
+    Window_FillTilemap(&param0->windows[8 + v0], 0);
+    Window_FillTilemap(&param0->windows[9 + v0], 0);
+    Window_FillTilemap(&param0->windows[4 + v0], 0);
+    Window_FillTilemap(&param0->windows[1 + v0], 0);
+    Window_FillTilemap(&param0->windows[2 + v0], 0);
+    Window_FillTilemap(&param0->windows[3 + v0], 0);
 
     DrawSummaryScreenHeader(param0, 0 + v0, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
     WriteHPStat(param0, param0->battleInfo->selectedPartySlot);
@@ -1408,19 +1408,19 @@ static void DrawMoveSummaryScreen(BattlePartyTask *param0)
     PartyPokemonMoveData *v0;
     u32 v1 = 11 * param0->unk_2071;
 
-    Window_FillTilemap(&param0->unk_206C[6], 0);
-    Window_FillTilemap(&param0->unk_206C[7], 0);
-    Window_FillTilemap(&param0->unk_206C[8], 0);
-    Window_FillTilemap(&param0->unk_206C[9], 0);
-    Window_FillTilemap(&param0->unk_206C[10], 0);
-    Window_FillTilemap(&param0->unk_206C[1 + v1], 0);
-    Window_FillTilemap(&param0->unk_206C[0 + v1], 0);
-    Window_FillTilemap(&param0->unk_206C[2 + v1], 0);
-    Window_FillTilemap(&param0->unk_206C[3 + v1], 0);
-    Window_FillTilemap(&param0->unk_206C[5 + v1], 0);
-    Window_FillTilemap(&param0->unk_206C[4 + v1], 0);
+    Window_FillTilemap(&param0->windows[6], 0);
+    Window_FillTilemap(&param0->windows[7], 0);
+    Window_FillTilemap(&param0->windows[8], 0);
+    Window_FillTilemap(&param0->windows[9], 0);
+    Window_FillTilemap(&param0->windows[10], 0);
+    Window_FillTilemap(&param0->windows[1 + v1], 0);
+    Window_FillTilemap(&param0->windows[0 + v1], 0);
+    Window_FillTilemap(&param0->windows[2 + v1], 0);
+    Window_FillTilemap(&param0->windows[3 + v1], 0);
+    Window_FillTilemap(&param0->windows[5 + v1], 0);
+    Window_FillTilemap(&param0->windows[4 + v1], 0);
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[param0->battleInfo->unk_34];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[param0->battleInfo->unk_34];
 
     DrawSummaryScreenHeader(param0, 6, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
     WriteSystemFontPP(param0, 7, 0, 0);
@@ -1442,17 +1442,17 @@ static void DrawLearnMoveScreen(BattlePartyTask *param0)
     PartyPokemonMoveData *v0;
     u32 v1;
 
-    Window_FillTilemap(&param0->unk_206C[0], 0);
-    Window_FillTilemap(&param0->unk_206C[1], 0);
-    Window_FillTilemap(&param0->unk_206C[2], 0);
-    Window_FillTilemap(&param0->unk_206C[3], 0);
-    Window_FillTilemap(&param0->unk_206C[4], 0);
-    Window_FillTilemap(&param0->unk_206C[5], 0);
+    Window_FillTilemap(&param0->windows[0], 0);
+    Window_FillTilemap(&param0->windows[1], 0);
+    Window_FillTilemap(&param0->windows[2], 0);
+    Window_FillTilemap(&param0->windows[3], 0);
+    Window_FillTilemap(&param0->windows[4], 0);
+    Window_FillTilemap(&param0->windows[5], 0);
 
     DrawSummaryScreenHeader(param0, 0, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
 
     for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
-        v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[v1];
+        v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[v1];
 
         if (v0->move == MOVE_NONE) {
             continue;
@@ -1472,27 +1472,27 @@ static void DrawLearnMoveScreen(BattlePartyTask *param0)
         WriteMovePP(param0, &v2, 5);
     }
 
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[1]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[2]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[3]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[4]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[5]);
+    Window_ScheduleCopyToVRAM(&param0->windows[1]);
+    Window_ScheduleCopyToVRAM(&param0->windows[2]);
+    Window_ScheduleCopyToVRAM(&param0->windows[3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[4]);
+    Window_ScheduleCopyToVRAM(&param0->windows[5]);
 }
 
 static void DrawConfirmLearnMove(BattlePartyTask *param0)
 {
-    Window_FillTilemap(&param0->unk_206C[0], 0);
-    Window_FillTilemap(&param0->unk_206C[2], 0);
-    Window_FillTilemap(&param0->unk_206C[3], 0);
-    Window_FillTilemap(&param0->unk_206C[1], 0);
-    Window_FillTilemap(&param0->unk_206C[4], 0);
-    Window_FillTilemap(&param0->unk_206C[6], 0);
-    Window_FillTilemap(&param0->unk_206C[5], 0);
-    Window_FillTilemap(&param0->unk_206C[7], 0);
-    Window_FillTilemap(&param0->unk_206C[9], 0);
-    Window_FillTilemap(&param0->unk_206C[10], 0);
-    Window_FillTilemap(&param0->unk_206C[8], 0);
-    Window_FillTilemap(&param0->unk_206C[11], 0);
+    Window_FillTilemap(&param0->windows[0], 0);
+    Window_FillTilemap(&param0->windows[2], 0);
+    Window_FillTilemap(&param0->windows[3], 0);
+    Window_FillTilemap(&param0->windows[1], 0);
+    Window_FillTilemap(&param0->windows[4], 0);
+    Window_FillTilemap(&param0->windows[6], 0);
+    Window_FillTilemap(&param0->windows[5], 0);
+    Window_FillTilemap(&param0->windows[7], 0);
+    Window_FillTilemap(&param0->windows[9], 0);
+    Window_FillTilemap(&param0->windows[10], 0);
+    Window_FillTilemap(&param0->windows[8], 0);
+    Window_FillTilemap(&param0->windows[11], 0);
 
     DrawSummaryScreenHeader(param0, 0, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
     WriteSystemFontPP(param0, 2, 0, 0);
@@ -1501,7 +1501,7 @@ static void DrawConfirmLearnMove(BattlePartyTask *param0)
     WriteSystemFontCategory(param0, 9);
 
     if (param0->battleInfo->unk_34 < LEARNED_MOVES_MAX) {
-        PartyPokemonMoveData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[param0->battleInfo->unk_34];
+        PartyPokemonMoveData *v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[param0->battleInfo->unk_34];
 
         WriteMoveName(param0, v0->move, 1, moveSlotEntryIDs[param0->battleInfo->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
         WriteMoveAccuracy(param0, 6, v0->accuracy);
@@ -1528,16 +1528,16 @@ static void DrawRestorePPScreen(BattlePartyTask *param0)
     PartyPokemonMoveData *v0;
     u32 v1;
 
-    Window_FillTilemap(&param0->unk_206C[0], 0);
-    Window_FillTilemap(&param0->unk_206C[1], 0);
-    Window_FillTilemap(&param0->unk_206C[2], 0);
-    Window_FillTilemap(&param0->unk_206C[3], 0);
-    Window_FillTilemap(&param0->unk_206C[4], 0);
+    Window_FillTilemap(&param0->windows[0], 0);
+    Window_FillTilemap(&param0->windows[1], 0);
+    Window_FillTilemap(&param0->windows[2], 0);
+    Window_FillTilemap(&param0->windows[3], 0);
+    Window_FillTilemap(&param0->windows[4], 0);
 
     DrawSummaryScreenHeader(param0, 0, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
 
     for (v1 = 0; v1 < LEARNED_MOVES_MAX; v1++) {
-        v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[v1];
+        v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[v1];
 
         if (v0->move == 0) {
             continue;
@@ -1551,27 +1551,27 @@ static void DrawRestorePPScreen(BattlePartyTask *param0)
         DrawPartyListSubText(param0, IN_BATTLE_TEXT_IDS_RESTORE_WHICH_MOVE);
     }
 
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[1]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[2]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[3]);
-    Window_ScheduleCopyToVRAM(&param0->unk_206C[4]);
+    Window_ScheduleCopyToVRAM(&param0->windows[1]);
+    Window_ScheduleCopyToVRAM(&param0->windows[2]);
+    Window_ScheduleCopyToVRAM(&param0->windows[3]);
+    Window_ScheduleCopyToVRAM(&param0->windows[4]);
 }
 
 void ov13_02223F5C(BattlePartyTask *param0, u16 windowIndex, u16 moveIndex)
 {
-    PartyPokemonMoveData *moveData = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[moveIndex];
+    PartyPokemonMoveData *moveData = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[moveIndex];
     WriteMoveCurrentPP(param0, moveData, windowIndex);
 }
 
 static void DrawConfirmLearnMoveContest(BattlePartyTask *param0)
 {
-    Window_FillTilemap(&param0->unk_206C[0], 0);
-    Window_FillTilemap(&param0->unk_206C[2], 0);
-    Window_FillTilemap(&param0->unk_206C[3], 0);
-    Window_FillTilemap(&param0->unk_206C[1], 0);
-    Window_FillTilemap(&param0->unk_206C[4], 0);
-    Window_FillTilemap(&param0->unk_206C[5], 0);
-    Window_FillTilemap(&param0->unk_206C[6], 0);
+    Window_FillTilemap(&param0->windows[0], 0);
+    Window_FillTilemap(&param0->windows[2], 0);
+    Window_FillTilemap(&param0->windows[3], 0);
+    Window_FillTilemap(&param0->windows[1], 0);
+    Window_FillTilemap(&param0->windows[4], 0);
+    Window_FillTilemap(&param0->windows[5], 0);
+    Window_FillTilemap(&param0->windows[6], 0);
 
     DrawSummaryScreenHeader(param0, 0, FONT_SYSTEM, param0->battleInfo->selectedPartySlot, 0, 0);
     WriteSystemFontPP(param0, 2, 0, 0);
@@ -1579,19 +1579,19 @@ static void DrawConfirmLearnMoveContest(BattlePartyTask *param0)
     {
         Strbuf *v0;
 
-        v0 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_APPEAL_PTS);
+        v0 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_APPEAL_PTS);
 
         {
             u32 v1 = Font_CalcCenterAlignment(FONT_SYSTEM, v0, 0, 12 * 8);
-            Text_AddPrinterWithParamsAndColor(&param0->unk_206C[4], FONT_SYSTEM, v0, v1, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
+            Text_AddPrinterWithParamsAndColor(&param0->windows[4], FONT_SYSTEM, v0, v1, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(15, 14, 0), NULL);
         }
 
         Strbuf_Free(v0);
-        Window_ScheduleCopyToVRAM(&param0->unk_206C[4]);
+        Window_ScheduleCopyToVRAM(&param0->windows[4]);
     }
 
     if (param0->battleInfo->unk_34 < LEARNED_MOVES_MAX) {
-        PartyPokemonMoveData *v2 = &param0->unk_04[param0->battleInfo->selectedPartySlot].moves[param0->battleInfo->unk_34];
+        PartyPokemonMoveData *v2 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[param0->battleInfo->unk_34];
 
         WriteMoveName(param0, v2->move, 1, moveSlotEntryIDs[param0->battleInfo->unk_34], FONT_SYSTEM, 0, TEXT_COLOR(15, 14, 0));
         WriteMoveContestEffect(param0, 5, v2->move);
@@ -1609,15 +1609,15 @@ static void DrawConfirmLearnMoveContest(BattlePartyTask *param0)
 
 void DisplayBattleMessageBox(BattlePartyTask *param0)
 {
-    Window_DrawMessageBoxWithScrollCursor(&param0->unk_204C[1], 1, 1, 14);
-    Window_FillTilemap(&param0->unk_204C[1], 15);
+    Window_DrawMessageBoxWithScrollCursor(&param0->messageBoxWindows[1], 1, 1, 14);
+    Window_FillTilemap(&param0->messageBoxWindows[1], 15);
     ov13_02224108(param0);
 }
 
 void ov13_02224108(BattlePartyTask *param0)
 {
     RenderControlFlags_SetCanABSpeedUpPrint(1);
-    param0->unk_2077 = Text_AddPrinterWithParams(&param0->unk_204C[1], FONT_MESSAGE, param0->unk_1FAC, 0, 0, BattleSystem_TextSpeed(param0->battleInfo->battleSystem), NULL);
+    param0->textPrinter = Text_AddPrinterWithParams(&param0->messageBoxWindows[1], FONT_MESSAGE, param0->strbuf, 0, 0, BattleSystem_TextSpeed(param0->battleInfo->battleSystem), NULL);
 }
 
 void ov13_02224144(BattlePartyTask *param0)
@@ -1663,58 +1663,58 @@ void ov13_02224144(BattlePartyTask *param0)
         v5 |= 0x40;
     }
 
-    if ((param0->unk_04[v1->selectedPartySlot].currentHP == 0) && (currentHP != 0)) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_FAINTED_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+    if ((param0->partyPokemon[v1->selectedPartySlot].currentHP == 0) && (currentHP != 0)) {
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_FAINTED_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
-    } else if (param0->unk_04[v1->selectedPartySlot].currentHP != currentHP) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_HP_RESTORED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_SetNumber(param0->unk_1FA8, 1, currentHP - param0->unk_04[v1->selectedPartySlot].currentHP, 3, 0, 1);
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+    } else if (param0->partyPokemon[v1->selectedPartySlot].currentHP != currentHP) {
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_HP_RESTORED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_SetNumber(param0->stringTemplate, 1, currentHP - param0->partyPokemon[v1->selectedPartySlot].currentHP, 3, 0, 1);
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if ((Item_Get(itemData, 36) != 0) || (Item_Get(itemData, 37) != 0)) {
-        MessageLoader_GetStrbuf(param0->unk_1FA4, 87, param0->unk_1FAC);
+        MessageLoader_GetStrbuf(param0->messageLoader, 87, param0->strbuf);
     } else if (v5 == 0x1) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_SLEEP_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_SLEEP_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if (v5 == 0x2) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_POISON_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_POISON_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if (v5 == 0x4) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_BURN_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_BURN_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if (v5 == 0x8) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_FROZEN_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_FROZEN_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if (v5 == 0x10) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_PARALYSIS_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_PARALYSIS_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if (v5 == 0x20) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_CONFUSION_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_CONFUSION_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else if (v5 == 0x40) {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_INFATUATION_CURED_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_INFATUATION_CURED_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     } else {
-        v3 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_MADE_HEALTHY_TEXT);
-        StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(v0));
-        StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v3);
+        v3 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_MADE_HEALTHY_TEXT);
+        StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(v0));
+        StringTemplate_Format(param0->stringTemplate, param0->strbuf, v3);
         Strbuf_Free(v3);
     }
 
@@ -1729,10 +1729,10 @@ void OnEmbargoBlockingItem(BattlePartyTask *param0)
 
     v1 = param0->battleInfo;
     pokemonData = BattleSystem_PartyPokemon(v1->battleSystem, v1->unk_28, v1->unk_2C[v1->selectedPartySlot]);
-    v2 = MessageLoader_GetNewStrbuf(param0->unk_1FA4, IN_BATTLE_TEXT_IDS_ITEM_USE_PREVENTED_TEXT);
+    v2 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ITEM_USE_PREVENTED_TEXT);
 
-    StringTemplate_SetNickname(param0->unk_1FA8, 0, Pokemon_GetBoxPokemon(pokemonData));
-    StringTemplate_SetMoveName(param0->unk_1FA8, 1, MOVE_EMBARGO);
-    StringTemplate_Format(param0->unk_1FA8, param0->unk_1FAC, v2);
+    StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(pokemonData));
+    StringTemplate_SetMoveName(param0->stringTemplate, 1, MOVE_EMBARGO);
+    StringTemplate_Format(param0->stringTemplate, param0->strbuf, v2);
     Strbuf_Free(v2);
 }

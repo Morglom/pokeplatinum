@@ -29,7 +29,7 @@ enum InBattleScreenIndex {
 
 typedef struct {
     BattlePartyBattleInfo *battleInfo;
-    PartyPokemonData unk_04[6]; // Party Pokemon
+    PartyPokemonData partyPokemon[6];
     BgConfig *background;
     PaletteData *palette;
     u16 unk_1E8[4][96];
@@ -51,27 +51,27 @@ typedef struct {
     u8 unk_1F9F_4 : 3;
     u8 unk_1F9F_7 : 1; // Some bool
     UnkStruct_0200C440 *unk_1FA0;
-    MessageLoader *unk_1FA4;
-    StringTemplate *unk_1FA8;
-    Strbuf *unk_1FAC;
+    MessageLoader *messageLoader;
+    StringTemplate *stringTemplate;
+    Strbuf *strbuf;
     SpriteManager *spriteManager;
     ManagedSprite *unk_1FB4[38];
-    Window unk_204C[2]; // Message box windows
-    Window *unk_206C; // Window array
-    u8 unk_2070; // Window num
+    Window messageBoxWindows[2];
+    Window *windows;
+    u8 numWindows;
     u8 unk_2071;
     u8 selectedPartySlot;
     u8 unk_2073_0 : 4; // Num windows
     u8 visitedContestHall : 4; // Some sort of enum
-    u8 currentState; // Another enum
-    u8 queuedState; // Screen queue
-    u8 unk_2076; // In battle screen index
-    u8 unk_2077; // Printer id
+    u8 currentState;
+    u8 queuedState;
+    u8 currentScreen;
+    u8 textPrinter;
     u8 unk_2078;
     u8 unk_2079;
     u16 unk_207A;
     u16 unk_207C[4]; // Moves
-    BattleSubMenuCursor *unk_2084; // In Battle Cursor
+    BattleSubMenuCursor *cursor;
     u8 unk_2088;
     u8 unk_2089; // Navigation
     u8 unk_208A;

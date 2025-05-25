@@ -783,18 +783,16 @@ static void LoadBackgroundData(BattleBagTask *battleBagTask)
 {
     NARC *narc = NARC_ctor(NARC_INDEX_BATTLE__GRAPHIC__B_BAG_GRA, battleBagTask->battleInfo->heapID);
 
-    Graphics_LoadTilesToBgLayerFromOpenNARC(narc, 2, battleBagTask->background, 6, 0, 0, 0, battleBagTask->battleInfo->heapID);
-    Graphics_LoadTilemapToBgLayerFromOpenNARC(narc, 0, battleBagTask->background, 6, 0, 0, 0, battleBagTask->battleInfo->heapID);
+    Graphics_LoadTilesToBgLayerFromOpenNARC(narc, 2, battleBagTask->background, BG_LAYER_SUB_2, 0, 0, 0, battleBagTask->battleInfo->heapID);
+    Graphics_LoadTilemapToBgLayerFromOpenNARC(narc, 0, battleBagTask->background, BG_LAYER_SUB_2, 0, 0, 0, battleBagTask->battleInfo->heapID);
 
     {
         NNSG2dScreenData *screenData;
         void *buffer;
-        u16 *rawData;
 
         buffer = NARC_AllocAndReadWholeMember(narc, 1, battleBagTask->battleInfo->heapID);
         NNS_G2dGetUnpackedScreenData(buffer, &screenData);
-        rawData = (u16 *)screenData->rawData;
-        ov13_02228128(battleBagTask, rawData);
+        ov13_02228128(battleBagTask, (u16 *)screenData->rawData);
         Heap_FreeToHeap(buffer);
     }
 
@@ -803,10 +801,10 @@ static void LoadBackgroundData(BattleBagTask *battleBagTask)
     PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_GRAPHIC__PL_FONT, 7, battleBagTask->battleInfo->heapID, PLTTBUF_SUB_BG, 0x20, 15 * 16);
 
     {
-        int v4 = ov16_0223EDE0(battleBagTask->battleInfo->battleSystem);
+        int optionsFrame = ov16_0223EDE0(battleBagTask->battleInfo->battleSystem);
 
-        Graphics_LoadTilesToBgLayer(NARC_INDEX_GRAPHIC__PL_WINFRAME, GetMessageBoxTilesNARCMember(v4), battleBagTask->background, 4, 1024 - (18 + 12), 0, 0, battleBagTask->battleInfo->heapID);
-        PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_GRAPHIC__PL_WINFRAME, GetMessageBoxPaletteNARCMember(v4), battleBagTask->battleInfo->heapID, PLTTBUF_SUB_BG, 0x20, 14 * 16);
+        Graphics_LoadTilesToBgLayer(NARC_INDEX_GRAPHIC__PL_WINFRAME, GetMessageBoxTilesNARCMember(optionsFrame), battleBagTask->background, BG_LAYER_SUB_0, 1024 - (18 + 12), 0, 0, battleBagTask->battleInfo->heapID);
+        PaletteData_LoadBufferFromFileStart(battleBagTask->palette, NARC_INDEX_GRAPHIC__PL_WINFRAME, GetMessageBoxPaletteNARCMember(optionsFrame), battleBagTask->battleInfo->heapID, PLTTBUF_SUB_BG, 0x20, 14 * 16);
     }
 }
 
@@ -859,8 +857,8 @@ static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen)
     SetupBackgroundTilemap(battleBagTask, screen);
     SetupBackgroundScroll(battleBagTask, screen);
 
-    Bg_ScheduleFillTilemap(battleBagTask->background, 4, 0);
-    Bg_ScheduleFillTilemap(battleBagTask->background, 5, 0);
+    Bg_ScheduleFillTilemap(battleBagTask->background, BG_LAYER_SUB_0, 0);
+    Bg_ScheduleFillTilemap(battleBagTask->background, BG_LAYER_SUB_1, 0);
 
     ClearInBattleBagScreen(battleBagTask);
     InitializeInBattleBagScreen(battleBagTask, screen);

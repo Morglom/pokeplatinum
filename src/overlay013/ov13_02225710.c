@@ -397,11 +397,11 @@ static void ov13_02225C4C(BattlePartyTask *param0, u16 *param1, u8 param2, u8 pa
     case 3:
     case 4:
     case 5:
-        if (param0->unk_04[param2 - 0].species == 0) {
+        if (param0->partyPokemon[param2 - 0].species == 0) {
             break;
         }
 
-        if (param0->unk_04[param2 - 0].isEgg != FALSE) {
+        if (param0->partyPokemon[param2 - 0].isEgg != FALSE) {
             u16 v5[2];
 
             v5[0] = param1[2 * v1 + 6 - 1];
@@ -413,7 +413,7 @@ static void ov13_02225C4C(BattlePartyTask *param0, u16 *param1, u8 param2, u8 pa
                 }
             }
         } else {
-            if (param0->unk_04[param2 - 0].currentHP == 0) {
+            if (param0->partyPokemon[param2 - 0].currentHP == 0) {
                 for (v3 = 0; v3 < v1 * v2; v3++) {
                     param1[v3] = (param1[v3] & 0xfff) | (2 << 12);
                 }
@@ -474,16 +474,16 @@ static void ov13_02225E08(BattlePartyTask *param0, u8 param1, u8 param2)
     }
 
     if ((param1 >= 14) && (param1 <= 17)) {
-        Window_Scroll(&param0->unk_206C[v0[param0->unk_2071]], v2, v3, 0);
-        Window_ScheduleCopyToVRAM(&param0->unk_206C[v0[param0->unk_2071]]);
+        Window_Scroll(&param0->windows[v0[param0->unk_2071]], v2, v3, 0);
+        Window_ScheduleCopyToVRAM(&param0->windows[v0[param0->unk_2071]]);
     } else {
         for (v1 = 0; v1 < 8; v1++) {
             if (v0[v1] == 0xff) {
                 break;
             }
 
-            Window_Scroll(&param0->unk_206C[v0[v1]], v2, v3, 0);
-            Window_ScheduleCopyToVRAM(&param0->unk_206C[v0[v1]]);
+            Window_Scroll(&param0->windows[v0[v1]], v2, v3, 0);
+            Window_ScheduleCopyToVRAM(&param0->windows[v0[v1]]);
         }
     }
 }
@@ -602,7 +602,7 @@ void ov13_022260EC(BattlePartyTask *param0, u8 param1)
         ov13_02225D8C(param0, 6, 0, 0);
         ov13_02225D8C(param0, 7, 0, 0);
 
-        if (param0->unk_04[param0->battleInfo->selectedPartySlot].isEgg != FALSE) {
+        if (param0->partyPokemon[param0->battleInfo->selectedPartySlot].isEgg != FALSE) {
             ov13_02225D8C(param0, 8, 3, 0);
             ov13_02225D8C(param0, 10, 3, 0);
         } else {
@@ -632,7 +632,7 @@ void ov13_022260EC(BattlePartyTask *param0, u8 param1)
         }
 
         for (v0 = 0; v0 < LEARNED_MOVES_MAX; v0++) {
-            if (param0->unk_04[param0->battleInfo->selectedPartySlot].moves[v0].move != MOVE_NONE) {
+            if (param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[v0].move != MOVE_NONE) {
                 ov13_02225D8C(param0, 14 + v0, 0, 0);
             } else {
                 ov13_02225D8C(param0, 14 + v0, 3, 0);
@@ -655,7 +655,7 @@ void ov13_022260EC(BattlePartyTask *param0, u8 param1)
         break;
     case IN_BATTLE_SCREEN_INDEX_RESTORE_PP:
         for (v0 = 0; v0 < 4; v0++) {
-            if (param0->unk_04[param0->battleInfo->selectedPartySlot].moves[v0].move != MOVE_NONE) {
+            if (param0->partyPokemon[param0->battleInfo->selectedPartySlot].moves[v0].move != MOVE_NONE) {
                 ov13_02225D8C(param0, 19 + v0, 0, 0);
             } else {
                 ov13_02225D8C(param0, 19 + v0, 3, 0);
@@ -710,7 +710,7 @@ static u8 CheckCanDoubleBattle(BattlePartyTask *param0)
     u16 i, numValidPokemon = 0;
 
     for (i = 0; i < MAX_PARTY_SIZE; i++) {
-        if ((param0->unk_04[i].species != SPECIES_NONE) && (param0->unk_04[i].isEgg == FALSE)) {
+        if ((param0->partyPokemon[i].species != SPECIES_NONE) && (param0->partyPokemon[i].isEgg == FALSE)) {
             numValidPokemon++;
         }
     }

@@ -254,8 +254,8 @@ static void ov13_02224588(BattlePartyTask *param0)
     SpriteSystem_LoadAnimResObjFromOpenNarc(v0, param0->spriteManager, v2, PokeIcon32KAnimationFileIndex(), FALSE, 45063);
 
     for (v1 = 0; v1 < 6; v1++) {
-        if (param0->unk_04[v1].species != 0) {
-            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v2, Pokemon_IconSpriteIndex(param0->unk_04[v1].pokemon), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
+        if (param0->partyPokemon[v1].species != 0) {
+            SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v2, Pokemon_IconSpriteIndex(param0->partyPokemon[v1].pokemon), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
         } else {
             SpriteSystem_LoadCharResObjFromOpenNarc(v0, param0->spriteManager, v2, PokeIconSpriteIndex(0, 0, 0), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 45063 + v1);
         }
@@ -376,11 +376,11 @@ static void ov13_022249CC(BattlePartyTask *param0)
     s32 v0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        if (param0->unk_04[v0].species == 0) {
+        if (param0->partyPokemon[v0].species == 0) {
             continue;
         }
 
-        ManagedSprite_SetExplicitPalette(param0->unk_1FB4[7 + v0], PokeIconPaletteIndex(param0->unk_04[v0].species, param0->unk_04[v0].form, param0->unk_04[v0].isEgg));
+        ManagedSprite_SetExplicitPalette(param0->unk_1FB4[7 + v0], PokeIconPaletteIndex(param0->partyPokemon[v0].species, param0->partyPokemon[v0].form, param0->partyPokemon[v0].isEgg));
     }
 }
 
@@ -493,14 +493,14 @@ static void ov13_02224C14(BattlePartyTask *param0)
     s32 v0;
 
     for (v0 = 0; v0 < 6; v0++) {
-        if (param0->unk_04[v0].species == SPECIES_NONE) {
+        if (param0->partyPokemon[v0].species == SPECIES_NONE) {
             continue;
         }
 
         ov13_022249AC(param0->unk_1FB4[7 + v0], PartyListSlotCoordinates[v0][0], PartyListSlotCoordinates[v0][1]);
-        ov13_02224AB0(param0->unk_04[v0].status, param0->unk_1FB4[13 + v0], Unk_ov13_02229434[v0][0], Unk_ov13_02229434[v0][1]);
-        ov13_02224B28(param0->unk_04[v0].heldItem, param0->unk_1FB4[0 + v0], PartyListSlotCoordinates[v0][0] + 8, PartyListSlotCoordinates[v0][1] + 8);
-        ov13_02224B5C(param0->unk_04[v0].mail, param0->unk_1FB4[32 + v0], PartyListSlotCoordinates[v0][0] + 16, PartyListSlotCoordinates[v0][1] + 8);
+        ov13_02224AB0(param0->partyPokemon[v0].status, param0->unk_1FB4[13 + v0], Unk_ov13_02229434[v0][0], Unk_ov13_02229434[v0][1]);
+        ov13_02224B28(param0->partyPokemon[v0].heldItem, param0->unk_1FB4[0 + v0], PartyListSlotCoordinates[v0][0] + 8, PartyListSlotCoordinates[v0][1] + 8);
+        ov13_02224B5C(param0->partyPokemon[v0].mail, param0->unk_1FB4[32 + v0], PartyListSlotCoordinates[v0][0] + 16, PartyListSlotCoordinates[v0][1] + 8);
     }
 }
 
@@ -509,7 +509,7 @@ static void ov13_02224CB0(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222921C[0], Unk_ov13_0222921C[1]);
     ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222921C[0] + 8, Unk_ov13_0222921C[1] + 8);
@@ -521,7 +521,7 @@ static void ov13_02224D08(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222923C[0], Unk_ov13_0222923C[1]);
     ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222924C[0], Unk_ov13_0222924C[1]);
@@ -536,7 +536,7 @@ static void ov13_02224DA0(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u32 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229244[0], Unk_ov13_02229244[1]);
     ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229254[0], Unk_ov13_02229254[1]);
@@ -556,7 +556,7 @@ static void ov13_02224DA0(BattlePartyTask *param0)
 
 static void ov13_02224E78(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    PartyPokemonData *v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229264[0], Unk_ov13_02229264[1]);
     ov13_02224AB0(v0->status, param0->unk_1FB4[13 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229224[0], Unk_ov13_02229224[1]);
@@ -573,7 +573,7 @@ static void ov13_02224F3C(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229294[0][0]);
@@ -584,7 +584,7 @@ static void ov13_02224F3C(BattlePartyTask *param0)
 
 static void ov13_02224FA8(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    PartyPokemonData *v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229284[0][0]);
@@ -606,7 +606,7 @@ static void ov13_0222506C(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_02229234[0], Unk_ov13_02229234[1]);
     ov13_02224AD4(param0, v0, &Unk_ov13_02229294[0][0]);
@@ -617,7 +617,7 @@ static void ov13_0222506C(BattlePartyTask *param0)
 
 static void ov13_022250D8(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    PartyPokemonData *v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_022249AC(param0->unk_1FB4[21 + param0->battleInfo->unk_34], Unk_ov13_0222925C[0], Unk_ov13_0222925C[1]);
@@ -628,7 +628,7 @@ static void ov13_022250D8(BattlePartyTask *param0)
 
 static void ov13_02225150(BattlePartyTask *param0)
 {
-    PartyPokemonData *v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    PartyPokemonData *v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_022249AC(param0->unk_1FB4[7 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0], Unk_ov13_0222927C[1]);
     ov13_02224B28(v0->heldItem, param0->unk_1FB4[0 + param0->battleInfo->selectedPartySlot], Unk_ov13_0222927C[0] + 8, Unk_ov13_0222927C[1] + 8);
@@ -642,7 +642,7 @@ static void ov13_022251B4(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     for (v1 = 0; v1 < 4; v1++) {
         if (v0->moves[v1].move == 0) {
@@ -664,7 +664,7 @@ static void ov13_02225248(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     for (v1 = 0; v1 < 4; v1++) {
         if (v0->moves[v1].move == 0) {
@@ -730,11 +730,11 @@ void ov13_0222537C(BattlePartyTask *param0)
     u16 v1;
 
     for (v0 = 0; v0 < Party_GetCurrentCount(param0->battleInfo->unk_00); v0++) {
-        if (param0->unk_04[v0].species == 0) {
+        if (param0->partyPokemon[v0].species == 0) {
             continue;
         }
 
-        v1 = ov13_02225324(&param0->unk_04[v0]);
+        v1 = ov13_02225324(&param0->partyPokemon[v0]);
 
         ov13_02225304(param0->unk_1FB4[7 + v0], v1);
         ManagedSprite_TickNFrames(param0->unk_1FB4[7 + v0], FX32_ONE);
@@ -765,7 +765,7 @@ static void ov13_02225420(BattlePartyTask *param0)
     PartyPokemonData *v0;
     u16 v1;
 
-    v0 = &param0->unk_04[param0->battleInfo->selectedPartySlot];
+    v0 = &param0->partyPokemon[param0->battleInfo->selectedPartySlot];
 
     ov13_02225304(param0->unk_1FB4[27], 0);
     ov13_02225304(param0->unk_1FB4[28], 1);
@@ -789,12 +789,12 @@ static void ov13_0222554C(BattlePartyTask *param0)
     ov16_0226DB7C(v0, param0->spriteManager, param0->palette, param0->battleInfo->heapID, 45080, 45068, 45068, 45068);
     v1 = ov16_0226DC24(v0, param0->spriteManager, param0->battleInfo->heapID, 45080, 45068, 45068, 45068, 0, 1);
 
-    SetBattleSubMenuCursorSprites(param0->unk_2084, v1);
+    SetBattleSubMenuCursorSprites(param0->cursor, v1);
 }
 
 static void ov13_022255B8(BattlePartyTask *param0)
 {
-    ov16_0226DCA8(GetBattleSubMenuCursorSprites(param0->unk_2084));
+    ov16_0226DCA8(GetBattleSubMenuCursorSprites(param0->cursor));
     ov16_0226DBFC(param0->spriteManager, 45080, 45068, 45068, 45068);
 }
 
@@ -881,55 +881,55 @@ static const ByteFlagSet *const Unk_ov13_0222938C[] = {
 static void ov13_022255EC(BattlePartyTask *param0)
 {
     if (param0->visitedContestHall == 0) {
-        SetEnabledPositionsMask(param0->unk_2084, 0x5f);
+        SetEnabledPositionsMask(param0->cursor, 0x5f);
     } else {
-        SetEnabledPositionsMask(param0->unk_2084, 0x7f);
+        SetEnabledPositionsMask(param0->cursor, 0x7f);
     }
 }
 
 static void ov13_02225614(BattlePartyTask *param0)
 {
     if (param0->visitedContestHall == 0) {
-        SetEnabledPositionsMask(param0->unk_2084, 5);
+        SetEnabledPositionsMask(param0->cursor, 5);
     } else {
-        SetEnabledPositionsMask(param0->unk_2084, 7);
+        SetEnabledPositionsMask(param0->cursor, 7);
     }
 }
 
 void ov13_0222563C(BattlePartyTask *param0, u8 param1)
 {
-    SetBattleSubMenuCursorPositions(param0->unk_2084, Unk_ov13_0222938C[param1]);
+    SetBattleSubMenuCursorPositions(param0->cursor, Unk_ov13_0222938C[param1]);
 
     switch (param1) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->battleInfo->selectedPartySlot);
+        SetBattleSubMenuCursorPosition(param0->cursor, param0->battleInfo->selectedPartySlot);
         param0->unk_2088 = 0;
         param0->battleInfo->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_2088);
+        SetBattleSubMenuCursorPosition(param0->cursor, param0->unk_2088);
         param0->battleInfo->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
     case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->battleInfo->unk_34);
+        SetBattleSubMenuCursorPosition(param0->cursor, param0->battleInfo->unk_34);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_1:
     case IN_BATTLE_SCREEN_LEARN_MOVE_2:
         ov13_022255EC(param0);
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_2089);
+        SetBattleSubMenuCursorPosition(param0->cursor, param0->unk_2089);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
         ov13_02225614(param0);
-        SetBattleSubMenuCursorPosition(param0->unk_2084, param0->unk_208A);
+        SetBattleSubMenuCursorPosition(param0->cursor, param0->unk_208A);
         break;
     }
 }
 
 void SomeKindOfReset(BattlePartyTask *param0)
 {
-    SetBattlePartyBagCursorVisiblity(param0->unk_2084, FALSE);
-    ResetBattleSubMenuCursorPosition(param0->unk_2084);
-    ov16_0226DDE8(GetBattleSubMenuCursorSprites(param0->unk_2084));
+    SetBattlePartyBagCursorVisiblity(param0->cursor, FALSE);
+    ResetBattleSubMenuCursorPosition(param0->cursor);
+    ov16_0226DDE8(GetBattleSubMenuCursorSprites(param0->cursor));
 }

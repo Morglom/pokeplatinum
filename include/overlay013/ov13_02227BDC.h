@@ -6,7 +6,7 @@
 void ov13_02227BDC(BattleBagTask *battleBagTask);
 void ClearPocketItemSprites(BattleBagTask *battleBagTask);
 void RenderBattleBagScreenSprites(BattleBagTask *battleBagTask, u32 screen);
-void SetupBattleBagCursor(BattleBagTask *battleBagTask, u8 param1);
+void SetupBattleBagCursor(BattleBagTask *battleBagTask, u8 screen);
 void DisableBattleBagCursor(BattleBagTask *battleBagTask);
 void ov13_022280F0(BattleBagTask *battleBagTask, u8 screen);
 
