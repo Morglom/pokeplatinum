@@ -85,36 +85,36 @@ enum InBattleTextIndex {
 
 static void BattlePartyTask_Tick(SysTask *task, void *taskParam);
 static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask);
-static u8 ov13_0221FF60(BattlePartyTask *battlePartyTask);
-static u8 SelectPokemonScreen(BattlePartyTask *battlePartyTask);
-static u8 PokemonDetailsScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_PartyListScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SelectPokemonScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_PokemonSummaryScreen(BattlePartyTask *battlePartyTask);
 static u8 PokemonCantShift(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_ClearErrorMessage(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_TextFinish(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_AwaitingInput(BattlePartyTask *battlePartyTask);
 static u8 SummaryScreen(BattlePartyTask *battlePartyTask);
-static u8 MoveDetailScreen(BattlePartyTask *battlePartyTask);
-static u8 LearnMoveScreen(BattlePartyTask *battlePartyTask);
-static u8 ov13_0222050C(BattlePartyTask *battlePartyTask);
-static u8 UsePPRestoreItem(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_MoveSummaryScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_LearnMoveScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_LearnMoveConfirmScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_UsePPItemScreen(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_ScreenTransition(BattlePartyTask *battlePartyTask);
-static u8 PartyList(BattlePartyTask *battlePartyTask);
-static u8 SelectPokemon(BattlePartyTask *battlePartyTask);
-static u8 CheckMoves(BattlePartyTask *battlePartyTask);
-static u8 PokemonSummaryDisplay(BattlePartyTask *battlePartyTask);
-static u8 MoveSummary(BattlePartyTask *battlePartyTask);
-static u8 ov13_02220768(BattlePartyTask *battlePartyTask);
-static u8 LearnMove(BattlePartyTask *battlePartyTask);
-static u8 CheckWhichPPItem(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupPartyListScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupSelectPokemonScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupCheckMovesScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupPokemonSummaryScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupMoveSummaryScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupLearnMoveScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupLearnMoveConfirmScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_SetupUsePPItemScreen(BattlePartyTask *battlePartyTask);
 static u8 ov13_022208A4(BattlePartyTask *battlePartyTask);
 static u8 UsePPAllRestoreItem(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_Exit(BattlePartyTask *battlePartyTask);
 static BOOL BattlePartyTask_FinishTask(SysTask *task, BattlePartyTask *battlePartyTask);
-static u8 MoveListScreen(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_CheckMovesScreen(BattlePartyTask *battlePartyTask);
 static u8 ov13_0221FFDC(BattlePartyTask *battlePartyTask);
 static void InitializeBackground(BattlePartyTask *battlePartyTask);
 static void CleanupBackground(BgConfig *background);
-static void ov13_02220D4C(BattlePartyTask *battlePartyTask);
+static void LoadBackgroundData(BattlePartyTask *battlePartyTask);
 static void InitializeMessageLoader(BattlePartyTask *battlePartyTask);
 static void CleanupMessageLoader(BattlePartyTask *battlePartyTask);
 static void InitialisePartyPokemon(BattlePartyTask *battlePartyTask);
@@ -137,7 +137,7 @@ static void ov13_02221A3C(BattlePartyTask *battlePartyTask);
 static u8 CheckSelectedPokemonIsEgg(BattlePartyTask *battlePartyTask);
 static void UseBagItem(BattleSystem *battleSys, u16 item, u16 category, u32 heapID);
 
-static const TouchScreenRect Unk_ov13_02228DEC[] = {
+static const TouchScreenRect partyListScreenTouchRects[] = {
     { 0x0, 0x2F, 0x0, 0x7F },
     { 0x8, 0x37, 0x80, 0xFF },
     { 0x30, 0x5F, 0x0, 0x7F },
@@ -148,7 +148,7 @@ static const TouchScreenRect Unk_ov13_02228DEC[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228D24[] = {
+static const TouchScreenRect selectPokemonScreenTouchRects[] = {
     { 0x8, 0x8F, 0x8, 0xF7 },
     { 0x98, 0xBF, 0x0, 0x67 },
     { 0x98, 0xBF, 0x68, 0xCF },
@@ -156,7 +156,7 @@ static const TouchScreenRect Unk_ov13_02228D24[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228D38[] = {
+static const TouchScreenRect pokemonSummaryScreenTouchRects[] = {
     { 0x98, 0xBF, 0x0, 0x27 },
     { 0x98, 0xBF, 0x28, 0x4F },
     { 0x98, 0xBF, 0x60, 0xC7 },
@@ -164,7 +164,7 @@ static const TouchScreenRect Unk_ov13_02228D38[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228E2C[] = {
+static const TouchScreenRect checkMovesScreenTouchRects[] = {
     { 0x30, 0x5F, 0x0, 0x7F },
     { 0x30, 0x5F, 0x80, 0xFF },
     { 0x60, 0x8F, 0x0, 0x7F },
@@ -176,7 +176,7 @@ static const TouchScreenRect Unk_ov13_02228E2C[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228D4C[] = {
+static const TouchScreenRect moveSummaryScreenTouchRects[] = {
     { 0x98, 0xA7, 0x58, 0x7F },
     { 0x98, 0xA7, 0x80, 0xA7 },
     { 0xA8, 0xB7, 0x58, 0x7F },
@@ -185,7 +185,7 @@ static const TouchScreenRect Unk_ov13_02228D4C[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228E0C[] = {
+static const TouchScreenRect learnMoveScreenTouchRects[] = {
     { 0x30, 0x5F, 0x0, 0x7F },
     { 0x30, 0x5F, 0x80, 0xFF },
     { 0x60, 0x8F, 0x0, 0x7F },
@@ -196,14 +196,14 @@ static const TouchScreenRect Unk_ov13_02228E0C[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228D14[] = {
+static const TouchScreenRect learnMoveConfirmScreenTouchRects[] = {
     { 0x98, 0xBF, 0x0, 0xCF },
     { 0x0, 0x27, 0xB8, 0xFF },
     { 0x98, 0xBF, 0xD8, 0xFF },
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-static const TouchScreenRect Unk_ov13_02228D64[] = {
+static const TouchScreenRect usePPItemScreenTouchRects[] = {
     { 0x30, 0x5F, 0x0, 0x7F },
     { 0x30, 0x5F, 0x80, 0xFF },
     { 0x60, 0x8F, 0x0, 0x7F },
@@ -241,43 +241,43 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
         battlePartyTask->currentState = BattlePartyTask_Initialize(battlePartyTask);
         break;
     case 1:
-        battlePartyTask->currentState = ov13_0221FF60(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_PartyListScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SELECT_POKEMON_SCREEN:
-        battlePartyTask->currentState = SelectPokemonScreen(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SelectPokemonScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_POKEMON_SUMMARY_SCREEN:
-        battlePartyTask->currentState = PokemonDetailsScreen(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_PokemonSummaryScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_CHECK_MOVES_SCREEN:
-        battlePartyTask->currentState = MoveListScreen(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_CheckMovesScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_MOVE_SUMMARY_SCREEN:
-        battlePartyTask->currentState = MoveDetailScreen(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_MoveSummaryScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_PARTY_LIST_SCREEN:
-        battlePartyTask->currentState = PartyList(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupPartyListScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_SELECT_POKEMON_SCREEN:
-        battlePartyTask->currentState = SelectPokemon(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupSelectPokemonScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_POKEMON_SUMMARY_SCREEN:
-        battlePartyTask->currentState = PokemonSummaryDisplay(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupPokemonSummaryScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_CHECK_MOVES_SCREEN:
-        battlePartyTask->currentState = CheckMoves(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupCheckMovesScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_MOVE_SUMMARY_SCREEN:
-        battlePartyTask->currentState = MoveSummary(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupMoveSummaryScreen(battlePartyTask);
         break;
     case 11:
-        battlePartyTask->currentState = ov13_02220768(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupLearnMoveScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_LEARN_MOVE_CONFIRM_SCREEN:
-        battlePartyTask->currentState = LearnMove(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupLearnMoveConfirmScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_USE_PP_ITEM_SCREEN:
-        battlePartyTask->currentState = CheckWhichPPItem(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_SetupUsePPItemScreen(battlePartyTask);
         break;
     case IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY:
         battlePartyTask->currentState = SummaryScreen(battlePartyTask);
@@ -295,13 +295,13 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
         battlePartyTask->currentState = BattlePartyTask_AwaitingInput(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_LEARN_MOVE_SCREEN:
-        battlePartyTask->currentState = LearnMoveScreen(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_LearnMoveScreen(battlePartyTask);
         break;
     case 20:
-        battlePartyTask->currentState = ov13_0222050C(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_LearnMoveConfirmScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_USE_PP_ITEM_SCREEN:
-        battlePartyTask->currentState = UsePPRestoreItem(battlePartyTask);
+        battlePartyTask->currentState = BattlePartyTask_UsePPItemScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION:
         battlePartyTask->currentState = BattlePartyTask_ScreenTransition(battlePartyTask);
@@ -345,7 +345,7 @@ static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask)
 
     InitialisePartyPokemon(battlePartyTask);
     InitializeBackground(battlePartyTask);
-    ov13_02220D4C(battlePartyTask);
+    LoadBackgroundData(battlePartyTask);
     InitializeMessageLoader(battlePartyTask);
 
     Font_InitManager(FONT_SUBSCREEN, battlePartyTask->battleInfo->heapID);
@@ -374,7 +374,7 @@ static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask)
     return v0;
 }
 
-static u8 ov13_0221FF60(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_PartyListScreen(BattlePartyTask *battlePartyTask)
 {
     if (PaletteData_GetSelectedBuffersMask(battlePartyTask->palette) != 0) {
         return 1;
@@ -449,7 +449,7 @@ static u8 ov13_0221FFDC(BattlePartyTask *battlePartyTask)
     return BATTLE_PARTY_TASK_STATE_TEXT_FINISH;
 }
 
-static u8 SelectPokemonScreen(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SelectPokemonScreen(BattlePartyTask *battlePartyTask)
 {
     u8 v0 = ov13_022212C4(battlePartyTask);
 
@@ -492,7 +492,7 @@ static u8 SelectPokemonScreen(BattlePartyTask *battlePartyTask)
     return 2;
 }
 
-static u8 PokemonDetailsScreen(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_PokemonSummaryScreen(BattlePartyTask *battlePartyTask)
 {
     u8 v0 = ov13_0222130C(battlePartyTask);
 
@@ -539,7 +539,7 @@ static u8 PokemonDetailsScreen(BattlePartyTask *battlePartyTask)
     return BATTLE_PARTY_TASK_STATE_POKEMON_SUMMARY_SCREEN;
 }
 
-static u8 MoveListScreen(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_CheckMovesScreen(BattlePartyTask *battlePartyTask)
 {
     u8 v0 = ov13_02221354(battlePartyTask);
 
@@ -600,7 +600,7 @@ static u8 MoveListScreen(BattlePartyTask *battlePartyTask)
     return BATTLE_PARTY_TASK_STATE_CHECK_MOVES_SCREEN;
 }
 
-static u8 MoveDetailScreen(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_MoveSummaryScreen(BattlePartyTask *battlePartyTask)
 {
     u8 v0 = ov13_0222139C(battlePartyTask);
 
@@ -626,9 +626,9 @@ static u8 MoveDetailScreen(BattlePartyTask *battlePartyTask)
     return BATTLE_PARTY_TASK_STATE_MOVE_SUMMARY_SCREEN;
 }
 
-static u8 LearnMoveScreen(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_LearnMoveScreen(BattlePartyTask *battlePartyTask)
 {
-    int v0 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228E0C);
+    int v0 = CheckTouchRectIsPressed(battlePartyTask, learnMoveScreenTouchRects);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -674,9 +674,9 @@ static u8 LearnMoveScreen(BattlePartyTask *battlePartyTask)
     return BATTLE_PARTY_TASK_STATE_LEARN_MOVE_SCREEN;
 }
 
-static u8 ov13_0222050C(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_LearnMoveConfirmScreen(BattlePartyTask *battlePartyTask)
 {
-    int v0 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228D14);
+    int v0 = CheckTouchRectIsPressed(battlePartyTask, learnMoveConfirmScreenTouchRects);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -735,13 +735,13 @@ static u8 ov13_0222050C(BattlePartyTask *battlePartyTask)
     return 20;
 }
 
-static u8 UsePPRestoreItem(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_UsePPItemScreen(BattlePartyTask *battlePartyTask)
 {
     BattlePartyBattleInfo *v0;
     int v1; // Move Index
 
     v0 = battlePartyTask->battleInfo;
-    v1 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228D64);
+    v1 = CheckTouchRectIsPressed(battlePartyTask, usePPItemScreenTouchRects);
 
     if (v1 == TOUCHSCREEN_INPUT_NONE) {
         v1 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -788,37 +788,37 @@ static u8 UsePPRestoreItem(BattlePartyTask *battlePartyTask)
     return 21;
 }
 
-static u8 PartyList(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupPartyListScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_PARTY_LIST);
     return 1;
 }
 
-static u8 SelectPokemon(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupSelectPokemonScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON);
     return 2;
 }
 
-static u8 PokemonSummaryDisplay(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupPokemonSummaryScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY);
     return 3;
 }
 
-static u8 CheckMoves(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupCheckMovesScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_CHECK_MOVES);
     return BATTLE_PARTY_TASK_STATE_CHECK_MOVES_SCREEN;
 }
 
-static u8 MoveSummary(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupMoveSummaryScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY);
     return BATTLE_PARTY_TASK_STATE_MOVE_SUMMARY_SCREEN;
 }
 
-static u8 ov13_02220768(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupLearnMoveScreen(BattlePartyTask *battlePartyTask)
 {
     if (battlePartyTask->inLearnMoveContestData == FALSE) {
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_1);
@@ -829,7 +829,7 @@ static u8 ov13_02220768(BattlePartyTask *battlePartyTask)
     return 19;
 }
 
-static u8 LearnMove(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupLearnMoveConfirmScreen(BattlePartyTask *battlePartyTask)
 {
     ov13_022252E8(battlePartyTask);
 
@@ -842,7 +842,7 @@ static u8 LearnMove(BattlePartyTask *battlePartyTask)
     return 20;
 }
 
-static u8 CheckWhichPPItem(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_SetupUsePPItemScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_RESTORE_PP);
 
@@ -1160,7 +1160,7 @@ static void CleanupBackground(BgConfig *background)
     Bg_FreeTilemapBuffer(background, BG_LAYER_SUB_3);
 }
 
-static void ov13_02220D4C(BattlePartyTask *battlePartyTask)
+static void LoadBackgroundData(BattlePartyTask *battlePartyTask)
 {
     NARC *narc = NARC_ctor(NARC_INDEX_BATTLE__GRAPHIC__PL_B_PLIST_GRA, battlePartyTask->battleInfo->heapID);
     Graphics_LoadTilesToBgLayerFromOpenNARC(narc, 22, battlePartyTask->background, BG_LAYER_SUB_3, 0, 0, 0, battlePartyTask->battleInfo->heapID);
@@ -1301,7 +1301,7 @@ static void InitialisePartyPokemon(BattlePartyTask *battlePartyTask)
 
 static u8 ov13_0222124C(BattlePartyTask *battlePartyTask)
 {
-    int v0 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228DEC);
+    int v0 = CheckTouchRectIsPressed(battlePartyTask, partyListScreenTouchRects);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -1330,7 +1330,7 @@ static u8 ov13_0222124C(BattlePartyTask *battlePartyTask)
 
 static u8 ov13_022212C4(BattlePartyTask *battlePartyTask)
 {
-    int buttonPressed = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228D24);
+    int buttonPressed = CheckTouchRectIsPressed(battlePartyTask, selectPokemonScreenTouchRects);
 
     if (buttonPressed == TOUCHSCREEN_INPUT_NONE) {
         buttonPressed = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -1349,7 +1349,7 @@ static u8 ov13_022212C4(BattlePartyTask *battlePartyTask)
 
 static u8 ov13_0222130C(BattlePartyTask *battlePartyTask)
 {
-    int v0 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228D38);
+    int v0 = CheckTouchRectIsPressed(battlePartyTask, pokemonSummaryScreenTouchRects);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -1368,7 +1368,7 @@ static u8 ov13_0222130C(BattlePartyTask *battlePartyTask)
 
 static u8 ov13_02221354(BattlePartyTask *battlePartyTask)
 {
-    int v0 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228E2C);
+    int v0 = CheckTouchRectIsPressed(battlePartyTask, checkMovesScreenTouchRects);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
@@ -1387,7 +1387,7 @@ static u8 ov13_02221354(BattlePartyTask *battlePartyTask)
 
 static u8 ov13_0222139C(BattlePartyTask *battlePartyTask)
 {
-    int v0 = CheckTouchRectIsPressed(battlePartyTask, Unk_ov13_02228D4C);
+    int v0 = CheckTouchRectIsPressed(battlePartyTask, moveSummaryScreenTouchRects);
 
     if (v0 == TOUCHSCREEN_INPUT_NONE) {
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
