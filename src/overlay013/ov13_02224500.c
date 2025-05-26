@@ -683,7 +683,7 @@ static void ov13_02225248(BattlePartyTask *param0)
 
 void ov13_022252E8(BattlePartyTask *param0)
 {
-    if (param0->unk_2073_0 == 0) {
+    if (param0->inLearnMoveContestData == FALSE) {
         ov13_022251B4(param0);
     } else {
         ov13_02225248(param0);
@@ -896,33 +896,33 @@ static void ov13_02225614(BattlePartyTask *param0)
     }
 }
 
-void ov13_0222563C(BattlePartyTask *param0, u8 param1)
+void ov13_0222563C(BattlePartyTask *battlePartyTask, u8 screen)
 {
-    SetBattleSubMenuCursorPositions(param0->cursor, Unk_ov13_0222938C[param1]);
+    SetBattleSubMenuCursorPositions(battlePartyTask->cursor, Unk_ov13_0222938C[screen]);
 
-    switch (param1) {
+    switch (screen) {
     case IN_BATTLE_SCREEN_INDEX_PARTY_LIST:
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->battleInfo->selectedPartySlot);
-        param0->unk_2088 = 0;
-        param0->battleInfo->unk_34 = 0;
+        SetBattleSubMenuCursorPosition(battlePartyTask->cursor, battlePartyTask->battleInfo->selectedPartySlot);
+        battlePartyTask->unk_2088 = 0;
+        battlePartyTask->battleInfo->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON:
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->unk_2088);
-        param0->battleInfo->unk_34 = 0;
+        SetBattleSubMenuCursorPosition(battlePartyTask->cursor, battlePartyTask->unk_2088);
+        battlePartyTask->battleInfo->unk_34 = 0;
         break;
     case IN_BATTLE_SCREEN_INDEX_CHECK_MOVES:
     case IN_BATTLE_SCREEN_INDEX_MOVE_SUMMARY:
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->battleInfo->unk_34);
+        SetBattleSubMenuCursorPosition(battlePartyTask->cursor, battlePartyTask->battleInfo->unk_34);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_1:
     case IN_BATTLE_SCREEN_LEARN_MOVE_2:
-        ov13_022255EC(param0);
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->unk_2089);
+        ov13_022255EC(battlePartyTask);
+        SetBattleSubMenuCursorPosition(battlePartyTask->cursor, battlePartyTask->unk_2089);
         break;
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM:
     case IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST:
-        ov13_02225614(param0);
-        SetBattleSubMenuCursorPosition(param0->cursor, param0->unk_208A);
+        ov13_02225614(battlePartyTask);
+        SetBattleSubMenuCursorPosition(battlePartyTask->cursor, battlePartyTask->unk_208A);
         break;
     }
 }

@@ -61,7 +61,7 @@ typedef struct {
     u8 numWindows;
     u8 unk_2071;
     u8 selectedPartySlot;
-    u8 unk_2073_0 : 4; // Num windows
+    u8 inLearnMoveContestData : 4; // Num windows
     u8 visitedContestHall : 4; // Some sort of enum
     u8 currentState;
     u8 queuedState;

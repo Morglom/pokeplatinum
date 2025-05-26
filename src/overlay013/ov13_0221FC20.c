@@ -355,7 +355,7 @@ static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask)
     ov13_02221A88(battlePartyTask);
     DrawInBattlePartyScreen(battlePartyTask, battlePartyTask->currentScreen);
 
-    if (battlePartyTask->battleInfo->unk_32 != 0) {
+    if (battlePartyTask->battleInfo->isCursorEnabled != 0) {
         SetBattlePartyBagCursorVisiblity(battlePartyTask->cursor, 1);
     }
 
@@ -654,7 +654,7 @@ static u8 LearnMoveScreen(BattlePartyTask *battlePartyTask)
             break;
         }
 
-        battlePartyTask->unk_2073_0 ^= 1;
+        battlePartyTask->inLearnMoveContestData ^= 1;
         battlePartyTask->unk_2089 = (u8)v0;
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(battlePartyTask, 18);
@@ -689,7 +689,7 @@ static u8 ov13_0222050C(BattlePartyTask *battlePartyTask)
     case 0:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
 
-        if (battlePartyTask->unk_2073_0 == 0) {
+        if (battlePartyTask->inLearnMoveContestData == FALSE) {
             ov13_02225FCC(battlePartyTask, 28);
         } else {
             ov13_02225FCC(battlePartyTask, 29);
@@ -698,7 +698,7 @@ static u8 ov13_0222050C(BattlePartyTask *battlePartyTask)
         if (CheckSelectedMoveIsHM(battlePartyTask) == TRUE) {
             ov13_02223118(battlePartyTask);
 
-            if (battlePartyTask->unk_2073_0 == 0) {
+            if (battlePartyTask->inLearnMoveContestData == FALSE) {
                 ov13_02221A04(battlePartyTask);
             } else {
                 ov13_02221A3C(battlePartyTask);
@@ -717,7 +717,7 @@ static u8 ov13_0222050C(BattlePartyTask *battlePartyTask)
 
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(battlePartyTask, 18);
-        battlePartyTask->unk_2073_0 ^= 1;
+        battlePartyTask->inLearnMoveContestData ^= 1;
         battlePartyTask->unk_208A = (u8)v0;
         battlePartyTask->queuedState = IN_BATTLE_PARTY_SCREEN_INDEX_LEARN_MOVE;
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
@@ -817,7 +817,7 @@ static u8 MoveSummary(BattlePartyTask *battlePartyTask)
 
 static u8 ov13_02220768(BattlePartyTask *battlePartyTask)
 {
-    if (battlePartyTask->unk_2073_0 == 0) {
+    if (battlePartyTask->inLearnMoveContestData == FALSE) {
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_1);
     } else {
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_2);
@@ -830,7 +830,7 @@ static u8 LearnMove(BattlePartyTask *battlePartyTask)
 {
     ov13_022252E8(battlePartyTask);
 
-    if (battlePartyTask->unk_2073_0 == 0) {
+    if (battlePartyTask->inLearnMoveContestData == FALSE) {
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_CONFIRM);
     } else {
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST);
@@ -1036,7 +1036,7 @@ static BOOL BattlePartyTask_FinishTask(SysTask *task, BattlePartyTask *battlePar
     ov13_02221BC8(battlePartyTask);
     CleanupBackground(battlePartyTask->background);
 
-    battlePartyTask->battleInfo->unk_32 = IsBattleSubMenuCursorVisible(battlePartyTask->cursor);
+    battlePartyTask->battleInfo->isCursorEnabled = IsBattleSubMenuCursorVisible(battlePartyTask->cursor);
 
     DeleteBattleSubMenuCursor(battlePartyTask->cursor);
     Font_Free(FONT_SUBSCREEN);

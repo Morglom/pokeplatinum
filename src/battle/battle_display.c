@@ -3617,7 +3617,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
         v0->unk_08->unk_04->unk_22 = v0->unk_04->selectedBattleBagItem;
         v0->unk_08->unk_04->unk_33 = v0->unk_04->selectedBattleBagPocket;
         v0->unk_08->unk_04->unk_28 = v0->unk_04->battler;
-        v0->unk_08->unk_04->unk_32 = v0->unk_10;
+        v0->unk_08->unk_04->isCursorEnabled = v0->unk_10;
         v0->unk_08->unk_04->unk_14 = v0->unk_08->unk_0C[v0->unk_0D];
         v0->unk_08->unk_04->unk_15 = v0->unk_08->unk_0C[BattleSystem_Partner(v0->unk_00, v0->unk_0D)];
 
@@ -3634,7 +3634,7 @@ static void ov16_022611DC(SysTask *param0, void *param1)
     } break;
     case 5:
         if (v0->unk_08->unk_04->unk_36) {
-            v0->unk_10 = v0->unk_08->unk_04->unk_32;
+            v0->unk_10 = v0->unk_08->unk_04->isCursorEnabled;
             v0->unk_08->unk_04->unk_36 = 0;
 
             if (v0->unk_08->unk_04->selectedPartySlot == 6) {
@@ -4211,7 +4211,7 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
                 v0->unk_04->unk_35 = v0->unk_0B;
                 v0->unk_04->unk_22 = v0->unk_14;
                 v0->unk_04->unk_28 = v0->unk_09;
-                v0->unk_04->unk_32 = v0->unk_17;
+                v0->unk_04->isCursorEnabled = v0->unk_17;
 
                 if ((v0->unk_18 & FlagIndex(v0->unk_09)) == 0) {
                     v0->unk_04->unk_14 = v0->unk_0C[v0->unk_09];
@@ -4235,7 +4235,7 @@ static void ov16_02261E8C(SysTask *param0, void *param1)
     case 2:
         if (v0->unk_04->unk_36) {
             ov16_0223B430(v0->unk_00);
-            ov16_0226CD10(ov16_0223E02C(v0->unk_00), v0->unk_04->unk_32);
+            ov16_0226CD10(ov16_0223E02C(v0->unk_00), v0->unk_04->isCursorEnabled);
             PaletteData_StartFade(v1, (0x1 | 0x4), 0xc00, -8, 7, 0, 0x0);
             PaletteData_StartFade(v1, (0x2 | 0x8), 0xffff, -8, 16, 0, 0x0);
             v0->unk_0A++;
@@ -5193,7 +5193,7 @@ static void ov16_022633A4(SysTask *param0, void *param1)
             v0->unk_04->unk_35 = 3;
             v0->unk_04->unk_22 = 0;
             v0->unk_04->unk_28 = v0->unk_09;
-            v0->unk_04->unk_32 = 0;
+            v0->unk_04->isCursorEnabled = 0;
 
             BattlePartyTask_Start(v0->unk_04);
             v0->unk_0A++;

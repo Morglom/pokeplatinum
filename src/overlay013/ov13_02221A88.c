@@ -268,15 +268,15 @@ static const u32 moveSlotEntryIDs[] = {
     0x49 // Move to learn
 };
 
-void ov13_02221A88(BattlePartyTask *param0)
+void ov13_02221A88(BattlePartyTask *battlePartyTask)
 {
     u32 i;
 
     for (i = 0; i < 2; i++) {
-        Window_AddFromTemplate(param0->background, &param0->messageBoxWindows[i], &partyScreenMessageBoxWindowTemplates[i]);
+        Window_AddFromTemplate(battlePartyTask->background, &battlePartyTask->messageBoxWindows[i], &partyScreenMessageBoxWindowTemplates[i]);
     }
 
-    InitializeInBattlePartyScreen(param0, param0->currentScreen);
+    InitializeInBattlePartyScreen(battlePartyTask, battlePartyTask->currentScreen);
 }
 
 void InitializeInBattlePartyScreen(BattlePartyTask *param0, enum InBattleScreenIndex screenIndex)

@@ -22,7 +22,7 @@ typedef struct {
     u16 unk_24; // Move to learn
     s32 unk_28; // Battler
     u8 unk_2C[6]; // Party slots
-    u8 unk_32;
+    u8 isCursorEnabled;
     u8 unk_33; // Item Category?
     u8 unk_34; // Index of selected move
     u8 unk_35; // Selection enum maybe
