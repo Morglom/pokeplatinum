@@ -240,7 +240,7 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
     case BATTLE_PARTY_TASK_STATE_INITIALISE:
         battlePartyTask->currentState = BattlePartyTask_Initialize(battlePartyTask);
         break;
-    case 1:
+    case BATTLE_PARTY_TASK_STATE_PARTY_LIST_SCREEN:
         battlePartyTask->currentState = BattlePartyTask_PartyListScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SELECT_POKEMON_SCREEN:
@@ -270,7 +270,7 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
     case BATTLE_PARTY_TASK_STATE_SETUP_MOVE_SUMMARY_SCREEN:
         battlePartyTask->currentState = BattlePartyTask_SetupMoveSummaryScreen(battlePartyTask);
         break;
-    case 11:
+    case BATTLE_PARTY_TASK_STATE_SETUP_LEARN_MOVE_SCREEN:
         battlePartyTask->currentState = BattlePartyTask_SetupLearnMoveScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_SETUP_LEARN_MOVE_CONFIRM_SCREEN:
@@ -297,7 +297,7 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
     case BATTLE_PARTY_TASK_STATE_LEARN_MOVE_SCREEN:
         battlePartyTask->currentState = BattlePartyTask_LearnMoveScreen(battlePartyTask);
         break;
-    case 20:
+    case BATTLE_PARTY_TASK_STATE_LEARN_MOVE_CONFIRM_SCREEN:
         battlePartyTask->currentState = BattlePartyTask_LearnMoveConfirmScreen(battlePartyTask);
         break;
     case BATTLE_PARTY_TASK_STATE_USE_PP_ITEM_SCREEN:
