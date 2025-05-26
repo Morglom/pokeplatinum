@@ -927,9 +927,9 @@ void ov13_0222563C(BattlePartyTask *battlePartyTask, u8 screen)
     }
 }
 
-void SomeKindOfReset(BattlePartyTask *param0)
+void DisableBattlePartyCursor(BattlePartyTask *battlePartyTask)
 {
-    SetBattlePartyBagCursorVisiblity(param0->cursor, FALSE);
-    ResetBattleSubMenuCursorPosition(param0->cursor);
-    ov16_0226DDE8(GetBattleSubMenuCursorSprites(param0->cursor));
+    SetBattlePartyBagCursorVisiblity(battlePartyTask->cursor, FALSE);
+    ResetBattleSubMenuCursorPosition(battlePartyTask->cursor);
+    ov16_0226DDE8(GetBattleSubMenuCursorSprites(battlePartyTask->cursor));
 }
