@@ -329,16 +329,16 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
 
 static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask)
 {
-    u8 v0;
+    u8 nextState;
 
     G2S_BlendNone();
 
     if (battlePartyTask->battleInfo->unk_35 == 3) {
         battlePartyTask->currentScreen = IN_BATTLE_SCREEN_LEARN_MOVE_1;
-        v0 = BATTLE_PARTY_TASK_STATE_LEARN_MOVE_SCREEN;
+        nextState = BATTLE_PARTY_TASK_STATE_LEARN_MOVE_SCREEN;
     } else {
         battlePartyTask->currentScreen = IN_BATTLE_SCREEN_INDEX_PARTY_LIST;
-        v0 = 1;
+        nextState = BATTLE_PARTY_TASK_STATE_PARTY_LIST_SCREEN;
     }
 
     battlePartyTask->cursor = MakeBattleSubMenuCursor(battlePartyTask->battleInfo->heapID);
@@ -358,11 +358,11 @@ static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask)
     ov13_02221A88(battlePartyTask);
     DrawInBattlePartyScreen(battlePartyTask, battlePartyTask->currentScreen);
 
-    if (battlePartyTask->battleInfo->isCursorEnabled != 0) {
-        SetBattlePartyBagCursorVisiblity(battlePartyTask->cursor, 1);
+    if (battlePartyTask->battleInfo->isCursorEnabled != FALSE) {
+        SetBattlePartyBagCursorVisiblity(battlePartyTask->cursor, TRUE);
     }
 
-    if ((battlePartyTask->currentScreen == 0) && (CheckIfSwitchingWithPartnersPokemon(battlePartyTask, 0) == TRUE)) {
+    if ((battlePartyTask->currentScreen == IN_BATTLE_SCREEN_INDEX_PARTY_LIST) && (CheckIfSwitchingWithPartnersPokemon(battlePartyTask, 0) == TRUE)) {
         battlePartyTask->battleInfo->selectedPartySlot = 1;
     }
 
@@ -371,13 +371,13 @@ static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask)
 
     PaletteData_StartFade(battlePartyTask->palette, (0x2 | 0x8), 0xffff, -8, 16, 0, 0);
 
-    return v0;
+    return nextState;
 }
 
 static u8 BattlePartyTask_PartyListScreen(BattlePartyTask *battlePartyTask)
 {
     if (PaletteData_GetSelectedBuffersMask(battlePartyTask->palette) != 0) {
-        return 1;
+        return BATTLE_PARTY_TASK_STATE_PARTY_LIST_SCREEN;
     }
 
     if (ov13_0222124C(battlePartyTask) == 1) {
@@ -430,7 +430,7 @@ static u8 ov13_0221FFDC(BattlePartyTask *battlePartyTask)
                 battlePartyTask->partyPokemon[battleInfo->selectedPartySlot].pokemon = BattleSystem_PartyPokemon(battleInfo->battleSystem, battleInfo->unk_28, battleInfo->unk_2C[battleInfo->selectedPartySlot]);
                 battleInfo->unk_20 = Pokemon_GetValue(battlePartyTask->partyPokemon[battleInfo->selectedPartySlot].pokemon, MON_DATA_CURRENT_HP, NULL);
                 battleInfo->unk_20 -= battlePartyTask->partyPokemon[battleInfo->selectedPartySlot].currentHP;
-                battlePartyTask->queuedState = 25;
+                battlePartyTask->queuedState = BATTLE_PARTY_TASK_EXIT;
             } else {
                 battlePartyTask->queuedState = 23;
             }
@@ -791,19 +791,19 @@ static u8 BattlePartyTask_UsePPItemScreen(BattlePartyTask *battlePartyTask)
 static u8 BattlePartyTask_SetupPartyListScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_PARTY_LIST);
-    return 1;
+    return BATTLE_PARTY_TASK_STATE_PARTY_LIST_SCREEN;
 }
 
 static u8 BattlePartyTask_SetupSelectPokemonScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_SELECT_POKEMON);
-    return 2;
+    return BATTLE_PARTY_TASK_STATE_SELECT_POKEMON_SCREEN;
 }
 
 static u8 BattlePartyTask_SetupPokemonSummaryScreen(BattlePartyTask *battlePartyTask)
 {
     ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_INDEX_POKEMON_SUMMARY);
-    return 3;
+    return BATTLE_PARTY_TASK_STATE_POKEMON_SUMMARY_SCREEN;
 }
 
 static u8 BattlePartyTask_SetupCheckMovesScreen(BattlePartyTask *battlePartyTask)
@@ -826,7 +826,7 @@ static u8 BattlePartyTask_SetupLearnMoveScreen(BattlePartyTask *battlePartyTask)
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_2);
     }
 
-    return 19;
+    return BATTLE_PARTY_TASK_STATE_LEARN_MOVE_SCREEN;
 }
 
 static u8 BattlePartyTask_SetupLearnMoveConfirmScreen(BattlePartyTask *battlePartyTask)
@@ -839,7 +839,7 @@ static u8 BattlePartyTask_SetupLearnMoveConfirmScreen(BattlePartyTask *battlePar
         ChangeBattlePartyScreen(battlePartyTask, IN_BATTLE_SCREEN_LEARN_MOVE_CONTEST);
     }
 
-    return 20;
+    return BATTLE_PARTY_TASK_STATE_LEARN_MOVE_CONFIRM_SCREEN;
 }
 
 static u8 BattlePartyTask_SetupUsePPItemScreen(BattlePartyTask *battlePartyTask)
