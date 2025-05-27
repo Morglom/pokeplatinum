@@ -104,21 +104,21 @@ void InitializeWindows(BattleBagTask *battleBagTask)
     InitializeInBattleBagScreen(battleBagTask, battleBagTask->currentScreen);
 }
 
-void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum BattlePartyTaskState screenIndex)
+void InitializeInBattleBagScreen(BattleBagTask *battleBagTask, enum BattleBagScreen screenIndex)
 {
     const WindowTemplate *windowTemplates;
     u8 i;
 
     switch (screenIndex) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
+    case BATTLE_BAG_SCREEN_BAG_MENU:
         windowTemplates = bagMenuScreenWindowTemplates;
         battleBagTask->numWindows = BAG_MENU_SCREEN_WINDOW_NUM;
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
+    case BATTLE_BAG_SCREEN_POCKET_MENU:
         windowTemplates = bagSubMenuScreenWindowTemplates;
         battleBagTask->numWindows = BAG_SUB_MENU_SCREEN_WINDOW_NUM;
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
+    case BATTLE_BAG_SCREEN_USE_ITEM:
         windowTemplates = useBagItemScreenWindowTemplates;
         battleBagTask->numWindows = USE_BAG_ITEM_SCREEN_WINDOW_NUM;
         break;
@@ -142,16 +142,16 @@ void ClearBattleBagWindows(BattleBagTask *BATTLE_BAG_TASK_STATE_EXIT)
     Window_Remove(&BATTLE_BAG_TASK_STATE_EXIT->messageBoxWindow);
 }
 
-void DrawInBattleBagScreen(BattleBagTask *param0, enum BattlePartyTaskState screenIndex)
+void DrawInBattleBagScreen(BattleBagTask *param0, enum BattleBagScreen screenIndex)
 {
     switch (screenIndex) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
+    case BATTLE_BAG_SCREEN_BAG_MENU:
         DrawBagMenuScreen(param0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
+    case BATTLE_BAG_SCREEN_POCKET_MENU:
         DrawBagSubMenuScreen(param0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
+    case BATTLE_BAG_SCREEN_USE_ITEM:
         DrawUseBagItemScreen(param0);
         break;
     }

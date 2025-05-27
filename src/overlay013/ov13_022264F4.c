@@ -71,15 +71,6 @@ enum BattleBagCatchTutorialState {
     BATTLE_BAG_CATCH_TUTORIAL_STATE_USE_ITEM_SCREEN,
 };
 
-enum BattleBagTextId {
-    BATTLE_BAG_TEXT_ID_NO_USE = 34,
-    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_TWO_POKEMON = 44,
-    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_NO_ROOM_LEFT,
-    BATTLE_BAG_TEXT_ID_EMBARGO_BLOCKING_ITEM_USE,
-    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_POKEMON_HIDDEN,
-    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_POKEMON_SUBSTITUTED,
-};
-
 enum BattleBagMenuScreenButton {
     BATTLE_BAG_MENU_SCREEN_BUTTON_RECOVER_HP_POCKET = 0,
     BATTLE_BAG_MENU_SCREEN_BUTTON_RECOVER_STATUS_POCKET,
@@ -104,6 +95,15 @@ enum BattleBagPocketMenuScreenButton {
 enum BattleBagUseItemScreenButton {
     BATTLE_BAG_USE_ITEM_SCREEN_BUTTON_USE = 0,
     BATTLE_BAG_USE_ITEM_SCREEN_BUTTON_CANCEL,
+};
+
+enum BattleBagTextId {
+    BATTLE_BAG_TEXT_ID_ITEM_HAS_NO_USE = 34,
+    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_TWO_POKEMON = 44,
+    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_NO_ROOM_LEFT,
+    BATTLE_BAG_TEXT_ID_EMBARGO_BLOCKING_ITEM_USE,
+    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_POKEMON_HIDDEN,
+    BATTLE_BAG_TEXT_ID_CANT_USE_POKE_BALL_POKEMON_SUBSTITUTED,
 };
 
 #define TEXT_ID_ROWANS_WARNING 36
@@ -498,7 +498,7 @@ static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask)
                 return BATTLE_BAG_TASK_AWAITING_TEXT_FINISH;
             }
         } else {
-            MessageLoader_GetStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_NO_USE, battleBagTask->strbuf);
+            MessageLoader_GetStrbuf(battleBagTask->messageLoader, BATTLE_BAG_TEXT_ID_ITEM_HAS_NO_USE, battleBagTask->strbuf);
             DisplayMessageBox(battleBagTask);
             battleBagTask->queuedState = BATTLE_BAG_TASK_STATE_CLEAR_ERROR_MESSAGE;
             return BATTLE_BAG_TASK_AWAITING_TEXT_FINISH;
@@ -543,19 +543,19 @@ static enum BattleBagTaskState TryUseItem(BattleBagTask *battleBagTask)
 
 static enum BattleBagTaskState BattleBagTask_SetupMenuScreen(BattleBagTask *battleBagTask)
 {
-    ChangeBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU);
+    ChangeBattleBagScreen(battleBagTask, BATTLE_BAG_SCREEN_BAG_MENU);
     return BATTLE_BAG_TASK_STATE_MENU_SCREEN;
 }
 
 static enum BattleBagTaskState BattleBagTask_SetupPocketMenuScreen(BattleBagTask *battleBagTask)
 {
-    ChangeBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU);
+    ChangeBattleBagScreen(battleBagTask, BATTLE_BAG_SCREEN_POCKET_MENU);
     return BATTLE_BAG_TASK_STATE_POCKET_MENU_SCREEN;
 }
 
 static enum BattleBagTaskState BattleBagTask_SetupUseItemScreen(BattleBagTask *battleBagTask)
 {
-    ChangeBattleBagScreen(battleBagTask, IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM);
+    ChangeBattleBagScreen(battleBagTask, BATTLE_BAG_SCREEN_USE_ITEM);
     return BATTLE_BAG_TASK_STATE_USE_ITEM_SCREEN;
 }
 
@@ -827,29 +827,29 @@ static void CleanupMessageLoader(BattleBagTask *battleBagTask)
 static void SetupBackgroundScroll(BattleBagTask *battleBagTask, u8 screen)
 {
     switch (screen) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
-        Bg_ScheduleScroll(battleBagTask->background, 6, 0, 0);
-        Bg_ScheduleScroll(battleBagTask->background, 6, 3, 0);
+    case BATTLE_BAG_SCREEN_BAG_MENU:
+        Bg_ScheduleScroll(battleBagTask->background, BG_LAYER_SUB_2, 0, 0);
+        Bg_ScheduleScroll(battleBagTask->background, BG_LAYER_SUB_2, 3, 0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
-        Bg_ScheduleScroll(battleBagTask->background, 6, 0, 256);
-        Bg_ScheduleScroll(battleBagTask->background, 6, 3, 0);
+    case BATTLE_BAG_SCREEN_POCKET_MENU:
+        Bg_ScheduleScroll(battleBagTask->background, BG_LAYER_SUB_2, 0, 256);
+        Bg_ScheduleScroll(battleBagTask->background, BG_LAYER_SUB_2, 3, 0);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
-        Bg_ScheduleScroll(battleBagTask->background, 6, 0, 0);
-        Bg_ScheduleScroll(battleBagTask->background, 6, 3, 256);
+    case BATTLE_BAG_SCREEN_USE_ITEM:
+        Bg_ScheduleScroll(battleBagTask->background, BG_LAYER_SUB_2, 0, 0);
+        Bg_ScheduleScroll(battleBagTask->background, BG_LAYER_SUB_2, 3, 256);
         break;
     }
 }
 
 static void SetupBackgroundTilemap(BattleBagTask *battleBagTask, u8 screen)
 {
-    if (screen != IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM) {
+    if (screen != BATTLE_BAG_SCREEN_USE_ITEM) {
         return;
     }
 
-    Bg_ChangeTilemapRectPalette(battleBagTask->background, 6, 2, 35, 28, 4, 8 + battleBagTask->currentBattleBagPocket);
-    Bg_ChangeTilemapRectPalette(battleBagTask->background, 6, 2, 40, 28, 8, 8 + battleBagTask->currentBattleBagPocket);
+    Bg_ChangeTilemapRectPalette(battleBagTask->background, BG_LAYER_SUB_2, 2, 35, 28, 4, 8 + battleBagTask->currentBattleBagPocket);
+    Bg_ChangeTilemapRectPalette(battleBagTask->background, BG_LAYER_SUB_2, 2, 40, 28, 8, 8 + battleBagTask->currentBattleBagPocket);
 }
 
 static void ChangeBattleBagScreen(BattleBagTask *battleBagTask, u8 screen)

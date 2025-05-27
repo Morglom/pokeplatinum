@@ -458,7 +458,7 @@ void ov13_02228848(BattleBagTask *battleBagTask)
 void ov13_02228924(BattleBagTask *battleBagTask, u8 screen)
 {
     switch (screen) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
+    case BATTLE_BAG_SCREEN_BAG_MENU:
         ov13_022286B8(battleBagTask, 0, 0, screen);
         ov13_022286B8(battleBagTask, 1, 0, screen);
         ov13_022286B8(battleBagTask, 2, 0, screen);
@@ -472,7 +472,7 @@ void ov13_02228924(BattleBagTask *battleBagTask, u8 screen)
 
         ov13_022286B8(battleBagTask, 5, 0, screen);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU: {
+    case BATTLE_BAG_SCREEN_POCKET_MENU: {
         u32 i;
 
         for (i = 0; i < BATTLE_BAG_ITEMS_PER_POCKET_PAGE; i++) {
@@ -494,7 +494,7 @@ void ov13_02228924(BattleBagTask *battleBagTask, u8 screen)
 
         ov13_022286B8(battleBagTask, 14, 0, screen);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
+    case BATTLE_BAG_SCREEN_USE_ITEM:
         ov13_022286B8(battleBagTask, 15, 0, screen);
         ov13_022286B8(battleBagTask, 16, 0, screen);
     }

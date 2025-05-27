@@ -15,10 +15,10 @@
 #include "strbuf.h"
 #include "string_template.h"
 
-enum BattlePartyTaskState {
-    IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU = 0,
-    IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU,
-    IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM,
+enum BattleBagScreen {
+    BATTLE_BAG_SCREEN_BAG_MENU = 0,
+    BATTLE_BAG_SCREEN_POCKET_MENU,
+    BATTLE_BAG_SCREEN_USE_ITEM,
 };
 
 enum InBattleBagSubMenuIndex {

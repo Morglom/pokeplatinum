@@ -172,13 +172,13 @@ void RenderBattleBagScreenSprites(BattleBagTask *battleBagTask, u32 screen)
     }
 
     switch (screen) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
+    case BATTLE_BAG_SCREEN_BAG_MENU:
         RenderLastUsedItemSprite(battleBagTask);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
+    case BATTLE_BAG_SCREEN_POCKET_MENU:
         RenderSubMenuItemSprites(battleBagTask);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
+    case BATTLE_BAG_SCREEN_USE_ITEM:
         RenderSelectedItemSprite(battleBagTask);
         break;
     }
@@ -277,13 +277,13 @@ void SetupBattleBagCursor(BattleBagTask *battleBagTask, u8 screen)
     SetBattleSubMenuCursorPositions(battleBagTask->cursor, Unk_ov13_02229BC8[screen]);
 
     switch (screen) {
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_MENU:
+    case BATTLE_BAG_SCREEN_BAG_MENU:
         SetBattleSubMenuCursorPosition(battleBagTask->cursor, battleBagTask->currentBattleBagPocket);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_BAG_SUB_MENU:
+    case BATTLE_BAG_SCREEN_POCKET_MENU:
         SetBattleSubMenuCursorPosition(battleBagTask->cursor, battleBagTask->battleInfo->pocketCurrentPagePositions[battleBagTask->currentBattleBagPocket]);
         break;
-    case IN_BATTLE_BAG_SCREEN_INDEX_USE_BAG_ITEM:
+    case BATTLE_BAG_SCREEN_USE_ITEM:
         break;
     }
 }

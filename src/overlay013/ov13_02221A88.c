@@ -1724,15 +1724,15 @@ void ov13_02224144(BattlePartyTask *param0)
 void OnEmbargoBlockingItem(BattlePartyTask *param0)
 {
     Pokemon *pokemonData;
-    BattlePartyBattleInfo *v1;
-    Strbuf *v2;
+    BattlePartyBattleInfo *battleInfo;
+    Strbuf *strbuf;
 
-    v1 = param0->battleInfo;
-    pokemonData = BattleSystem_PartyPokemon(v1->battleSystem, v1->unk_28, v1->unk_2C[v1->selectedPartySlot]);
-    v2 = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ITEM_USE_PREVENTED_TEXT);
+    battleInfo = param0->battleInfo;
+    pokemonData = BattleSystem_PartyPokemon(battleInfo->battleSystem, battleInfo->unk_28, battleInfo->unk_2C[battleInfo->selectedPartySlot]);
+    strbuf = MessageLoader_GetNewStrbuf(param0->messageLoader, IN_BATTLE_TEXT_IDS_ITEM_USE_PREVENTED_TEXT);
 
     StringTemplate_SetNickname(param0->stringTemplate, 0, Pokemon_GetBoxPokemon(pokemonData));
     StringTemplate_SetMoveName(param0->stringTemplate, 1, MOVE_EMBARGO);
-    StringTemplate_Format(param0->stringTemplate, param0->strbuf, v2);
-    Strbuf_Free(v2);
+    StringTemplate_Format(param0->stringTemplate, param0->strbuf, strbuf);
+    Strbuf_Free(strbuf);
 }

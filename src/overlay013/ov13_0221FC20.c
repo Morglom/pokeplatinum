@@ -44,7 +44,7 @@
 #include "unk_0208C098.h"
 #include "unk_02094EDC.h"
 
-enum BattlePartyTaskState {
+enum BattleBagScreen {
     BATTLE_PARTY_TASK_STATE_INITIALISE = 0,
     BATTLE_PARTY_TASK_STATE_POKEMON_LIST_SCREEN,
     BATTLE_PARTY_TASK_STATE_SELECT_POKEMON_SCREEN,
@@ -60,7 +60,7 @@ enum BattlePartyTaskState {
     BATTLE_PARTY_TASK_STATE_SETUP_LEARN_MOVE_CONFIRM_SCREEN,
     BATTLE_PARTY_TASK_STATE_SETUP_USE_PP_ITEM_SCREEN,
     IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY,
-    IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_CANT_SHIFT,
+    BATTLE_PARTY_TASK_POKEMON_CANT_SWITCH_ERROR_MESSAGE,
     IN_BATTLE_PARTY_SCREEN_INDEX_ERROR_MESSAGE_BOX,
     BATTLE_PARTY_TASK_STATE_TEXT_FINISH,
     BATTLE_PARTY_TASK_STATE_AWAITING_INPUT,
@@ -118,12 +118,27 @@ enum BattlePartyMoveSummaryScreenButton {
 };
 
 enum BattlePartyLearnMoveScreenButton {
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_1 = 0,
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_2,
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_3,
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_4,
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_TO_LEARN,
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_CONTEST_DATA,
+    BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_CANCEL,
 };
 
 enum BattlePartyLearnMoveConfirmScreenButton {
+    BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_LEARN_MOVE = 0,
+    BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_CONTEST_DATA,
+    BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_CANCEL,
 };
 
 enum BattlePartyUsePPItemScreenButton {
+    BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_1 = 0,
+    BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_2,
+    BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_3,
+    BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_4,
+    BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_CANCEL,
 };
 
 #define EXP_BAR_MAX_PIXELS 64
@@ -133,7 +148,7 @@ static u8 BattlePartyTask_Initialize(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_PokemonListScreen(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_SelectPokemonScreen(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_PokemonSummaryScreen(BattlePartyTask *battlePartyTask);
-static u8 PokemonCantShift(BattlePartyTask *battlePartyTask);
+static u8 BattlePartyTask_PokemonCantSwitchErrorMessage(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_ClearErrorMessage(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_TextFinish(BattlePartyTask *battlePartyTask);
 static u8 BattlePartyTask_AwaitingInput(BattlePartyTask *battlePartyTask);
@@ -327,8 +342,8 @@ static void BattlePartyTask_Tick(SysTask *task, void *taskParam)
     case IN_BATTLE_PARTY_SCREEN_INDEX_SUMMARY:
         battlePartyTask->currentState = SummaryScreen(battlePartyTask);
         break;
-    case IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_CANT_SHIFT:
-        battlePartyTask->currentState = PokemonCantShift(battlePartyTask);
+    case BATTLE_PARTY_TASK_POKEMON_CANT_SWITCH_ERROR_MESSAGE:
+        battlePartyTask->currentState = BattlePartyTask_PokemonCantSwitchErrorMessage(battlePartyTask);
         break;
     case IN_BATTLE_PARTY_SCREEN_INDEX_ERROR_MESSAGE_BOX:
         battlePartyTask->currentState = BattlePartyTask_ClearErrorMessage(battlePartyTask);
@@ -507,7 +522,7 @@ static u8 BattlePartyTask_SelectPokemonScreen(BattlePartyTask *battlePartyTask)
             return BATTLE_PARTY_TASK_EXIT;
         }
 
-        battlePartyTask->queuedState = IN_BATTLE_PARTY_SCREEN_INDEX_POKEMON_CANT_SHIFT;
+        battlePartyTask->queuedState = BATTLE_PARTY_TASK_POKEMON_CANT_SWITCH_ERROR_MESSAGE;
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
     case BATTLE_PARTY_SELECT_POKEMON_SCREEN_BUTTON_CHECK_SUMMARY:
         if (CheckSelectedPokemonIsEgg(battlePartyTask) == TRUE) {
@@ -679,26 +694,26 @@ static u8 BattlePartyTask_LearnMoveScreen(BattlePartyTask *battlePartyTask)
         learnMoveScreenButtonPressed = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
 
         if (learnMoveScreenButtonPressed == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
-            learnMoveScreenButtonPressed = 6;
+            learnMoveScreenButtonPressed = BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_CANCEL;
         }
     } else {
         DisableBattlePartyCursor(battlePartyTask);
     }
 
     switch (learnMoveScreenButtonPressed) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_1:
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_2:
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_3:
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_4:
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_MOVE_TO_LEARN:
         battlePartyTask->battleInfo->unk_34 = (u8)learnMoveScreenButtonPressed;
         battlePartyTask->unk_2089 = (u8)learnMoveScreenButtonPressed;
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(battlePartyTask, 23 + learnMoveScreenButtonPressed);
         battlePartyTask->queuedState = 12;
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
-    case 5:
-        if (battlePartyTask->visitedContestHall == 0) {
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_CONTEST_DATA:
+        if (battlePartyTask->visitedContestHall == FALSE) {
             break;
         }
 
@@ -708,7 +723,7 @@ static u8 BattlePartyTask_LearnMoveScreen(BattlePartyTask *battlePartyTask)
         ov13_02225FCC(battlePartyTask, 18);
         battlePartyTask->queuedState = BATTLE_PARTY_TASK_STATE_SETUP_LEARN_MOVE_SCREEN;
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
-    case 6:
+    case BATTLE_PARTY_LEARN_MOVE_SCREEN_BUTTON_CANCEL:
         battlePartyTask->battleInfo->unk_34 = 4;
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(battlePartyTask, 6);
@@ -727,14 +742,14 @@ static u8 BattlePartyTask_LearnMoveConfirmScreen(BattlePartyTask *battlePartyTas
         v0 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
 
         if (v0 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
-            v0 = 2;
+            v0 = BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_CANCEL;
         }
     } else {
         DisableBattlePartyCursor(battlePartyTask);
     }
 
     switch (v0) {
-    case 0:
+    case BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_LEARN_MOVE:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
 
         if (battlePartyTask->inLearnMoveContestData == FALSE) {
@@ -758,7 +773,7 @@ static u8 BattlePartyTask_LearnMoveConfirmScreen(BattlePartyTask *battlePartyTas
         }
 
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
-    case 1:
+    case BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_CONTEST_DATA:
         if (battlePartyTask->visitedContestHall == FALSE) {
             break;
         }
@@ -769,7 +784,7 @@ static u8 BattlePartyTask_LearnMoveConfirmScreen(BattlePartyTask *battlePartyTas
         battlePartyTask->unk_208A = (u8)v0;
         battlePartyTask->queuedState = BATTLE_PARTY_TASK_STATE_SETUP_LEARN_MOVE_CONFIRM_SCREEN;
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
-    case 2:
+    case BATTLE_PARTY_LEARN_MOVE_CONFIRM_SCREEN_BUTTON_CANCEL:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(battlePartyTask, 6);
         battlePartyTask->unk_208A = 0;
@@ -792,17 +807,17 @@ static u8 BattlePartyTask_UsePPItemScreen(BattlePartyTask *battlePartyTask)
         v1 = CheckBattleSubMenuCursorInputs(battlePartyTask->cursor);
 
         if (v1 == BATTLE_SUB_MENU_CURSOR_BACK_INDEX) {
-            v1 = 4;
+            v1 = BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_CANCEL;
         }
     } else {
         DisableBattlePartyCursor(battlePartyTask);
     }
 
     switch (v1) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
+    case BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_1:
+    case BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_2:
+    case BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_3:
+    case BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_MOVE_4:
         if (battlePartyTask->partyPokemon[v0->selectedPartySlot].moves[v1].move == 0) {
             break;
         }
@@ -823,14 +838,14 @@ static u8 BattlePartyTask_UsePPItemScreen(BattlePartyTask *battlePartyTask)
             return BATTLE_PARTY_TASK_STATE_TEXT_FINISH;
         }
         break;
-    case 4:
+    case BATTLE_PARTY_USE_PP_ITEM_SCREEN_BUTTON_CANCEL:
         Sound_PlayEffect(SEQ_SE_DP_DECIDE);
         ov13_02225FCC(battlePartyTask, 6);
-        battlePartyTask->queuedState = 6;
+        battlePartyTask->queuedState = BATTLE_PARTY_TASK_STATE_SETUP_POKEMON_LIST_SCREEN;
         return BATTLE_PARTY_TASK_STATE_SCREEN_TRANSITION;
     }
 
-    return 21;
+    return BATTLE_PARTY_TASK_STATE_USE_PP_ITEM_SCREEN;
 }
 
 static u8 BattlePartyTask_SetupPokemonListScreen(BattlePartyTask *battlePartyTask)
@@ -912,7 +927,7 @@ static u8 SummaryScreen(BattlePartyTask *battlePartyTask)
     return BATTLE_PARTY_TASK_STATE_POKEMON_MOVES_SCREEN;
 }
 
-static u8 PokemonCantShift(BattlePartyTask *battlePartyTask)
+static u8 BattlePartyTask_PokemonCantSwitchErrorMessage(BattlePartyTask *battlePartyTask)
 {
     DisplayBattleMessageBox(battlePartyTask);
     battlePartyTask->queuedState = IN_BATTLE_PARTY_SCREEN_INDEX_ERROR_MESSAGE_BOX;
